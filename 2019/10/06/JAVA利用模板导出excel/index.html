@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>JAVA利用模板导出excel | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="JAVA利用poi技术实现模板导出excel先说说我搞这个的一个痛苦经历，其实利用模板来实现数据的导入是非常方便的一件事情，但我在一个地方卡壳了很多，哎，&#x3D;&#x3D;说我在哪个地方遇到了问题，以下是ssm工程项目   1.为什么要用模板？用模板，我们就不需要自己通过代码来创建Excel并画表格样式，可以直接通过wps等办公软件来快速地建excel，然后我们只需要通过代码来动态地写入数据，这样就大大减少了代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA利用模板导出excel">
+<meta property="og:url" content="https://yellowbp.github.io/2019/10/06/JAVA%E5%88%A9%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%AF%BC%E5%87%BAexcel/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="JAVA利用poi技术实现模板导出excel先说说我搞这个的一个痛苦经历，其实利用模板来实现数据的导入是非常方便的一件事情，但我在一个地方卡壳了很多，哎，&#x3D;&#x3D;说我在哪个地方遇到了问题，以下是ssm工程项目   1.为什么要用模板？用模板，我们就不需要自己通过代码来创建Excel并画表格样式，可以直接通过wps等办公软件来快速地建excel，然后我们只需要通过代码来动态地写入数据，这样就大大减少了代">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://messageimages.oss-cn-shenzhen.aliyuncs.com/%E5%8C%85%E7%BB%93%E6%9E%84.png">
+<meta property="article:published_time" content="2019-10-06T09:26:07.000Z">
+<meta property="article:modified_time" content="2021-02-10T06:40:08.090Z">
+<meta property="article:author" content="hbp">
+<meta property="article:tag" content="javaWeb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://messageimages.oss-cn-shenzhen.aliyuncs.com/%E5%8C%85%E7%BB%93%E6%9E%84.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content="">
+  <meta name="keywords" content=",javaWeb">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/10/06/JAVA%E5%88%A9%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%AF%BC%E5%87%BAexcel/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Sun Oct 06 2019 17:26:07 GMT+0800">
+    <meta property="article:modified_time" content="Wed Feb 10 2021 14:40:08 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2019/10/06/JAVA%E5%88%A9%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%AF%BC%E5%87%BAexcel/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">35</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-none-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/algorithm/" rel="tag">algorithm<span class="mdui-ripple sidebar_archives-none-count">7</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java/" rel="tag">java<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/javaWeb/" rel="tag">javaWeb<span class="mdui-ripple sidebar_archives-none-count">13</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/linux/" rel="tag">linux<span class="mdui-ripple sidebar_archives-none-count">2</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/mysql/" rel="tag">mysql<span class="mdui-ripple sidebar_archives-none-count">4</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/nginx/" rel="tag">nginx<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/redis/" rel="tag">redis<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/win7/" rel="tag">win7<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/" rel="tag">笔记本选购<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AE%A1%E7%90%86/" rel="tag">管理<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式<span class="mdui-ripple sidebar_archives-none-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-11.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">JAVA利用模板导出excel</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2019-10-06 / 
+          <i class="iconfont">&#xe601;</i> Peyton Wong
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="JAVA利用poi技术实现模板导出excel"><a href="#JAVA利用poi技术实现模板导出excel" class="headerlink" title="JAVA利用poi技术实现模板导出excel"></a>JAVA利用poi技术实现模板导出excel</h1><p>先说说我搞这个的一个痛苦经历，其实利用模板来实现数据的导入是非常方便的一件事情，但我在一个地方卡壳了很多，哎，==说我在哪个地方遇到了问题，以下是ssm工程项目</p>
+<br>
+
+<h2 id="1-为什么要用模板？"><a href="#1-为什么要用模板？" class="headerlink" title="1.为什么要用模板？"></a>1.为什么要用模板？</h2><p>用模板，我们就不需要自己通过代码来创建Excel并画表格样式，可以直接通过wps等办公软件来快速地建excel，然后我们只需要通过代码来动态地写入数据，这样就大大减少了代码量（代码书写excel和画表格样式很麻烦，而且会导致代码很乱）</p>
+<br>
+
+<h2 id="2-利用模板导出excel的思路"><a href="#2-利用模板导出excel的思路" class="headerlink" title="2.利用模板导出excel的思路"></a>2.利用模板导出excel的思路</h2><p>把模板保存到项目里或者一些存储云上，再通过路径获取到该模板文件，把其内容全部复制到代码新创建的Excel中，再往里填充数据。</p>
+<br>
+
+<h2 id="3-上代码"><a href="#3-上代码" class="headerlink" title="3.上代码"></a>3.上代码</h2><blockquote>
+<p> <strong>包结构</strong></p>
+</blockquote>
+<p><img src="https://messageimages.oss-cn-shenzhen.aliyuncs.com/%E5%8C%85%E7%BB%93%E6%9E%84.png"></p>
+<h3 id="1-引入依赖（pom-xml）"><a href="#1-引入依赖（pom-xml）" class="headerlink" title="1.引入依赖（pom.xml）"></a>1.引入依赖（pom.xml）</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">       &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;</span><br><span class="line">       &lt;artifactId&gt;poi-ooxml&lt;/artifactId&gt;</span><br><span class="line">       &lt;version&gt;3.17&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-ResponseUtil类"><a href="#2-ResponseUtil类" class="headerlink" title="2.ResponseUtil类"></a>2.ResponseUtil类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ResponseUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">export</span><span class="params">(HttpServletResponse response , Workbook wb , String fileName)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        response.setHeader(<span class="string">&quot;Content-Disposition&quot;</span> , <span class="string">&quot;attachment;filename=&quot;</span>+<span class="keyword">new</span> String(fileName.getBytes(<span class="string">&quot;utf-8&quot;</span>),<span class="string">&quot;iso8859-1&quot;</span>));</span><br><span class="line">        response.setContentType(<span class="string">&quot;application/ynd.ms;charset=UTF-8&quot;</span>);</span><br><span class="line">        OutputStream outputStream = response.getOutputStream();</span><br><span class="line">        wb.write(outputStream);</span><br><span class="line">        outputStream.flush();</span><br><span class="line">        outputStream.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-ExcelUtil类"><a href="#3-ExcelUtil类" class="headerlink" title="3.ExcelUtil类"></a>3.ExcelUtil类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExcelUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Workbook <span class="title">fillExcelDataWithTemplate</span><span class="params">(List list, String templateFileName)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//方法一：获取模板文件的绝对路径，当然还有其他方法可以获取其绝对路径，这里介绍这一种（有局限性）</span></span><br><span class="line">        InputStream inputStream = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">&quot;H:\\你自己的项目路径\\src\\main\\java\\com\\jg\\excelTemplate\\&quot;</span>+templateFileName));</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//方法二：上传到过存储云，获取模板文件的URL；好处：项目打包上传服务器后，在能访问改模板文件</span></span><br><span class="line">        <span class="comment">//URL httpurl=new URL(&quot;https://fruitxlx.oss-cn-shenzhen.aliyuncs.com/%E5%87%BA%E5%BA%93%E6%B1%87%E6%80%BB.xls&quot;);</span></span><br><span class="line">       <span class="comment">// URLConnection urlConnection = httpurl.openConnection();</span></span><br><span class="line">        <span class="comment">//InputStream inputStream = urlConnection.getInputStream();</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取模板,把其内容全部复制到代码新创建的Excel</span></span><br><span class="line">        Workbook workbook = WorkbookFactory.create(inputStream);</span><br><span class="line">        <span class="comment">//获取第一个sheet</span></span><br><span class="line">        Sheet sheet = workbook.getSheetAt(<span class="number">0</span>);</span><br><span class="line">        <span class="comment">//获取总列数</span></span><br><span class="line">        <span class="keyword">int</span> cellNums = sheet.getRow(<span class="number">0</span>).getLastCellNum();</span><br><span class="line">        <span class="comment">//从第三行开始插入数据，根据你自己的excel改变</span></span><br><span class="line">        <span class="keyword">int</span> rowIndex = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//给单元格设置样式</span></span><br><span class="line">        XSSFCellStyle cellStyle = (XSSFCellStyle) workbook.createCellStyle();</span><br><span class="line">        cellStyle.setBorderBottom(BorderStyle.THIN); <span class="comment">//下边框</span></span><br><span class="line">        cellStyle.setBorderLeft(BorderStyle.THIN);<span class="comment">//左边框</span></span><br><span class="line">        cellStyle.setBorderTop(BorderStyle.THIN);<span class="comment">//上边框</span></span><br><span class="line">        cellStyle.setBorderRight(BorderStyle.THIN);<span class="comment">//右边框</span></span><br><span class="line">        cellStyle.setAlignment(HorizontalAlignment.CENTER);<span class="comment">// 水平居中</span></span><br><span class="line">        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);<span class="comment">// 上下居中</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//插入数据到excel</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i&lt;list.size() ; i++) &#123;</span><br><span class="line">            <span class="comment">//创建行</span></span><br><span class="line">            Row row = sheet.createRow(rowIndex++);</span><br><span class="line">            <span class="comment">//行高</span></span><br><span class="line">            row.setHeight((<span class="keyword">short</span>)(<span class="number">350</span>));</span><br><span class="line">            <span class="comment">//TODO 根据你自己的需要插入数据到excel表格</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> workbook;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="4-controller类"><a href="#4-controller类" class="headerlink" title="4.controller类"></a>4.controller类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/export&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExcelController</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ExcelService excelService;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/excel&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">export</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">      </span><br><span class="line">        <span class="comment">//根据你自己的需要查数据，list</span></span><br><span class="line">        </span><br><span class="line">        Workbook wb = ExcelUtil.fillExcelDataWithTemplate(传入你自个的list,<span class="string">&quot;出库汇总.xls&quot;</span>);</span><br><span class="line"></span><br><span class="line">        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();</span><br><span class="line"></span><br><span class="line">        ResponseUtil.export(response , wb , <span class="string">&quot;出库汇总.xls&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<blockquote>
+<p><font color=blue>到这一步已大功到成啦</font></p>
+<p>顺便提醒大家一个地方（我被坑了很惨的地方），不要导下面这个依赖，我之类两个都导入了，可能就造成了冲突，找我了老半天的，或许你可以试试导下面这个依赖，而不导我上面那个依赖试试</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&lt;dependency&gt;</span><br><span class="line">     &lt;!--&lt;groupId&gt;org.apache.poi&lt;/groupId&gt;--&gt;</span><br><span class="line">     &lt;!--&lt;artifactId&gt;poi&lt;/artifactId&gt;--&gt;</span><br><span class="line">     &lt;!--&lt;version&gt;3.17&lt;/version&gt;--&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+
+</blockquote>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/10/06/JAVA%E5%88%A9%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%AF%BC%E5%87%BAexcel/">https://yellowbp.github.io/2019/10/06/JAVA%E5%88%A9%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%AF%BC%E5%87%BAexcel/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-none-link" href="/tags/javaWeb/" rel="tag">javaWeb</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2019/10/15/%E7%AE%97%E6%B3%95/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2019/09/24/Mysql%E8%BF%9E%E6%8E%A5%E6%95%B0%E8%BF%87%E5%A4%9A%E9%97%AE%E9%A2%98/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckobnacaz0004j0tw8t3g6no4"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JAVA%E5%88%A9%E7%94%A8poi%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0%E6%A8%A1%E6%9D%BF%E5%AF%BC%E5%87%BAexcel"><span class="toc-number">1.</span> <span class="toc-text">JAVA利用poi技术实现模板导出excel</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E6%A8%A1%E6%9D%BF%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1.为什么要用模板？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%88%A9%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%AF%BC%E5%87%BAexcel%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="toc-number">1.2.</span> <span class="toc-text">2.利用模板导出excel的思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%B8%8A%E4%BB%A3%E7%A0%81"><span class="toc-number">1.3.</span> <span class="toc-text">3.上代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96%EF%BC%88pom-xml%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.引入依赖（pom.xml）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-ResponseUtil%E7%B1%BB"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.ResponseUtil类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-ExcelUtil%E7%B1%BB"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.ExcelUtil类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-controller%E7%B1%BB"><span class="toc-number">1.3.4.</span> <span class="toc-text">4.controller类</span></a></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2021 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>Peyton Wong All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>linux | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="Linux1、概述说明：  这里是基于java全栈开发的linux，而不是运维级别的开发 系统是基于centos 7 （6、7、8版本区别大）  准备工作：  购买阿里云服务器 下载好putty或者xshell（用来远程控制服务器）和winscp工具（用来上传文件） 购买完之后，获取服务器的公网ip地址、重置服务器登录密码，就可以远程登录了  关于安全组的说明（很重要）：  如果要打开端口，需要同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux">
+<meta property="og:url" content="https://yellowbp.github.io/2021/05/05/linux/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="Linux1、概述说明：  这里是基于java全栈开发的linux，而不是运维级别的开发 系统是基于centos 7 （6、7、8版本区别大）  准备工作：  购买阿里云服务器 下载好putty或者xshell（用来远程控制服务器）和winscp工具（用来上传文件） 购买完之后，获取服务器的公网ip地址、重置服务器登录密码，就可以远程登录了  关于安全组的说明（很重要）：  如果要打开端口，需要同">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://linuximagess.oss-cn-shenzhen.aliyuncs.com/%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84.png">
+<meta property="article:published_time" content="2021-05-05T15:31:37.140Z">
+<meta property="article:modified_time" content="2021-03-01T05:48:40.829Z">
+<meta property="article:author" content="hbp">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://linuximagess.oss-cn-shenzhen.aliyuncs.com/%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content="">
+  <meta name="keywords" content=",linux">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2021/05/05/linux/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Wed May 05 2021 23:31:37 GMT+0800">
+    <meta property="article:modified_time" content="Mon Mar 01 2021 13:48:40 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2021/05/05/linux/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">35</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-none-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/algorithm/" rel="tag">algorithm<span class="mdui-ripple sidebar_archives-none-count">7</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java/" rel="tag">java<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/javaWeb/" rel="tag">javaWeb<span class="mdui-ripple sidebar_archives-none-count">13</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/linux/" rel="tag">linux<span class="mdui-ripple sidebar_archives-none-count">2</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/mysql/" rel="tag">mysql<span class="mdui-ripple sidebar_archives-none-count">4</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/nginx/" rel="tag">nginx<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/redis/" rel="tag">redis<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/win7/" rel="tag">win7<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/" rel="tag">笔记本选购<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AE%A1%E7%90%86/" rel="tag">管理<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式<span class="mdui-ripple sidebar_archives-none-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-11.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">linux</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2021-05-05 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><h2 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h2><p><strong>说明：</strong></p>
+<ul>
+<li>这里是基于java全栈开发的linux，而不是运维级别的开发</li>
+<li>系统是基于centos 7 （6、7、8版本区别大）</li>
+</ul>
+<p><strong>准备工作：</strong></p>
+<ul>
+<li>购买阿里云服务器</li>
+<li>下载好putty或者xshell（用来远程控制服务器）和winscp工具（用来上传文件）</li>
+<li>购买完之后，获取服务器的公网ip地址、重置服务器登录密码，就可以远程登录了</li>
+</ul>
+<p><strong>关于安全组的说明（很重要）：</strong></p>
+<ul>
+<li>如果要打开端口，需要同时开启linux防火墙和阿里云的安全组面板中开启对应的出入规则，否则就算你在linux的防火墙中开启了端口，而没有在阿里云中开发对应的端口，也会被阿里拦截。</li>
+</ul>
+<p><strong>简介：</strong></p>
+<ul>
+<li>linux一切皆文件</li>
+<li>程序在windows叫做服务(service)，而在Linux中就叫做“守护进程”(daemon)</li>
+</ul>
+<p><strong>linux发行版：</strong></p>
+<ul>
+<li>linux发行版简单点就是将linux内核与应用软件做一个打包</li>
+</ul>
+<h2 id="2、常用的基本命令"><a href="#2、常用的基本命令" class="headerlink" title="2、常用的基本命令"></a>2、常用的基本命令</h2><blockquote>
+<p><strong>开机登录</strong></p>
+</blockquote>
+<p>开机成功后，它会显示一个文本登录界面，这个界面就是我们经常看到的登录界面，在这个登录界面中会提示用户输入用户名，而用户输入的用户将作为参数传给login程序来验证用户的身份，密码是不显示的，输完回车即可！</p>
+<p>一般来说，用户的登录方式有三种：</p>
+<ul>
+<li>命令行登录</li>
+<li>ssh登录（putty中使用的协议）</li>
+<li>图形界面登录（宝塔）</li>
+</ul>
+<p>最高权限账户为root，可以操作一切</p>
+<blockquote>
+<p><strong>关机</strong></p>
+</blockquote>
+<p>服务器很少遇到关机的操作，除非在特殊情况下，不得已才会关机。</p>
+<p>关机指令：shutdown</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">sync <span class="comment">#将数据由内存同步到硬盘中。一般在重启系统还是开启系统前都要执行的操作</span></span><br><span class="line"></span><br><span class="line">shutdown <span class="comment"># 关机指令，你可以man shutdown来看一下帮助文档。例如你可以运行如下命令关机：</span></span><br><span class="line"></span><br><span class="line">shutdown-h now <span class="comment"># 立马关机</span></span><br><span class="line"></span><br><span class="line">shutdown-h +10 <span class="comment"># 这个命令告诉大家，计算机将在10分钟后关机</span></span><br><span class="line"></span><br><span class="line">shutdown-h 20：25<span class="comment"># 系统会在今天20：25关机shutdown-h+10#十分钟后关机</span></span><br><span class="line"></span><br><span class="line">shutdown-r now <span class="comment"># 系统立马重启</span></span><br><span class="line"></span><br><span class="line">shutdown-r +10 <span class="comment"># 系统十分钟后重启</span></span><br><span class="line"></span><br><span class="line">reboot <span class="comment"># 就是重启，等同于shutdown-r now </span></span><br><span class="line"></span><br><span class="line">halt <span class="comment"># 关闭系统，等同于shutdown -h now和poweroff</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="目录管理"><a href="#目录管理" class="headerlink" title="目录管理"></a>目录管理</h3><blockquote>
+<p><strong>系统目录结构</strong></p>
+</blockquote>
+<ol>
+<li>根目录 / ，所有的文件都挂载在这个节点下</li>
+</ol>
+<p><img src="https://linuximagess.oss-cn-shenzhen.aliyuncs.com/%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84.png"></p>
+<p><strong>以下是对这些目录的解释：</strong></p>
+<ul>
+<li>/bin是Binary的缩写，这个目录存放着最经常使用的命令。</li>
+<li>/boot：这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件。（不要动）</li>
+<li>/dev：dev是Device（设备）的缩写，存放的是Linux的外部设备，比如u盘。在Linux中访问设备的方式和访问文件的方式是相同的。</li>
+<li><strong>/etc：这个目录用来存放所有的系统管理所需要的配置文件和子目录。</strong></li>
+<li><strong>/home：用户的主目录，在Linux中，每个用户都有一个自己的目录，一般该目录名是以用户的账号命名的。</strong></li>
+<li>/lib：这个目录里存放着系统最基本的动态连接共享库，其作用类似于Windows里的DLL文件。</li>
+<li>/lost+found：这个目录一般情况下是空的，当系统非法关机后，这里就存放了一些文件。</li>
+<li>/media：linux系统会自动识别一些设备，例如U盘、光驱等等，当识别后，linux会把识别的设备挂载到</li>
+<li>这个目录下。·/mnt：系统提供该目录是为了让用户临时挂载别的文件系统的，我们可以将光驱挂载在/mnt/上，然后进入该目录就可以查看光驱里的内容了。</li>
+<li><strong>/opt：这是给主机额外安装软件所摆放的目录。比如你安装一个ORACLE数据库则就可以放到这个目录下。默认是空的。</strong></li>
+<li>/proc：这个目录是一个虚拟的目录，它是系统内存的映射，我们可以通过直接访问这个目录来获取系统信息。</li>
+<li><strong>/root：该目录为系统管理员，也称作超级权限者的用户主目录。</strong></li>
+<li>/sbin：s就是Super User的意思，这里存放的是系统管理员使用的系统管理程序。</li>
+<li>/srv：该目录存放一些服务启动之后需要提取的数据。</li>
+<li>/sys：这是linux2.6内核的一个很大的变化。该目录下安装了2.6内核中新出现的一个文件系统sysfs。</li>
+<li><strong>/tmp：这个目录是用来存放一些临时文件的。用完即丢的文件可以放在这个目录下，比如安装包</strong></li>
+<li><strong>/usr：这是一个非常重要的目录，用户的很多应用程序和文件都放在这个目录下，类似于windows下的program files目录。</strong></li>
+<li>/usr/bin：系统用户使用的应用程序。</li>
+<li>·/usr/sbin：超级用户使用的比较高级的管理程序和系统守护程序。</li>
+<li>/usr/src：内核源代码默认的放置目录。</li>
+<li>/var：这个目录中存放着在不断扩充着的东西，我们习惯将那些经常被修改的目录放在这个目录下。包括各种日志文件。</li>
+<li>/run：是一个临时文件系统，存储系统启动以来的信息。当系统重启时，这个目录下的文件应该被删掉或清除。</li>
+</ul>
+<blockquote>
+<p><strong>cd（切换目录）</strong></p>
+</blockquote>
+<p>cd: change dir 切换目录</p>
+<p>/：根目录</p>
+<p>./ ：当前目录</p>
+<p>cd ..：返回上一级目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ ~]<span class="comment"># cd /</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ /]<span class="comment"># ls</span></span><br><span class="line">bin   dev  home  lib64       media  opt   root  sbin  sys  usr</span><br><span class="line">boot  etc  lib   lost+found  mnt    proc  run   srv   tmp  var</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ /]<span class="comment"># cd /home</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cd ..</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>ls（列出目录）</strong></p>
+</blockquote>
+<p>列出当前文件夹的所有文件。</p>
+<ul>
+<li>-a参数：all，查看全部的文件，包括隐藏文件</li>
+<li>-l参数：列出所有的文件，包括文件的属性和权限，但不包括隐藏文件 </li>
+<li>所有的linux命令可以组合使用</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ /]<span class="comment"># ls</span></span><br><span class="line">bin   dev  home  lib64       media  opt   root  sbin  sys  usr</span><br><span class="line">boot  etc  lib   lost+found  mnt    proc  run   srv   tmp  var</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ /]<span class="comment"># ls -a</span></span><br><span class="line">.   .autorelabel  boot  etc   lib    lost+found  mnt  proc  run   srv  tmp  var</span><br><span class="line">..  bin           dev   home  lib64  media       opt  root  sbin  sys  usr</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ /]<span class="comment"># ls -l</span></span><br><span class="line">total 60</span><br><span class="line">lrwxrwxrwx.  1 root root     7 Apr 26  2020 bin -&gt; usr/bin</span><br><span class="line">dr-xr-xr-x.  5 root root  4096 Apr 26  2020 boot</span><br><span class="line">drwxr-xr-x  19 root root  2960 Feb 23 09:27 dev</span><br><span class="line">drwxr-xr-x. 76 root root  4096 Feb 22 21:05 etc</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 home</span><br><span class="line">lrwxrwxrwx.  1 root root     7 Apr 26  2020 lib -&gt; usr/lib</span><br><span class="line">lrwxrwxrwx.  1 root root     9 Apr 26  2020 lib64 -&gt; usr/lib64</span><br><span class="line">drwx------.  2 root root 16384 Apr 26  2020 lost+found</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 media</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 mnt</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 opt</span><br><span class="line">dr-xr-xr-x  87 root root     0 Feb 23 09:27 proc</span><br><span class="line">dr-xr-x---.  4 root root  4096 Feb 23 09:20 root</span><br><span class="line">drwxr-xr-x  23 root root   620 Feb 23 09:27 run</span><br><span class="line">lrwxrwxrwx.  1 root root     8 Apr 26  2020 sbin -&gt; usr/sbin</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 srv</span><br><span class="line">dr-xr-xr-x  13 root root     0 Feb 23  2021 sys</span><br><span class="line">drwxrwxrwt.  9 root root  4096 Feb 23 09:27 tmp</span><br><span class="line">drwxr-xr-x. 13 root root  4096 Apr 26  2020 usr</span><br><span class="line">drwxr-xr-x. 19 root root  4096 Apr 26  2020 var</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ /]<span class="comment"># ls -al</span></span><br><span class="line">total 68</span><br><span class="line">dr-xr-xr-x. 18 root root  4096 Feb 22 21:05 .</span><br><span class="line">dr-xr-xr-x. 18 root root  4096 Feb 22 21:05 ..</span><br><span class="line">-rw-r--r--   1 root root     0 Apr 26  2020 .autorelabel</span><br><span class="line">lrwxrwxrwx.  1 root root     7 Apr 26  2020 bin -&gt; usr/bin</span><br><span class="line">dr-xr-xr-x.  5 root root  4096 Apr 26  2020 boot</span><br><span class="line">drwxr-xr-x  19 root root  2960 Feb 23 09:27 dev</span><br><span class="line">drwxr-xr-x. 76 root root  4096 Feb 22 21:05 etc</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 home</span><br><span class="line">lrwxrwxrwx.  1 root root     7 Apr 26  2020 lib -&gt; usr/lib</span><br><span class="line">lrwxrwxrwx.  1 root root     9 Apr 26  2020 lib64 -&gt; usr/lib64</span><br><span class="line">drwx------.  2 root root 16384 Apr 26  2020 lost+found</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 media</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 mnt</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 opt</span><br><span class="line">dr-xr-xr-x  87 root root     0 Feb 23 09:27 proc</span><br><span class="line">dr-xr-x---.  4 root root  4096 Feb 23 09:20 root</span><br><span class="line">drwxr-xr-x  23 root root   620 Feb 23 09:27 run</span><br><span class="line">lrwxrwxrwx.  1 root root     8 Apr 26  2020 sbin -&gt; usr/sbin</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 srv</span><br><span class="line">dr-xr-xr-x  13 root root     0 Feb 23 10:19 sys</span><br><span class="line">drwxrwxrwt.  9 root root  4096 Feb 23 09:27 tmp</span><br><span class="line">drwxr-xr-x. 13 root root  4096 Apr 26  2020 usr</span><br><span class="line">drwxr-xr-x. 19 root root  4096 Apr 26  2020 var</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>pwd显示当前所在的目录</strong></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ /]<span class="comment"># cd /usr/local</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ <span class="built_in">local</span>]<span class="comment"># pwd</span></span><br><span class="line">/usr/<span class="built_in">local</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>mkdir 创建一个目录</strong></p>
+</blockquote>
+<ul>
+<li>-r参数：递归创建多个目录</li>
+</ul>
+<p>创建单个目录：mkdir 文件夹名</p>
+<p>创建层级目录：mkdir -p 文件夹1/文件夹2/…</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">test1</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># mkdir test2</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">test1  test2</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># mkdir -p test2/test3/test4</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">test1  test2</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cd test2</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ test2]<span class="comment"># ls</span></span><br><span class="line">test3</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>rmdir 删除目录</strong></p>
+</blockquote>
+<ul>
+<li>-p参数：递归创建多个目录</li>
+</ul>
+<p>rmdir仅能删除空的目录，如果下面存在文件，需要先删除文件；递归删除多个目录加个-p参数即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">test1  test2</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># rmdir test1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">test2</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># rmdir test2</span></span><br><span class="line">rmdir: failed to remove ‘test2’: Directory not empty</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># rmdir -p test2/test3/test4</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>cp（复制文件或目录）</strong></p>
+</blockquote>
+<ul>
+<li>-r参数：复制目录的话 ，需要加这个参数</li>
+</ul>
+<p>cp 原来的地方 新的地方</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">hbp  test1</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cd test1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ test1]<span class="comment"># ls</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ test1]<span class="comment"># cd ..</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cp -r hbp test1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cd test1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ test1]<span class="comment"># ls</span></span><br><span class="line">hbp</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ test1]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>rm（移除文件或者目录）</strong></p>
+</blockquote>
+<ul>
+<li>-f参数：忽略不存在的文件，不会出现警告，强制删除</li>
+<li>-r参数：递归删除目录</li>
+<li>-i参数：互动，删除询问是否删除</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf <span class="comment"># 非常危险，删库跑路的做法</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>mv 移动文件或者目录或者重命名文件</strong></p>
+</blockquote>
+<ul>
+<li>-f参数：强制</li>
+<li>-u参数：只替换已经更新过的文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">hbp  test1</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># mv hbp test1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">test1</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cd test1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ test1]<span class="comment"># ls</span></span><br><span class="line">hbp</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ test1]<span class="comment"># cd ..</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># mv test1 test2 </span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">test2</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="基本属性"><a href="#基本属性" class="headerlink" title="基本属性"></a>基本属性</h3><p>Linux系统是一种典型的多用户系统，不同的用户拥有不同的权限。为了保护系统的安全性，Linux系统对不同的用户访问同一文件（包括目录文件）的权限做了不同的规定。</p>
+<p>在Linux中我们可以使用 <code>ls -ll</code>或者<code>ls –l</code>或<code>ll</code>命令来显示一个文件的属性以及文件所属的用户和组，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ /]<span class="comment"># ls -l</span></span><br><span class="line">total 60</span><br><span class="line">lrwxrwxrwx.  1 root root     7 Apr 26  2020 bin -&gt; usr/bin</span><br><span class="line">dr-xr-xr-x.  5 root root  4096 Apr 26  2020 boot</span><br><span class="line">drwxr-xr-x  19 root root  2960 Feb 23 09:27 dev</span><br><span class="line">drwxr-xr-x. 76 root root  4096 Feb 22 21:05 etc</span><br><span class="line">drwxr-xr-x.  3 root root  4096 Feb 23 11:22 home</span><br><span class="line">lrwxrwxrwx.  1 root root     7 Apr 26  2020 lib -&gt; usr/lib</span><br><span class="line">lrwxrwxrwx.  1 root root     9 Apr 26  2020 lib64 -&gt; usr/lib64</span><br><span class="line">drwx------.  2 root root 16384 Apr 26  2020 lost+found</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 media</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 mnt</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 opt</span><br><span class="line">dr-xr-xr-x  85 root root     0 Feb 23 09:27 proc</span><br><span class="line">dr-xr-x---.  4 root root  4096 Feb 23 09:20 root</span><br><span class="line">drwxr-xr-x  23 root root   620 Feb 23 09:27 run</span><br><span class="line">lrwxrwxrwx.  1 root root     8 Apr 26  2020 sbin -&gt; usr/sbin</span><br><span class="line">drwxr-xr-x.  2 root root  4096 Apr 11  2018 srv</span><br><span class="line">dr-xr-xr-x  13 root root     0 Feb 23 10:19 sys</span><br><span class="line">drwxrwxrwt.  9 root root  4096 Feb 23 09:27 tmp</span><br><span class="line">drwxr-xr-x. 13 root root  4096 Apr 26  2020 usr</span><br><span class="line">drwxr-xr-x. 19 root root  4096 Apr 26  2020 var</span><br></pre></td></tr></table></figure>
+
+
+
+<p>每个文件的属性由左边第一部分的10个字符来确定</p>
+<table>
+<thead>
+<tr>
+<th align="center">文件类型</th>
+<th align="center">属主属性(root)</th>
+<th align="center">属组属性</th>
+<th align="center">其他用户权限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">1      2     3</td>
+<td align="center">1      2     3</td>
+<td align="center">1      2     3</td>
+</tr>
+<tr>
+<td align="center">d</td>
+<td align="center">r      w     x</td>
+<td align="center">r      -     x</td>
+<td align="center">r      -     x</td>
+</tr>
+<tr>
+<td align="center">目录文件</td>
+<td align="center">读   写   执行</td>
+<td align="center">读   写   执行</td>
+<td align="center">读   写   执行</td>
+</tr>
+</tbody></table>
+<p>在Linux中第一个字符代表这个文件是目录、文件或链接文件等等：</p>
+<ul>
+<li>当为[ <strong>d</strong> ]则是目录</li>
+<li>当为[ <strong>-</strong> ]则是文件；</li>
+<li>若是[ <strong>l</strong> ]则表示为链接文档 ( link file )，相当于windows当中的快捷方式</li>
+<li>若是[ <strong>b</strong> ]则表示为装置文件里面的可供储存的接口设备 ( 可随机存取装置 )；</li>
+<li>若是[ <strong>c</strong> ]则表示为装置文件里面的串行端口设备，例如键盘、鼠标 ( 一次性读取装置 )。</li>
+</ul>
+<p>除了第一个字符外，接下来的字符中，以三个为一组，且均为『rwx』 的三个参数的组合。</p>
+<p>这三个权限的位置不会改变，如果没有权限，就会出现减号[ - ]而已</p>
+<blockquote>
+<p><strong>chgrp：更改文件属组</strong></p>
+</blockquote>
+<ul>
+<li>-R参数 递归更改文件属组</li>
+</ul>
+<p>chgrp -R 属性名 文件名</p>
+<blockquote>
+<p><strong>chown：更改文件属主，可以同时更改文件属组</strong></p>
+</blockquote>
+<ul>
+<li>-r参数 递归更改文件属组</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chown [-R] 属主名 文件名</span><br><span class="line">chown [-R] 属主名：属组名 文件名</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>chmod：更改文件9个属性</strong></p>
+</blockquote>
+<p>在操作中，你可能会遇到这种情况：”你没有权限操作此文件”</p>
+<ul>
+<li>-R参数 递归更改文件属组</li>
+</ul>
+<p>chmod [-R] xyz 文件或目录</p>
+<p>Linux文件属性有两种设置方法，一种是数字（常用），一种是符号。</p>
+<p>Linux文件的基本权限就有9个，分别是owner/group/others三种身份各有自己的read/write/execute权限。</p>
+<p>先复习一下刚刚上面提到的数据：文件的权限字符为：『-rwxrwxrwx』， 这九个权限是三个三个一组的！其中，我们可以使用数字来代表各个权限，各权限的分数对照表如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">r:4     w:2         x:1</span><br></pre></td></tr></table></figure>
+
+<p>每种身份(owner/group/others)各自的三个权限(r/w/x)分数是需要累加的，例如当权限为：[-rwxrwx—] 分数则是：</p>
+<ul>
+<li>owner = rwx = 4+2+1 = 7</li>
+<li>group = rwx = 4+2+1 = 7</li>
+<li>others= — = 0+0+0 = 0</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls -l</span></span><br><span class="line">total 8</span><br><span class="line">drwxr-xr-x 2 root root 4096 Feb 23 14:01 test1</span><br><span class="line">drwxr-xr-x 3 root root 4096 Feb 23 11:22 test2</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># chmod 777 test2</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls -l</span></span><br><span class="line">total 8</span><br><span class="line">drwxr-xr-x 2 root root 4096 Feb 23 14:01 test1</span><br><span class="line">drwxrwxrwx 3 root root 4096 Feb 23 11:22 test2</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="文件内容查看"><a href="#文件内容查看" class="headerlink" title="文件内容查看"></a>文件内容查看</h3><p>Linux系统中使用以下命令来查看文件的内容</p>
+<ul>
+<li><p><strong>cat 由第一行开始显示文件内容，用来读文章，或者读配置文件，都是用cat</strong></p>
+</li>
+<li><p>tac从最后一行开始显示，可以看出tac是cat的倒写</p>
+<details>
+  <summary>例子</summary>
+  <p> 
+    [root@iZwz9ick8j8tmsj93waiowZ /]# cd /etc/sysconfig/network-scripts/
+    [root@iZwz9ick8j8tmsj93waiowZ network-scripts]# cat ifcfg-eth0
+    # Created by cloud-init on instance boot automatically, do not edit.
+    # If you don't want cloud-init genrated automatically,you can disable it in /etc/cloud/cloud.cfg
+    # For more information, please refer to: https://help.aliyun.com/document_detail/57803.html
+    #
+    BOOTPROTO=dhcp
+    DEVICE=eth0
+    ONBOOT=yes
+    STARTMODE=auto
+    TYPE=Ethernet
+    USERCTL=no
+    [root@iZwz9ick8j8tmsj93waiowZ network-scripts]# tac ifcfg-eth0
+    USERCTL=no
+    TYPE=Ethernet
+    STARTMODE=auto
+    ONBOOT=yes
+    DEVICE=eth0
+    BOOTPROTO=dhcp
+    #
+    # For more information, please refer to: https://help.aliyun.com/document_detail/57803.html
+    # If you don't want cloud-init genrated automatically,you can disable it in /etc/cloud/cloud.cfg
+    # Created by cloud-init on instance boot automatically, do not edit.
+  </p>
+</details></li>
+<li><p>nl显示的时候，顺便显示行号；看代码时，想顺便显示行号</p>
+<details>
+    <summary>例子</summary>
+    <p>
+        [root@iZwz9ick8j8tmsj93waiowZ network-scripts]# nl ifcfg-eth0
+     1  # Created by cloud-init on instance boot automatically, do not edit.
+     2  # If you don't want cloud-init genrated automatically,you can disable it in /etc/cloud/cloud.cfg
+     3  # For more information, please refer to: https://help.aliyun.com/document_detail/57803.html
+     4  #
+     5  BOOTPROTO=dhcp
+     6  DEVICE=eth0
+     7  ONBOOT=yes
+     8  STARTMODE=auto
+     9  TYPE=Ethernet
+    10  USERCTL=no
+[root@iZwz9ick8j8tmsj93waiowZ network-scripts]#
+        </p>
+    </details></li>
+<li><p>more 一页一页地显示文件内容（空格表示翻页；enter表示向下看一行； :f表示显示当前行号）</p>
+</li>
+<li><p><strong>less与more类似，但是比more更好的是，它可以往前翻页（空格下翻页，上下键代表翻动页面，退出q命令，查找字符串/要查询的字符向下查询，向上查询使用？要查询的字符串，n继续搜寻下一个，N上寻找）</strong></p>
+</li>
+<li><p>head只看头几行</p>
+<ul>
+<li>-n 页数：表示显示多少行</li>
+</ul>
+</li>
+<li><p>tail只看尾巴几行</p>
+<ul>
+<li>-n 页数：表示显示多少行</li>
+</ul>
+</li>
+</ul>
+<p><strong>Linux链接概念</strong></p>
+<p>Linux的链接分为两种：硬链接、软链接</p>
+<p>硬链接：B—&gt;A  假设B是A的硬链接，那么他们两个指向了同一个文件，那么假如A删掉了，只要B没删，那么A里面的内容，B也是能访问到的。用户可以通过这种机制建立硬链接到一些重要的文件上，防止误删！</p>
+<p>软链接：相当于window里的快捷方式</p>
+<blockquote>
+<p>ln 创建链接</p>
+</blockquote>
+<ul>
+<li>-s参数 ，为创建软链接</li>
+</ul>
+<p>ln [-s] 被指向的文件  链接文件</p>
+<blockquote>
+<p>touch创建文件</p>
+</blockquote>
+<blockquote>
+<p>echo输入字符串</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># touch f1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">f1</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ln f1 f2	      # 创建硬链接，f2--&gt;f1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">f1  f2</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ln -s f1 f3       # 创建软链接，f3--&gt;f1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">f1  f2  f3</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls -l</span></span><br><span class="line">total 0</span><br><span class="line">-rw-r--r-- 2 root root 0 Feb 24 09:23 f1</span><br><span class="line">-rw-r--r-- 2 root root 0 Feb 24 09:23 f2</span><br><span class="line">lrwxrwxrwx 1 root root 2 Feb 24 09:24 f3 -&gt; f1</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># echo &quot;i am a student&quot;&gt;&gt;f1   # 向f1中输入字符串</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ll</span></span><br><span class="line">total 8</span><br><span class="line">-rw-r--r-- 2 root root 15 Feb 24 09:25 f1</span><br><span class="line">-rw-r--r-- 2 root root 15 Feb 24 09:25 f2</span><br><span class="line">lrwxrwxrwx 1 root root  2 Feb 24 09:24 f3 -&gt; f1</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cat f1</span></span><br><span class="line">i am a student</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cat f2</span></span><br><span class="line">i am a student</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cat f3</span></span><br><span class="line">i am a student</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># rm -rf f1</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">f2  f3</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cat f2</span></span><br><span class="line">i am a student</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cat f3</span></span><br><span class="line">cat: f3: No such file or directory</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Vim编辑器"><a href="#Vim编辑器" class="headerlink" title="Vim编辑器"></a>Vim编辑器</h3><p>Vim是从 vi 发展出来的一个文本编辑器。代码补完、编译及错误跳转等方便编程的功能特别丰富，在程序员中被广泛使用。</p>
+<p>vi/vim 共分为三种模式，分别是<strong>命令模式</strong>，<strong>输入模式</strong>和<strong>底线命令模式</strong>。这三种模式的作用分别是：</p>
+<p><strong>命令模式：</strong></p>
+<p>用户刚刚启动 vi/vim，便进入了命令模式。</p>
+<p>此状态下敲击键盘动作会被Vim识别为命令，而非输入字符。比如我们此时按下i，并不会输入一个字符， i 被当作了一个命令。</p>
+<p>以下是常用的几个命令：</p>
+<ul>
+<li><strong>i</strong> 切换到输入模式，以输入字符。</li>
+<li><strong>x</strong> 删除当前光标所在处的字符。</li>
+<li><strong>:</strong> 切换到底线命令模式，以在最底一行输入命令。如果是编辑模式，需要先退出编辑模式ESC</li>
+</ul>
+<p>若想要编辑文本：启动Vim，进入了命令模式，按下 i，切换到输入模式。</p>
+<p>命令模式只有一些最基本的命令，因此仍要依靠底线命令模式输入更多命令。</p>
+<p><strong>输入模式：</strong></p>
+<p>在命令模式下按下 i 就进入了输入模式。</p>
+<p>在输入模式中，可以使用以下按键：</p>
+<ul>
+<li><strong>字符按键以及Shift组合</strong>，输入字符</li>
+<li><strong>ENTER</strong>，回车键，换行</li>
+<li><strong>BACK SPACE</strong>，退格键，删除光标前一个字符</li>
+<li><strong>DEL</strong>，删除键，删除光标后一个字符</li>
+<li><strong>方向键</strong>，在文本中移动光标</li>
+<li><strong>HOME</strong>/<strong>END</strong>，移动光标到行首/行尾</li>
+<li><strong>Page Up</strong>/<strong>Page Down</strong>，上/下翻页 </li>
+<li><strong>Insert</strong>，切换光标为输入/替换模式，光标将变成竖线/下划线</li>
+<li><strong>ESC</strong>，退出输入模式，切换到命令模式</li>
+</ul>
+<p><strong>底线命令模式</strong></p>
+<p>在命令模式下按下:（英文冒号）就进入了底线命令模式。</p>
+<p>底线命令模式可以输入单个或多个字符的命令，可用的命令非常多。</p>
+<p>在底线命令模式中，基本的命令有（已经省略了冒号）：</p>
+<ul>
+<li>q 退出程序</li>
+<li>w 保存文件</li>
+<li>wq 保存并退出（常用）</li>
+</ul>
+<p>按ESC键可随时退出底线命令模式。</p>
+<p><strong>简单的Vin使用：vim命令新建或者编辑文件，按 i 进行编辑模式，编写内容，编写完成后退出编辑模式esc， :wq 退出之后进行底线命令模式</strong></p>
+<h3 id="账号管理"><a href="#账号管理" class="headerlink" title="账号管理"></a>账号管理</h3><p>用户账号的管理：</p>
+<p>用户账号的管理工作主要涉及到用户账号的增删改</p>
+<p>增：在系统中创建一个新账号 ，然后为新账号分配用户号，用户组，主目录</p>
+<blockquote>
+<p><strong>useradd命令 添加用户</strong></p>
+</blockquote>
+<ul>
+<li>-m参数：自动创建这个用户的主目录/home/hbp</li>
+<li>-G参数：给用户分配组</li>
+</ul>
+<p>理解本质：Linux中一切皆文件，这里的添加用户说白了就是往某一个文件中写入用户的信息了 <code>/etc/passwd</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># useradd -m hbp</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">f2  f3  hbp  hbp.txt</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>userdel 删除用户</strong></p>
+</blockquote>
+<ul>
+<li>-r参数：删除用户的时候将他的目录也一并删掉</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># userdel -r hbp</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># ls</span></span><br><span class="line">f2  f3  hbp.txt</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p><strong>usermod 修改用户</strong></p>
+</blockquote>
+<p>usermod 对应修改的内容 修改那个用户</p>
+<ul>
+<li>-d 目录 指定用户主目录</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ etc]<span class="comment"># usermod -d /home/233 hbp</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完毕之后查看配置文件即可</p>
+<blockquote>
+<p><strong>切换用户</strong></p>
+</blockquote>
+<ol>
+<li><p>切换用户的命令为：su username【username是你的用户名】</p>
+</li>
+<li><p>从普通用户切换到root用户，还可以使用命令：sudo su</p>
+</li>
+<li><p>在终端输入exit或logout或使用快捷方式ctrl+d，可以退回到原来用户，其实ctrl+d也是执行的exit命令</p>
+</li>
+<li><p>在切换用户时，如果想在切换用户之后使用新用户的工作环境，可以在su和username之间加-，例如：【su-root】<br>$表示普通用户</p>
+<p>#表示超级用户，也就是root用户</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>用户的密码设置</strong></p>
+</blockquote>
+<p>passwd username </p>
+<p>我们一般通过root创建用户的时候，要配置密码</p>
+<p>在Linux中输入密码是不会显示出来的，正常输入就行了</p>
+<blockquote>
+<p>锁定账户</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd -l hbp <span class="comment"># 锁定之后就不能登录了</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="用户组管理"><a href="#用户组管理" class="headerlink" title="用户组管理"></a>用户组管理</h3><p>每个用户都有一个用户组，系统可以对一个用户组中的所有用户进行集中管理。不同Linux系统对用户组的规定有所不同，如Linux下的用户属于与它同名的用户组，这个用户组在创建用户时同时创建。<br>用户组的管理涉及用户组的添加、删除和修改。组的增加、删除和修改实际上就是对/etc/group文件的更新。</p>
+<blockquote>
+<p>groupadd 创建一个用户组</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># groupadd yellowbp</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cat /etc/group</span></span><br></pre></td></tr></table></figure>
+
+<p>创建完用户之后可以得到一个组的id，当然这个id是可以指定的，如果不指定就是自增1</p>
+<ul>
+<li>-g参数：-g 数组</li>
+</ul>
+<blockquote>
+<p>groupdel 删除用户组</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># groupdel yellowbp</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># cat /etc/group</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>groupmod 修改用户组的权限和名字</p>
+</blockquote>
+<ul>
+<li>-g 修改id</li>
+<li>-n 修改名字</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># groupmod -g 666 -n newhbp hbp</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="磁盘管理"><a href="#磁盘管理" class="headerlink" title="磁盘管理"></a>磁盘管理</h3><blockquote>
+<p>df (列出文件系统整体的磁盘使用量)     du（检查磁盘空间使用量）</p>
+</blockquote>
+<p>df：</p>
+<ul>
+<li>-h参数：按照G或M查看</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ ~]<span class="comment"># df</span></span><br><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">devtmpfs         1929764       0   1929764   0% /dev</span><br><span class="line">tmpfs            1940124       0   1940124   0% /dev/shm</span><br><span class="line">tmpfs            1940124     488   1939636   1% /run</span><br><span class="line">tmpfs            1940124       0   1940124   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1       41152812 2052444  37196660   6% /</span><br><span class="line">tmpfs             388028       0    388028   0% /run/user/0</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs        1.9G     0  1.9G   0% /dev</span><br><span class="line">tmpfs           1.9G     0  1.9G   0% /dev/shm</span><br><span class="line">tmpfs           1.9G  488K  1.9G   1% /run</span><br><span class="line">tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup</span><br><span class="line">/dev/vda1        40G  2.0G   36G   6% /</span><br><span class="line">tmpfs           379M     0  379M   0% /run/user/0</span><br></pre></td></tr></table></figure>
+
+<p>du：</p>
+<ul>
+<li>-a参数：就是查看隐藏文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># du</span></span><br><span class="line">20      ./hbp</span><br><span class="line">32      .</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># du -h</span></span><br><span class="line">20K     ./hbp</span><br><span class="line">32K     .</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ home]<span class="comment"># du -ha</span></span><br><span class="line">4.0K    ./hbp.txt</span><br><span class="line">4.0K    ./hbp/.bash_logout</span><br><span class="line">4.0K    ./hbp/.bash_profile</span><br><span class="line">4.0K    ./hbp/.bash_history</span><br><span class="line">4.0K    ./hbp/.bashrc</span><br><span class="line">20K     ./hbp</span><br><span class="line">0       ./f3</span><br><span class="line">4.0K    ./f2</span><br><span class="line">32K     .</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>du -sm /* 查看根目录下每个目录所占用的用量</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ /]<span class="comment"># du -sm /*</span></span><br><span class="line">0       /bin</span><br><span class="line">146     /boot</span><br><span class="line">0       /dev</span><br><span class="line">34      /etc</span><br><span class="line">1       /home</span><br><span class="line">0       /lib</span><br><span class="line">0       /lib64</span><br><span class="line">1       /lost+found</span><br><span class="line">1       /media</span><br><span class="line">1       /mnt</span><br><span class="line">1       /opt</span><br><span class="line">du: cannot access ‘/proc/11475/task/11475/fd/4’: No such file or directory</span><br><span class="line">du: cannot access ‘/proc/11475/task/11475/fdinfo/4’: No such file or directory</span><br><span class="line">du: cannot access ‘/proc/11475/fd/4’: No such file or directory</span><br><span class="line">du: cannot access ‘/proc/11475/fdinfo/4’: No such file or directory</span><br><span class="line">0       /proc</span><br><span class="line">1       /root</span><br><span class="line">1       /run</span><br><span class="line">0       /sbin</span><br><span class="line">1       /srv</span><br><span class="line">0       /sys</span><br><span class="line">76      /tmp</span><br><span class="line">1570    /usr</span><br><span class="line">132     /var</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h3><p>概述：</p>
+<ol>
+<li>在Linux中，每一个程序都是有自己一个进程，每一个进程都有一个id号</li>
+<li>每一个进程，都会有一个父进程</li>
+<li>进程可以有两种存放方式：前台和后台</li>
+<li>通常服务都是后台运行的，基本的程序</li>
+</ol>
+<blockquote>
+<p>ps 查看当前系统中正在执行的各种进程的信息 </p>
+</blockquote>
+<ul>
+<li>-a参数：显示当前终端运行的所有的进程信息</li>
+<li>-u参数：以用户的信息显示进程</li>
+<li>-x参数：显示后台运行进程的参数</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># | 在Linux中叫做管道符  A|B 即：将A命令的结果作为输出来操作B命令</span></span><br><span class="line"><span class="comment"># grep 查找文件中符合条件的字符串</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ps -aux 查看所有的进程</span></span><br><span class="line">ps -aux|grep mysql</span><br><span class="line">ps -aux|grep java <span class="comment">#查看tomcat进程是否在正常运行</span></span><br></pre></td></tr></table></figure>
+
+<p>我们只需要记住一个命令即可： ps -xx|grep进程名字   过滤进程信息</p>
+<blockquote>
+<p>kill  结束进程</p>
+</blockquote>
+<p>kill -9 进程的id 表示强制结束该进程</p>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2021/05/05/linux/">https://yellowbp.github.io/2021/05/05/linux/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器</a>
+      
+      
+        <a class="mdui-ripple article_tags-none-link" href="/tags/linux/" rel="tag">linux</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2021/05/05/springboot2/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2021/05/05/test/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckobnacci0039j0tw6kbf33o9"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux"><span class="toc-number">1.</span> <span class="toc-text">Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">1、概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E5%B8%B8%E7%94%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="toc-number">1.2.</span> <span class="toc-text">2、常用的基本命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">目录管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%B1%9E%E6%80%A7"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E6%9F%A5%E7%9C%8B"><span class="toc-number">1.2.3.</span> <span class="toc-text">文件内容查看</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vim%E7%BC%96%E8%BE%91%E5%99%A8"><span class="toc-number">1.2.4.</span> <span class="toc-text">Vim编辑器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A6%E5%8F%B7%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.5.</span> <span class="toc-text">账号管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%BB%84%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.6.</span> <span class="toc-text">用户组管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.7.</span> <span class="toc-text">磁盘管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.8.</span> <span class="toc-text">进程管理</span></a></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2021 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>Peyton Wong All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>

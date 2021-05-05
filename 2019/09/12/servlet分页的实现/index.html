@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>servlet分页的实现 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="Servlet分页的实现分页的产生原因 当数据达到一定数量的时候，如果一次性将这些数据查询出来，必然会加大服务器内存的负载，降低运行速度，因此分页产生的原因：提高性能，查询效率高，页面美观    分页的实现： 要实现分页，必须知道 某一页的数据 从哪里开始，到哪里结束   1.分页的sql语句分析 假设每页显示10条数据  sqlserver&#x2F;oracle：从1开始计数    第n页 开始 结束">
+<meta property="og:type" content="article">
+<meta property="og:title" content="servlet分页的实现">
+<meta property="og:url" content="https://yellowbp.github.io/2019/09/12/servlet%E5%88%86%E9%A1%B5%E7%9A%84%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="Servlet分页的实现分页的产生原因 当数据达到一定数量的时候，如果一次性将这些数据查询出来，必然会加大服务器内存的负载，降低运行速度，因此分页产生的原因：提高性能，查询效率高，页面美观    分页的实现： 要实现分页，必须知道 某一页的数据 从哪里开始，到哪里结束   1.分页的sql语句分析 假设每页显示10条数据  sqlserver&#x2F;oracle：从1开始计数    第n页 开始 结束">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://javapageimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%86%E9%A1%B5%E9%9C%80%E8%A6%81%E7%9A%84%E5%8F%82%E6%95%B0.png">
+<meta property="og:image" content="https://javapageimages.oss-cn-shenzhen.aliyuncs.com/%E5%A4%A7%E8%87%B4%E7%9A%84%E5%88%86%E9%A1%B5%E6%95%88%E6%9E%9C.png">
+<meta property="article:published_time" content="2019-09-12T00:41:25.000Z">
+<meta property="article:modified_time" content="2021-03-22T15:59:27.938Z">
+<meta property="article:author" content="hbp">
+<meta property="article:tag" content="javaWeb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://javapageimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%86%E9%A1%B5%E9%9C%80%E8%A6%81%E7%9A%84%E5%8F%82%E6%95%B0.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content="">
+  <meta name="keywords" content=",javaWeb">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/09/12/servlet%E5%88%86%E9%A1%B5%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Thu Sep 12 2019 08:41:25 GMT+0800">
+    <meta property="article:modified_time" content="Mon Mar 22 2021 23:59:27 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2019/09/12/servlet%E5%88%86%E9%A1%B5%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">35</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-none-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/algorithm/" rel="tag">algorithm<span class="mdui-ripple sidebar_archives-none-count">7</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java/" rel="tag">java<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/javaWeb/" rel="tag">javaWeb<span class="mdui-ripple sidebar_archives-none-count">13</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/linux/" rel="tag">linux<span class="mdui-ripple sidebar_archives-none-count">2</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/mysql/" rel="tag">mysql<span class="mdui-ripple sidebar_archives-none-count">4</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/nginx/" rel="tag">nginx<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/redis/" rel="tag">redis<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/win7/" rel="tag">win7<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/" rel="tag">笔记本选购<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AE%A1%E7%90%86/" rel="tag">管理<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式<span class="mdui-ripple sidebar_archives-none-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-14.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">servlet分页的实现</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2019-09-12 / 
+          <i class="iconfont">&#xe601;</i> Peyton Wong
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="Servlet分页的实现"><a href="#Servlet分页的实现" class="headerlink" title="Servlet分页的实现"></a>Servlet分页的实现</h1><h2 id="分页的产生原因"><a href="#分页的产生原因" class="headerlink" title="分页的产生原因"></a>分页的产生原因</h2><blockquote>
+<p><strong>当数据达到一定数量的时候，如果一次性将这些数据查询出来，必然会加大服务器内存的负载，降低运行速度，因此分页产生的原因：提高性能，查询效率高，页面美观</strong></p>
+</blockquote>
+<br>
+
+<h2 id="分页的实现："><a href="#分页的实现：" class="headerlink" title="分页的实现："></a>分页的实现：</h2><blockquote>
+<p>要实现分页，<font color=blue><strong>必须知道 某一页的数据 从哪里开始，到哪里结束</strong></font></p>
+</blockquote>
+<p><img src="https://javapageimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%86%E9%A1%B5%E9%9C%80%E8%A6%81%E7%9A%84%E5%8F%82%E6%95%B0.png"></p>
+<h3 id="1-分页的sql语句分析"><a href="#1-分页的sql语句分析" class="headerlink" title="1.分页的sql语句分析"></a>1.分页的sql语句分析</h3><blockquote>
+<p>假设每页显示10条数据</p>
+</blockquote>
+<p>sqlserver/oracle：从1开始计数</p>
+<table>
+<thead>
+<tr>
+<th align="left">第n页</th>
+<th>开始</th>
+<th>结束</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td>1</td>
+<td>10</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td>11</td>
+<td>20</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td>21</td>
+<td>30</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td>(n-1)*10+1</td>
+<td>n*10</td>
+</tr>
+</tbody></table>
+<hr>
+<p>mysql：从0开始计数</p>
+<table>
+<thead>
+<tr>
+<th>第n页</th>
+<th>开始</th>
+<th>结束</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>9</td>
+</tr>
+<tr>
+<td>1</td>
+<td>10</td>
+<td>19</td>
+</tr>
+<tr>
+<td>2</td>
+<td>20</td>
+<td>29</td>
+</tr>
+<tr>
+<td>n</td>
+<td>n*10</td>
+<td>(n+1)*10-1</td>
+</tr>
+</tbody></table>
+<h3 id="2-mysql实现分页的sql："><a href="#2-mysql实现分页的sql：" class="headerlink" title="2.mysql实现分页的sql："></a>2.mysql实现分页的sql：</h3><blockquote>
+<p><strong>limit 开始，多少条</strong></p>
+</blockquote>
+<p>第0页：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from student limit 0,10</span><br></pre></td></tr></table></figure>
+
+<p>第1页：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from student limit 10,10</span><br></pre></td></tr></table></figure>
+
+<p>第n页：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from student limit n*10 10</span><br></pre></td></tr></table></figure>
+
+<p><strong>通式：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select * from student limit 页数*页面大小,页面大小</span><br><span class="line">页数：第几页</span><br><span class="line">页面大小：每页显示的数据量</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="3-java代码分页需要的参数"><a href="#3-java代码分页需要的参数" class="headerlink" title="3.java代码分页需要的参数"></a>3.java代码分页需要的参数</h3><p>5个变量（属性）</p>
+<ol>
+<li><p>数据总数</p>
+<ul>
+<li>查数据库，select count(1)….</li>
+</ul>
+</li>
+<li><p>页面大小(每页显示的数据条数) </p>
+<ul>
+<li>用户自定义（前台传参）</li>
+</ul>
+</li>
+<li><p>总页数</p>
+<ul>
+<li>程序自动计算</li>
+<li>总页数 = 数据总数%页面大小==0 ？ 数据总数/页面大小 ：数据总数/页面大小+1</li>
+</ul>
+</li>
+<li><p>当前页(页码)</p>
+<ul>
+<li>用户自定义（前台传参）</li>
+</ul>
+</li>
+<li><p>当前页的对象集合(实体类集合)：每一页显示的所有数据</p>
+<ul>
+<li>查数据库，分页sql</li>
+</ul>
+</li>
+</ol>
+<br>
+
+<h2 id="java代码的实现"><a href="#java代码的实现" class="headerlink" title="java代码的实现"></a>java代码的实现</h2><h4 id="1-建议先封装一个DBUtil工具类"><a href="#1-建议先封装一个DBUtil工具类" class="headerlink" title="1.建议先封装一个DBUtil工具类"></a>1.建议先封装一个DBUtil工具类</h4><blockquote>
+<p><strong>把通用的增删查改 和 数据库的连接释放的方法写进去，到时方便调用，避免dao层代码的冗余</strong></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.aurora.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.aurora.entity.NewStudent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">//通用的数据库操作方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DBUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String URL=<span class="string">&quot;填写你自己的&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String USER=<span class="string">&quot;填写你自己的&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PASSWORD=<span class="string">&quot;填写你自己的&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DRIVER=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> PreparedStatement preparedStatement = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Connection connection = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ResultSet resultSet = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取连接</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Connection <span class="title">getConnection</span><span class="params">()</span> <span class="keyword">throws</span> ClassNotFoundException, SQLException </span>&#123;</span><br><span class="line">            <span class="comment">//加载mysql数据库驱动</span></span><br><span class="line">            Class.forName(DRIVER);</span><br><span class="line">            <span class="comment">//获取数据库连接</span></span><br><span class="line">            <span class="keyword">return</span> DriverManager.getConnection(URL,USER,PASSWORD);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//通用的增删改 用Object的原因是：可以解决占位符参数类型不一致的问题</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">executeUpdate</span><span class="params">(String sql , Object[] params)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> isUpdate = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="comment">//创建sql命令对象</span></span><br><span class="line">            preparedStatement = getConnection().prepareStatement(sql);</span><br><span class="line">            <span class="comment">//给占位符赋值</span></span><br><span class="line">            <span class="keyword">if</span>(params != <span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; params.length ; i++)&#123;</span><br><span class="line">                    preparedStatement.setObject(i+<span class="number">1</span> , params[i]);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            <span class="comment">//执行sql语句</span></span><br><span class="line">            isUpdate = preparedStatement.executeUpdate();</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            closeAll(connection , preparedStatement,<span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(isUpdate &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//通用的查 返回是一个集合 (单，集合，null)</span></span><br><span class="line">    <span class="comment">//这里要主要，不要释放资源，因为如果在这里释放了资源，就返回不了ResultSet了，</span></span><br><span class="line">    <span class="comment">//释放资源在Dao层释放即可</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">static</span> ResultSet <span class="title">execueQuery</span><span class="params">(String sql , Object[] params)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建集合对象</span></span><br><span class="line">        List&lt;NewStudent&gt; newStudentList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="comment">//创建sql命令对象</span></span><br><span class="line">            preparedStatement = getConnection().prepareStatement(sql);</span><br><span class="line">            <span class="comment">//用占位符赋值</span></span><br><span class="line">            <span class="keyword">if</span>(params != <span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i&lt;params.length ; i++)&#123;</span><br><span class="line">                    preparedStatement.setObject(i+<span class="number">1</span> , params[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//执行sql语句</span></span><br><span class="line">            resultSet = preparedStatement.executeQuery();</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//返回结果集</span></span><br><span class="line">        <span class="keyword">return</span> resultSet;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//关闭连接，释放资源</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">closeAll</span><span class="params">(Connection connection , PreparedStatement preparedStatement , ResultSet resultSet)</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(resultSet!=<span class="keyword">null</span>) resultSet.close();</span><br><span class="line">            <span class="keyword">if</span>(preparedStatement!=<span class="keyword">null</span>) preparedStatement.close();</span><br><span class="line">            <span class="keyword">if</span>(connection!=<span class="keyword">null</span>) connection.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-先把分页2个需要查数据库的参数的方法先实现了-Dao层"><a href="#2-先把分页2个需要查数据库的参数的方法先实现了-Dao层" class="headerlink" title="2.先把分页2个需要查数据库的参数的方法先实现了(Dao层)"></a>2.先把分页2个需要查数据库的参数的方法先实现了(Dao层)</h4><blockquote>
+<p><strong>数据总数</strong></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 查询新生总数量</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTotalStudentNum</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    ResultSet resultSet = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span> totalNum = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="comment">//用count(1)的原因是：1比*效率更高</span></span><br><span class="line">        String sql = <span class="string">&quot;select count(1) from newstudent&quot;</span>;</span><br><span class="line">        <span class="comment">//把sql语句和占位符作为参数传入方法里头，如果不需要占位符，则传入null</span></span><br><span class="line">        resultSet = DBUtil.execueQuery(sql, <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">while</span>(resultSet.next())&#123;</span><br><span class="line">            totalNum = resultSet.getInt(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        DBUtil.closeAll(DBUtil.connection,DBUtil.preparedStatement,resultSet);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> totalNum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>当前页对象的集合</strong></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	根据当前页和页面大小查询当前页对象的集合</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;NewStudent&gt; <span class="title">queryStudentsByPage</span><span class="params">(<span class="keyword">int</span> currentPage, <span class="keyword">int</span> pageSize)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;NewStudent&gt; newStudentList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        String sql = <span class="string">&quot;select * from newstudent limit ?,?&quot;</span>;</span><br><span class="line"></span><br><span class="line">        Object[] params = &#123;currentPage*pageSize , pageSize&#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//返回查询的数据集合</span></span><br><span class="line">        ResultSet resultSet = DBUtil.execueQuery(sql , params);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">while</span>(resultSet.next())&#123;</span><br><span class="line">                <span class="comment">//根据自己实际情况填写</span></span><br><span class="line"></span><br><span class="line">                NewStudent newStudent = <span class="keyword">new</span> NewStudent();</span><br><span class="line">               .</span><br><span class="line">               .</span><br><span class="line">               .</span><br><span class="line"></span><br><span class="line">                newStudentList.add(newStudent);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            DBUtil.closeAll(DBUtil.connection,DBUtil.preparedStatement,resultSet);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> newStudentList;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">在分页显示的前提下：显示数据jsp需要哪些数据     </span><br><span class="line"><span class="number">1.</span>当前页 currentPage      </span><br><span class="line"><span class="number">2.</span>页面大小 pageSize      </span><br><span class="line"><span class="number">3.</span>当前页的数据集合 currentNewStudentList     </span><br><span class="line"><span class="number">4.</span>总数据 totalStudentNum      </span><br><span class="line"><span class="number">5.</span>总页数 totalPage                  </span><br><span class="line">--&gt;新建Page类，用于封装以上<span class="number">5</span>个字段,方便后续数据的传输</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><strong>Utils包内新建Page工具类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.aurora.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.aurora.entity.NewStudent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PageUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">//        1.当前页 currentPage</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> currentPage;</span><br><span class="line"><span class="comment">//        2.页面大小 pageSize</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> pageSize;</span><br><span class="line"><span class="comment">//        3.当前页的数据集合 currentNewStudentList</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;NewStudent&gt; currentNewStudentList;</span><br><span class="line"><span class="comment">//        4.总数据 totalStudentNum</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> totalStudentNum;</span><br><span class="line"><span class="comment">//        5.总页数 totalPage</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> totalPage;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCurrentPage</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> currentPage;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentPage</span><span class="params">(<span class="keyword">int</span> currentPage)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.currentPage = currentPage;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPageSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> pageSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//当我们调用了 数据总数的set() 和页面大小的set()以后，自动计算出总页数</span></span><br><span class="line">    <span class="comment">//注意调用顺序问题，在servlet中一定要先set数据总数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPageSize</span><span class="params">(<span class="keyword">int</span> pageSize)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.pageSize = pageSize;</span><br><span class="line">        <span class="comment">//自动计算总页数</span></span><br><span class="line">        <span class="comment">//总页数 = 数据总数%页面大小==0 ？ 数据总数/页面大小 ：数据总数/页面大小+1</span></span><br><span class="line">        <span class="keyword">this</span>.totalPage = <span class="keyword">this</span>.totalStudentNum % <span class="keyword">this</span>.pageSize==<span class="number">0</span> ? <span class="keyword">this</span>.totalStudentNum / <span class="keyword">this</span>.pageSize:<span class="keyword">this</span>.totalStudentNum / <span class="keyword">this</span>.pageSize+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;NewStudent&gt; <span class="title">getCurrentNewStudentList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> currentNewStudentList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCurrentNewStudentList</span><span class="params">(List&lt;NewStudent&gt; currentNewStudentList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.currentNewStudentList = currentNewStudentList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTotalStudentNum</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> totalStudentNum;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTotalStudentNum</span><span class="params">(<span class="keyword">int</span> totalStudentNum)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.totalStudentNum = totalStudentNum;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTotalPage</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> totalPage;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p><strong>分页的servlet层</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置请求编码格式</span></span><br><span class="line">        req.setCharacterEncoding(<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置响应编码格式</span></span><br><span class="line">        resp.setContentType(<span class="string">&quot;text/html;charset=UTF-8&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取数据总数</span></span><br><span class="line">        <span class="keyword">int</span> totalStudentNum = 你的service对象.getTotalStudentNum();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        	获取前台的当前页</span></span><br><span class="line"><span class="comment">        	刚开始访问时没有，则默认设置为第一页，因为我用的是mysql，所以是0</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        String cPage = req.getParameter(<span class="string">&quot;currentPage&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(cPage==<span class="keyword">null</span>)&#123;</span><br><span class="line">            cPage = <span class="string">&quot;0&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> currentPage = Integer.parseInt(cPage);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        	获取前台的页面大小(当前页显示的数据量)</span></span><br><span class="line"><span class="comment">        	刚开始访问时没有，则默认设置为10</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        String pSize = req.getParameter(<span class="string">&quot;pageSize&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(pSize==<span class="keyword">null</span>)&#123;</span><br><span class="line">            pSize = <span class="string">&quot;10&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> pageSize = Integer.parseInt(pSize);</span><br><span class="line">        </span><br><span class="line">        List&lt;NewStudent&gt; currentPageNewStudentList = 你的service对象.queryStudentsByPage(currentPage , pageSize);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//将分页所需的5个字段（其中有1个自动计算，因此实际只需要组装4个即可，注意顺序，先数据总数，在页面大小）组装到pageUtil对象中</span></span><br><span class="line">        PageUtil pageUtil = <span class="keyword">new</span> PageUtil();</span><br><span class="line">        pageUtil.setCurrentPage(currentPage);</span><br><span class="line">        pageUtil.setTotalStudentNum(totalStudentNum);</span><br><span class="line">        pageUtil.setPageSize(pageSize);</span><br><span class="line">        pageUtil.setCurrentNewStudentList(currentPageNewStudentList);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        req.setAttribute(<span class="string">&quot;pageUtil&quot;</span>,pageUtil);</span><br><span class="line">        <span class="comment">//请求转发(共用同一个request)</span></span><br><span class="line">        req.getRequestDispatcher(<span class="string">&quot;/view/admin/information-aggregation.jsp&quot;</span>).forward(req,resp);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p><strong>jsp关于分页的实现</strong></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">当前页怎么获取？</span><br><span class="line">答：先通过servlet后再访问此jsp，这样就可以拿到当前页了</span><br><span class="line">&lt;a href&#x3D;&quot;你的servlet?currentPage&#x3D;0&quot;&gt;首页&lt;&#x2F;a&gt;</span><br><span class="line">&lt;a href&#x3D;&quot;你的servlet?currentPage&#x3D;(当前页-1)&quot;&gt;上一页&lt;&#x2F;a&gt;</span><br><span class="line">&lt;a href&#x3D;&quot;你的servlet?currentPage&#x3D;(当前页+1)&quot;&lt;&#x2F;a&gt;</span><br><span class="line">&lt;a href&#x3D;&quot;你的servlet?currentPage&#x3D;尾页&quot;&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><strong>完整的jsp代码</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">    	&lt;thead&gt;</span><br><span class="line">    		&lt;tr&gt;</span><br><span class="line">    			&lt;th&gt;XX&lt;/th&gt;</span><br><span class="line">    			&lt;th&gt;XX&lt;/th&gt;</span><br><span class="line">    			&lt;th&gt;XX&lt;/th&gt;</span><br><span class="line">    			&lt;th&gt;XX&lt;/th&gt;</span><br><span class="line">    			&lt;th&gt;XX&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;XX&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;XX&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;XX&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;XX&lt;/th&gt;</span><br><span class="line">    		&lt;/tr&gt;</span><br><span class="line">&lt;/thead&gt;</span><br><span class="line">&lt;tbody&gt;</span><br><span class="line"></span><br><span class="line">&lt;%</span><br><span class="line">         PageUtil pageUtil = (PageUtil) request.getAttribute(<span class="string">&quot;pageUtil&quot;</span>);</span><br><span class="line">		 <span class="keyword">for</span> (NewStudent newStudent : pageUtil.getCurrentNewStudentList())&#123;</span><br><span class="line">%&gt;</span><br><span class="line">    		&lt;tr&gt;</span><br><span class="line">                &lt;td&gt;&lt;%=newStudent.getName()%&gt;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;%=newStudent.getGender()%&gt;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;%=newStudent.getGrade()%&gt;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;%=newStudent.getMajor()%&gt;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;%=newStudent.getDirection()%&gt;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;%=newStudent.getFoundation()%&gt;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;%=newStudent.getPhone()%&gt;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;%=newStudent.getQq()%&gt;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&lt;%=newStudent.getHobby()%&gt;&lt;/td&gt;</span><br><span class="line">           &lt;/tr&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br><span class="line">&lt;/tbody&gt;</span><br><span class="line">&lt;/table&gt;</span><br><span class="line">每页显示</span><br><span class="line">&lt;select onchange=<span class="string">&quot;location.replace(&#x27;../../AdminInfoAggregationServlet?pageSize=&#x27;+this.value)&quot;</span>&gt;</span><br><span class="line">							&lt;%</span><br><span class="line">								<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">5</span> ; i&lt;=<span class="number">20</span> ; i=i+<span class="number">5</span>)&#123;</span><br><span class="line">								    <span class="keyword">if</span>(pageUtil.getPageSize()==i)&#123;</span><br><span class="line">							%&gt;</span><br><span class="line"></span><br><span class="line">							&lt;option value=&quot;&lt;%=i%&gt;&quot; selected=&quot;selected&quot;&gt;&lt;%=i%&gt;&lt;/option&gt;</span><br><span class="line"></span><br><span class="line">							&lt;%</span><br><span class="line">									&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">							%&gt;</span><br><span class="line"></span><br><span class="line">								&lt;option value=&quot;&lt;%=i%&gt;&quot; &gt;&lt;%=i%&gt;&lt;/option&gt;</span><br><span class="line"></span><br><span class="line">							&lt;%</span><br><span class="line">									&#125;</span><br><span class="line">								&#125;</span><br><span class="line">							%&gt;</span><br><span class="line"></span><br><span class="line">						&lt;/select&gt;</span><br><span class="line">						条</span><br><span class="line"></span><br><span class="line">一共分了&lt;%=pageUtil.getTotalPage()%&gt;页，当前是在&lt;%=pageUtil.getCurrentPage()+<span class="number">1</span>%&gt;页</span><br><span class="line">						</span><br><span class="line">						&lt;br&gt;</span><br><span class="line">						&lt;div &gt;</span><br><span class="line">&lt;%--mysql是从<span class="number">0</span>开始的--%&gt;</span><br><span class="line">&lt;a href=&quot;../../AdminInfoAggregationServlet?currentPage=0&quot;&gt;首页&lt;/a&gt;</span><br><span class="line">&lt;a style=&#x27;cursor: pointer&#x27; onclick=&quot;beforePage(&lt;%=pageUtil.getCurrentPage()-1%&gt;)&quot;&gt;上一页&lt;/a&gt;</span><br><span class="line">&lt;a style=&#x27;cursor: pointer&#x27; onclick=&quot;nextPage(&lt;%=pageUtil.getCurrentPage()+1%&gt;)&quot;&gt;下一页&lt;/a&gt;</span><br><span class="line">&lt;a href=&quot;../../AdminInfoAggregationServlet?currentPage=&lt;%=pageUtil.getTotalPage()-1%&gt;&quot;&gt;尾页&lt;/a&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">		<span class="function">function <span class="title">beforePage</span><span class="params">(currentPage)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		    <span class="keyword">if</span>(currentPage==-<span class="number">1</span>)&#123;</span><br><span class="line">		        alert(<span class="string">&quot;已经是第一页啦&quot;</span>);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                window.location=<span class="string">&quot;../../AdminInfoAggregationServlet?currentPage=&lt;%=pageUtil.getCurrentPage()-1%&gt;&quot;</span>;</span><br><span class="line">			&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function">function <span class="title">nextPage</span><span class="params">(currentPage)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		    <span class="keyword">if</span>(currentPage==&lt;%=pageUtil.getTotalPage()%&gt;)&#123;</span><br><span class="line">		        alert(<span class="string">&quot;已经是尾页啦&quot;</span>);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                window.location=<span class="string">&quot;../../AdminInfoAggregationServlet?currentPage=&lt;%=pageUtil.getCurrentPage()+1%&gt;&quot;</span>;</span><br><span class="line">			&#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>大致的分页效果</p>
+<p><img src="https://javapageimages.oss-cn-shenzhen.aliyuncs.com/%E5%A4%A7%E8%87%B4%E7%9A%84%E5%88%86%E9%A1%B5%E6%95%88%E6%9E%9C.png"></p>
+<blockquote>
+<p><font color=blue><strong>分页效果就大致完成啦</strong></font></p>
+</blockquote>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/09/12/servlet%E5%88%86%E9%A1%B5%E7%9A%84%E5%AE%9E%E7%8E%B0/">https://yellowbp.github.io/2019/09/12/servlet%E5%88%86%E9%A1%B5%E7%9A%84%E5%AE%9E%E7%8E%B0/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-none-link" href="/tags/javaWeb/" rel="tag">javaWeb</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2019/09/24/Mysql%E8%BF%9E%E6%8E%A5%E6%95%B0%E8%BF%87%E5%A4%9A%E9%97%AE%E9%A2%98/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2019/09/04/Mysql%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckobnacbe000rj0twb1kqek6y"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Servlet%E5%88%86%E9%A1%B5%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">Servlet分页的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E7%9A%84%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0"><span class="toc-number">1.1.</span> <span class="toc-text">分页的产生原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">分页的实现：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%86%E9%A1%B5%E7%9A%84sql%E8%AF%AD%E5%8F%A5%E5%88%86%E6%9E%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.分页的sql语句分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-mysql%E5%AE%9E%E7%8E%B0%E5%88%86%E9%A1%B5%E7%9A%84sql%EF%BC%9A"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.mysql实现分页的sql：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-java%E4%BB%A3%E7%A0%81%E5%88%86%E9%A1%B5%E9%9C%80%E8%A6%81%E7%9A%84%E5%8F%82%E6%95%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">3.java代码分页需要的参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java%E4%BB%A3%E7%A0%81%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">java代码的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%BB%BA%E8%AE%AE%E5%85%88%E5%B0%81%E8%A3%85%E4%B8%80%E4%B8%AADBUtil%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">1.建议先封装一个DBUtil工具类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%85%88%E6%8A%8A%E5%88%86%E9%A1%B52%E4%B8%AA%E9%9C%80%E8%A6%81%E6%9F%A5%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%8F%82%E6%95%B0%E7%9A%84%E6%96%B9%E6%B3%95%E5%85%88%E5%AE%9E%E7%8E%B0%E4%BA%86-Dao%E5%B1%82"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">2.先把分页2个需要查数据库的参数的方法先实现了(Dao层)</span></a></li></ol></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2021 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>Peyton Wong All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
