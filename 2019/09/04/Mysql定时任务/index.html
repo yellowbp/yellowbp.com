@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta http-equiv="Cache-Control" content="no-siteapp">
@@ -12,13 +12,14 @@
 
   <link rel="shortcut icon" href="/images/favicon.png">
   
-  <meta name="description" content="Mysql定时自动清除数据一、背景过多的数据会浪费Mysql数据库的磁盘空间 二、准备家当 mysql5.1以上 Navicat  三、具体操作 整个过程总共分有3个部分：  开启Mysql事件 写存储过程 写Event事件并设置成Enable   1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)1SHOW VARIABLES LIKE &#39;event_schedule">
+  <meta name="description" content="Mysql定时自动清除数据一、背景过多的数据会浪费Mysql数据库的磁盘空间 二、准备家当 mysql5.1以上 Navicat  三、具体操作 整个过程总共分有3个部分：  开启Mysql事件 写存储过程 写Event事件并设置成Enable   1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)1SHOW VARIABLES LIKE &amp;apos;event_schedul">
+<meta name="keywords" content="mysql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mysql定时任务">
-<meta property="og:url" content="https://yellowbp.github.io/2019/09/04/Mysql%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/index.html">
+<meta property="og:url" content="https://yellowbp.github.io/2019/09/04/Mysql定时任务/index.html">
 <meta property="og:site_name" content="bp的Blog">
-<meta property="og:description" content="Mysql定时自动清除数据一、背景过多的数据会浪费Mysql数据库的磁盘空间 二、准备家当 mysql5.1以上 Navicat  三、具体操作 整个过程总共分有3个部分：  开启Mysql事件 写存储过程 写Event事件并设置成Enable   1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)1SHOW VARIABLES LIKE &#39;event_schedule">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:description" content="Mysql定时自动清除数据一、背景过多的数据会浪费Mysql数据库的磁盘空间 二、准备家当 mysql5.1以上 Navicat  三、具体操作 整个过程总共分有3个部分：  开启Mysql事件 写存储过程 写Event事件并设置成Enable   1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)1SHOW VARIABLES LIKE &amp;apos;event_schedul">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E6%9F%A5%E7%9C%8B%E6%97%B6%E9%97%B4%E8%B0%83%E5%BA%A6.png">
 <meta property="og:image" content="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E5%90%AF%E4%BA%8B%E4%BB%B6.png">
 <meta property="og:image" content="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E9%87%8D%E5%90%AF%E6%95%B0%E6%8D%AE%E5%BA%931.png">
@@ -26,21 +27,20 @@
 <meta property="og:image" content="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF%E4%BA%86%E4%BA%8B%E4%BB%B6.png">
 <meta property="og:image" content="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E5%82%A8%E5%AD%98%E8%BF%87%E7%A8%8B.png">
 <meta property="og:image" content="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E4%BA%8B%E4%BB%B6.png">
-<meta property="article:published_time" content="2019-09-04T04:57:25.000Z">
-<meta property="article:modified_time" content="2019-11-22T05:27:44.644Z">
-<meta property="article:author" content="hbp">
-<meta property="article:tag" content="mysql">
+<meta property="og:updated_time" content="2019-11-22T05:27:44.644Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql定时任务">
+<meta name="twitter:description" content="Mysql定时自动清除数据一、背景过多的数据会浪费Mysql数据库的磁盘空间 二、准备家当 mysql5.1以上 Navicat  三、具体操作 整个过程总共分有3个部分：  开启Mysql事件 写存储过程 写Event事件并设置成Enable   1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)1SHOW VARIABLES LIKE &amp;apos;event_schedul">
 <meta name="twitter:image" content="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E6%9F%A5%E7%9C%8B%E6%97%B6%E9%97%B4%E8%B0%83%E5%BA%A6.png">
 
   <meta name="format-detection" content="telephone=no,email=no">
   <meta name="theme-color" content="#9C27B0">
-  <meta name="description" content="">
+  <meta name="description" content>
   <meta name="keywords" content=",mysql">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="bp的Blog">
-  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/09/04/Mysql%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/09/04/Mysql定时任务/">
   <meta name="msapplication-navbutton-color" content="#9C27B0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="bp的Blog">
@@ -53,7 +53,7 @@
   
 
   
-    <link rel="canonical" href="https://yellowbp.github.io/2019/09/04/Mysql%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">
+    <link rel="canonical" href="https://yellowbp.github.io/2019/09/04/Mysql定时任务/">
   
 
   <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
@@ -76,11 +76,9 @@
 </script>
   
 
-  
-<link rel="stylesheet" href="/css/mdui.css">
+  <link rel="stylesheet" href="/css/mdui.css">
 <link rel="stylesheet" href="/css/style.css">
-
-<meta name="generator" content="Hexo 5.4.0"></head>
+</head>
 <body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
   <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
   <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
@@ -131,7 +129,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
         
       </div>
     </div>
@@ -143,7 +141,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">37</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">36</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/服务器/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -155,7 +153,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-none-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/algorithm/" rel="tag">algorithm<span class="mdui-ripple sidebar_archives-none-count">7</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java/" rel="tag">java<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/javaWeb/" rel="tag">javaWeb<span class="mdui-ripple sidebar_archives-none-count">14</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/linux/" rel="tag">linux<span class="mdui-ripple sidebar_archives-none-count">2</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/mysql/" rel="tag">mysql<span class="mdui-ripple sidebar_archives-none-count">4</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/nginx/" rel="tag">nginx<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/redis/" rel="tag">redis<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/win7/" rel="tag">win7<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%85%B6%E4%BB%96/" rel="tag">其他<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/" rel="tag">笔记本选购<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AE%A1%E7%90%86/" rel="tag">管理<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式<span class="mdui-ripple sidebar_archives-none-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java/">java<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/管理/">管理<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -184,13 +182,11 @@
   </div>
 </aside>
   <main id="main" class="mdui-m-t-5 fadeIn animated">
-  
-<link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
-
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
   <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
   <article class="mdui-card mdui-m-b-5">
     <header class="mdui-card-media">
-      <img src="/images/random/material-19.png" style="max-height: 240px;">
+      <img src="/images/random/material-2.png" style="max-height: 240px;">
       <div class="mdui-card-media-covered">
         <div class="mdui-card-primary">
           <div class="mdui-card-primary-title">Mysql定时任务</div>
@@ -221,24 +217,24 @@
 <li>写Event事件并设置成Enable</li>
 </ol>
 </blockquote>
-<h3 id="1-在Navicat查看Mysql是否开启的事件调度-默认是OFF"><a href="#1-在Navicat查看Mysql是否开启的事件调度-默认是OFF" class="headerlink" title="1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)"></a>1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW VARIABLES LIKE &#39;event_scheduler&#39;</span><br></pre></td></tr></table></figure>
+<h3 id="1-在Navicat查看Mysql是否开启的事件调度-默认是OFF"><a href="#1-在Navicat查看Mysql是否开启的事件调度-默认是OFF" class="headerlink" title="1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)"></a>1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW VARIABLES LIKE &apos;event_scheduler&apos;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E6%9F%A5%E7%9C%8B%E6%97%B6%E9%97%B4%E8%B0%83%E5%BA%A6.png"></p>
+<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E6%9F%A5%E7%9C%8B%E6%97%B6%E9%97%B4%E8%B0%83%E5%BA%A6.png" alt></p>
 <h3 id="2-开启事件（一劳永逸的办法）"><a href="#2-开启事件（一劳永逸的办法）" class="headerlink" title="2. 开启事件（一劳永逸的办法）"></a>2. 开启事件（一劳永逸的办法）</h3><blockquote>
-<p><font size=4><strong>2.1 打开mysql的安装目录，找到my.ini配置文件，加入如下配置来开启事件</strong></font></p>
+<p><font size="4"><strong>2.1 打开mysql的安装目录，找到my.ini配置文件，加入如下配置来开启事件</strong></font></p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event_scheduler&#x3D;ON</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">event_scheduler=ON</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E5%90%AF%E4%BA%8B%E4%BB%B6.png"></p>
+<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E5%90%AF%E4%BA%8B%E4%BB%B6.png" alt></p>
 <blockquote>
-<p><font size=4><strong>2.2 重启数据库（win7为例）</strong></font></p>
+<p><font size="4"><strong>2.2 重启数据库（win7为例）</strong></font></p>
 </blockquote>
-<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E9%87%8D%E5%90%AF%E6%95%B0%E6%8D%AE%E5%BA%931.png"></p>
-<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E9%87%8D%E5%90%AF%E6%95%B0%E6%8D%AE%E5%BA%932.png"></p>
+<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E9%87%8D%E5%90%AF%E6%95%B0%E6%8D%AE%E5%BA%931.png" alt></p>
+<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E9%87%8D%E5%90%AF%E6%95%B0%E6%8D%AE%E5%BA%932.png" alt></p>
 <blockquote>
-<p><font size=4><strong>2.3 检查是否开启了事件</strong></font></p>
+<p><font size="4"><strong>2.3 检查是否开启了事件</strong></font></p>
 </blockquote>
-<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF%E4%BA%86%E4%BA%8B%E4%BB%B6.png"></p>
+<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF%E4%BA%86%E4%BA%8B%E4%BB%B6.png" alt></p>
 <br>
 
 <h3 id="3-写存储过程"><a href="#3-写存储过程" class="headerlink" title="3. 写存储过程"></a>3. 写存储过程</h3><blockquote>
@@ -246,8 +242,8 @@
 </blockquote>
 <br>
 
-<p><font size=4><strong>3.1 首先是写需要删除的数据的sql语句</strong></font></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete From orderfood where DATE(time) &lt;&#x3D; DATE(DATE_SUB(NOW(),INTERVAL 3 day));</span><br></pre></td></tr></table></figure>
+<p><font size="4"><strong>3.1 首先是写需要删除的数据的sql语句</strong></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete From orderfood where DATE(time) &lt;= DATE(DATE_SUB(NOW(),INTERVAL 3 day));</span><br></pre></td></tr></table></figure>
 
 <p>代码说明：</p>
 <ul>
@@ -260,18 +256,18 @@
 </ul>
 <br>
 
-<p><font size=4><strong>3.2 创建存储过程</strong></font></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create PROCEDURE del_time() </span><br><span class="line">BEGIN</span><br><span class="line">delete From orderfood where DATE(time) &lt;&#x3D; DATE(DATE_SUB(NOW(),INTERVAL 3 day));</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+<p><font size="4"><strong>3.2 创建存储过程</strong></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create PROCEDURE del_time() </span><br><span class="line">BEGIN</span><br><span class="line">delete From orderfood where DATE(time) &lt;= DATE(DATE_SUB(NOW(),INTERVAL 3 day));</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
 
 <p>代码说明：</p>
 <ul>
 <li>del_time—存储程序的命名</li>
 <li>begin~end之间的内容是你需要执行的一条或多条sql语句</li>
 </ul>
-<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E5%82%A8%E5%AD%98%E8%BF%87%E7%A8%8B.png"></p>
+<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E5%82%A8%E5%AD%98%E8%BF%87%E7%A8%8B.png" alt></p>
 <br>
 
-<h3 id="4-写Event定时事件"><a href="#4-写Event定时事件" class="headerlink" title="4.写Event定时事件"></a>4.写Event定时事件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">create event del_event  </span><br><span class="line">on schedule </span><br><span class="line">EVERY 1 day  </span><br><span class="line">STARTS &#39;2018-08-25 22:30:00&#39;  </span><br><span class="line">ON COMPLETION  PRESERVE ENABLE  </span><br><span class="line">do  call del_time()</span><br></pre></td></tr></table></figure>
+<h3 id="4-写Event定时事件"><a href="#4-写Event定时事件" class="headerlink" title="4.写Event定时事件"></a>4.写Event定时事件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">create event del_event  </span><br><span class="line">on schedule </span><br><span class="line">EVERY 1 day  </span><br><span class="line">STARTS &apos;2018-08-25 22:30:00&apos;  </span><br><span class="line">ON COMPLETION  PRESERVE ENABLE  </span><br><span class="line">do  call del_time()</span><br></pre></td></tr></table></figure>
 
 <p>代码说明：</p>
 <ul>
@@ -291,9 +287,9 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E4%BA%8B%E4%BB%B6.png"></p>
+<p><img src="https://mysqllimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E4%BA%8B%E4%BB%B6.png" alt></p>
 <blockquote>
-<p><font size=4 color=blue>至此，你的定时任务事件已经开启(ENABLE表示打开事务)</font></p>
+<p><font size="4" color="blue">至此，你的定时任务事件已经开启(ENABLE表示打开事务)</font></p>
 </blockquote>
 <br>
 
@@ -302,44 +298,42 @@
 <br>
 
 <blockquote>
-<p>参考的文章：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/bbab32eb3323">https://www.jianshu.com/p/bbab32eb3323</a></p>
+<p>参考的文章：<a href="https://www.jianshu.com/p/bbab32eb3323" target="_blank" rel="noopener">https://www.jianshu.com/p/bbab32eb3323</a></p>
 </blockquote>
 
       <blockquote class="mdui-m-t-5">
         
           <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
         
-        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/09/04/Mysql%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">https://yellowbp.github.io/2019/09/04/Mysql%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/</a>
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/09/04/Mysql定时任务/">https://yellowbp.github.io/2019/09/04/Mysql定时任务/</a>
       </blockquote>
       
     </div>
     <footer class="mdui-card-actions">
       
-        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+        <a class="mdui-ripple article_categories-link" href="/categories/技术/">技术</a>
       
       
-        <a class="mdui-ripple article_tags-none-link" href="/tags/mysql/" rel="tag">mysql</a>
+        <a class="mdui-ripple article_tags-link" href="/tags/mysql/">mysql</a>
       
     </footer>
     
   </article>
-  
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
-
   <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
 
 
   <nav id="paginator">
     
-      <a rel="prev" class="extend prev" href="/2019/09/12/servlet%E5%88%86%E9%A1%B5%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+      <a rel="prev" class="extend prev" href="/2019/09/12/servlet分页的实现/">
         <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
       </a>
     
     <div class="spacer"></div>
     
-      <a rel="next" class="extend next" href="/2019/08/17/win7%E9%87%8D%E8%A3%85%E7%B3%BB%E7%BB%9F/">
+      <a rel="next" class="extend next" href="/2019/08/17/win7重装系统/">
         下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
       </a>
@@ -349,7 +343,7 @@
 
   <div id="comment" class="mdui-m-t-5">
     <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
-<div id="SOHUCS" sid="ckoed7szf0006rctw2bx73pjw"></div>
+<div id="SOHUCS" sid="ckoefg3l90004lwtw7o6qft4y"></div>
 <script type="text/javascript">
 (function(){
 var appid = 'cyubhC2Dq';
@@ -364,7 +358,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
   <div style="position: fixed !important; right: 16px; top: 30%;">
     <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
     <ul class="mdui-menu" id="toc">
-      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Mysql%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E6%B8%85%E9%99%A4%E6%95%B0%E6%8D%AE"><span class="toc-number">1.</span> <span class="toc-text">Mysql定时自动清除数据</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="toc-number">1.1.</span> <span class="toc-text">一、背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%87%86%E5%A4%87%E5%AE%B6%E5%BD%93"><span class="toc-number">1.2.</span> <span class="toc-text">二、准备家当</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C"><span class="toc-number">1.3.</span> <span class="toc-text">三、具体操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9C%A8Navicat%E6%9F%A5%E7%9C%8BMysql%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF%E7%9A%84%E4%BA%8B%E4%BB%B6%E8%B0%83%E5%BA%A6-%E9%BB%98%E8%AE%A4%E6%98%AFOFF"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%BC%80%E5%90%AF%E4%BA%8B%E4%BB%B6%EF%BC%88%E4%B8%80%E5%8A%B3%E6%B0%B8%E9%80%B8%E7%9A%84%E5%8A%9E%E6%B3%95%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 开启事件（一劳永逸的办法）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%86%99%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 写存储过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%86%99Event%E5%AE%9A%E6%97%B6%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.3.4.</span> <span class="toc-text">4.写Event定时事件</span></a></li></ol></li></ol></li></ol></li>
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Mysql定时自动清除数据"><span class="toc-number">1.</span> <span class="toc-text">Mysql定时自动清除数据</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、背景"><span class="toc-number">1.1.</span> <span class="toc-text">一、背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、准备家当"><span class="toc-number">1.2.</span> <span class="toc-text">二、准备家当</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、具体操作"><span class="toc-number">1.3.</span> <span class="toc-text">三、具体操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-在Navicat查看Mysql是否开启的事件调度-默认是OFF"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 在Navicat查看Mysql是否开启的事件调度(默认是OFF)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-开启事件（一劳永逸的办法）"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 开启事件（一劳永逸的办法）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-写存储过程"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 写存储过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-写Event定时事件"><span class="toc-number">1.3.4.</span> <span class="toc-text">4.写Event定时事件</span></a></li></ol></li></ol></li></ol></li>
     </ul>
   </div>
 </main>
@@ -401,9 +395,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
 </footer>
   <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
   <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  
-<script src="/js/mdui.js"></script>
+  <script src="/js/mdui.js"></script>
 <script src="/js/script.js"></script>
-
 </body>
 </html>

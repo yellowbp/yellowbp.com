@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta http-equiv="Cache-Control" content="no-siteapp">
@@ -13,12 +13,13 @@
   <link rel="shortcut icon" href="/images/favicon.png">
   
   <meta name="description" content="使用Hexo+Git+Github Pages搭建个人博客一.什么是Hexo？ Hexo是基于Node.js，是一个快速、简洁且高效的博客框架。 Hexo 使用 Markdown解析文章，在几秒内，即可利用靓丽的主题生成静态网页。  二.为什么要用Hexo？优势：  轻量级，无需数据库，发布环境下是静态页面 - Hexo 直接在github pages平台上托管我们的博客 利用MarkDown语法">
+<meta name="keywords" content="Hexo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用hexo+Github搭建个人博客">
-<meta property="og:url" content="https://yellowbp.github.io/2019/08/13/%E4%BD%BF%E7%94%A8Hexo+Github%20Pages+Git%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/index.html">
+<meta property="og:url" content="https://yellowbp.github.io/2019/08/13/使用Hexo+Github Pages+Git搭建个人博客/index.html">
 <meta property="og:site_name" content="bp的Blog">
 <meta property="og:description" content="使用Hexo+Git+Github Pages搭建个人博客一.什么是Hexo？ Hexo是基于Node.js，是一个快速、简洁且高效的博客框架。 Hexo 使用 Markdown解析文章，在几秒内，即可利用靓丽的主题生成静态网页。  二.为什么要用Hexo？优势：  轻量级，无需数据库，发布环境下是静态页面 - Hexo 直接在github pages平台上托管我们的博客 利用MarkDown语法">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E8%BF%9B%E5%85%A5blog%E6%96%87%E4%BB%B6%E5%A4%B9.png">
 <meta property="og:image" content="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%AE%89%E8%A3%85hexo.png">
 <meta property="og:image" content="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E6%9F%A5hexo%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F.png">
@@ -45,21 +46,20 @@
 <meta property="og:image" content="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E4%BB%93%E5%BA%93%E9%A1%B5%E9%9D%A23.png">
 <meta property="og:image" content="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E5%BA%94%E7%94%A8.png">
 <meta property="og:image" content="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/post%E6%96%87%E4%BB%B6%E5%A4%B9.png">
-<meta property="article:published_time" content="2019-08-13T08:38:50.000Z">
-<meta property="article:modified_time" content="2021-05-06T14:38:03.391Z">
-<meta property="article:author" content="hbp">
-<meta property="article:tag" content="Hexo">
+<meta property="og:updated_time" content="2021-05-06T14:38:03.391Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用hexo+Github搭建个人博客">
+<meta name="twitter:description" content="使用Hexo+Git+Github Pages搭建个人博客一.什么是Hexo？ Hexo是基于Node.js，是一个快速、简洁且高效的博客框架。 Hexo 使用 Markdown解析文章，在几秒内，即可利用靓丽的主题生成静态网页。  二.为什么要用Hexo？优势：  轻量级，无需数据库，发布环境下是静态页面 - Hexo 直接在github pages平台上托管我们的博客 利用MarkDown语法">
 <meta name="twitter:image" content="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E8%BF%9B%E5%85%A5blog%E6%96%87%E4%BB%B6%E5%A4%B9.png">
 
   <meta name="format-detection" content="telephone=no,email=no">
   <meta name="theme-color" content="#9C27B0">
-  <meta name="description" content="">
+  <meta name="description" content>
   <meta name="keywords" content=",Hexo">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="bp的Blog">
-  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/08/13/%E4%BD%BF%E7%94%A8Hexo+Github%20Pages+Git%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/08/13/使用Hexo+Github Pages+Git搭建个人博客/">
   <meta name="msapplication-navbutton-color" content="#9C27B0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="bp的Blog">
@@ -72,7 +72,7 @@
   
 
   
-    <link rel="canonical" href="https://yellowbp.github.io/2019/08/13/%E4%BD%BF%E7%94%A8Hexo+Github%20Pages+Git%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">
+    <link rel="canonical" href="https://yellowbp.github.io/2019/08/13/使用Hexo+Github Pages+Git搭建个人博客/">
   
 
   <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
@@ -95,11 +95,9 @@
 </script>
   
 
-  
-<link rel="stylesheet" href="/css/mdui.css">
+  <link rel="stylesheet" href="/css/mdui.css">
 <link rel="stylesheet" href="/css/style.css">
-
-<meta name="generator" content="Hexo 5.4.0"></head>
+</head>
 <body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
   <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
   <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
@@ -150,7 +148,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
         
       </div>
     </div>
@@ -162,7 +160,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">37</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">36</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/服务器/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -174,7 +172,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-none-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/algorithm/" rel="tag">algorithm<span class="mdui-ripple sidebar_archives-none-count">7</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java/" rel="tag">java<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/javaWeb/" rel="tag">javaWeb<span class="mdui-ripple sidebar_archives-none-count">14</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/linux/" rel="tag">linux<span class="mdui-ripple sidebar_archives-none-count">2</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/mysql/" rel="tag">mysql<span class="mdui-ripple sidebar_archives-none-count">4</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/nginx/" rel="tag">nginx<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/redis/" rel="tag">redis<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/win7/" rel="tag">win7<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%85%B6%E4%BB%96/" rel="tag">其他<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/" rel="tag">笔记本选购<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AE%A1%E7%90%86/" rel="tag">管理<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式<span class="mdui-ripple sidebar_archives-none-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java/">java<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/管理/">管理<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -203,13 +201,11 @@
   </div>
 </aside>
   <main id="main" class="mdui-m-t-5 fadeIn animated">
-  
-<link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
-
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
   <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
   <article class="mdui-card mdui-m-b-5">
     <header class="mdui-card-media">
-      <img src="/images/random/material-19.png" style="max-height: 240px;">
+      <img src="/images/random/material-15.png" style="max-height: 240px;">
       <div class="mdui-card-media-covered">
         <div class="mdui-card-primary">
           <div class="mdui-card-primary-title">使用hexo+Github搭建个人博客</div>
@@ -249,33 +245,31 @@
 <li>Github账号注册</li>
 <li>Notepad++或sublime等编辑器</li>
 </ol>
-<h3 id="3-2-开始安装"><a href="#3-2-开始安装" class="headerlink" title="3.2-开始安装"></a>3.2-开始安装</h3><h4 id="1-在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面"><a href="#1-在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面" class="headerlink" title="1.在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面"></a>1.在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面</h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E8%BF%9B%E5%85%A5blog%E6%96%87%E4%BB%B6%E5%A4%B9.png"></p>
+<h3 id="3-2-开始安装"><a href="#3-2-开始安装" class="headerlink" title="3.2-开始安装"></a>3.2-开始安装</h3><h4 id="1-在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面"><a href="#1-在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面" class="headerlink" title="1.在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面"></a>1.在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面</h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E8%BF%9B%E5%85%A5blog%E6%96%87%E4%BB%B6%E5%A4%B9.png" alt></p>
 <h4 id="2-输入以下命令，开始安装Hexo"><a href="#2-输入以下命令，开始安装Hexo" class="headerlink" title="2.输入以下命令，开始安装Hexo"></a><strong>2.输入以下命令，开始安装Hexo</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo -g</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%AE%89%E8%A3%85hexo.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%AE%89%E8%A3%85hexo.png" alt></p>
 <h4 id="3-检查hexo是否安装成功"><a href="#3-检查hexo是否安装成功" class="headerlink" title="3.检查hexo是否安装成功"></a><strong>3.检查hexo是否安装成功</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E6%9F%A5hexo%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F.png" alt="文件上传失败"></p>
 <h4 id="4-初始化该文件夹"><a href="#4-初始化该文件夹" class="headerlink" title="4.初始化该文件夹"></a><strong>4.初始化该文件夹</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%87%E4%BB%B6%E5%A4%B91.png" alt="文件上传失败"></p>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%87%E4%BB%B6%E5%A4%B92.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%87%E4%BB%B6%E5%A4%B92.png" alt></p>
 <h4 id="5-安装所需要的组件"><a href="#5-安装所需要的组件" class="headerlink" title="5.安装所需要的组件"></a><strong>5.安装所需要的组件</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%AE%89%E8%A3%85%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E7%BB%84%E4%BB%B6.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%AE%89%E8%A3%85%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E7%BB%84%E4%BB%B6.png" alt></p>
 <h4 id="6-开始体验Hexo，首先编译生成静态文件"><a href="#6-开始体验Hexo，首先编译生成静态文件" class="headerlink" title="6.开始体验Hexo，首先编译生成静态文件"></a><strong>6.开始体验Hexo，首先编译生成静态文件</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E9%A6%96%E6%AC%A1%E4%BD%93%E9%AA%8CHexo.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E9%A6%96%E6%AC%A1%E4%BD%93%E9%AA%8CHexo.png" alt></p>
 <h4 id="7-开启服务器-hexo-server-，访问该网址-localhost-4000-，正式体验Hexo"><a href="#7-开启服务器-hexo-server-，访问该网址-localhost-4000-，正式体验Hexo" class="headerlink" title="7.开启服务器(hexo server)，访问该网址(localhost:4000)，正式体验Hexo"></a><strong>7.开启服务器(hexo server)，访问该网址(localhost:4000)，正式体验Hexo</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E5%90%AF%E6%9C%8D%E5%8A%A1%E5%99%A8.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E5%90%AF%E6%9C%8D%E5%8A%A1%E5%99%A8.png" alt></p>
 <p>问题：假如页面一直无法跳转，那么可能端口被占用了。此时我们ctrl+c停止服务器，接着输入“hexo server -p 端口号”来改变端口号</p>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%94%B9%E5%8F%98%E7%AB%AF%E5%8F%A3%E5%8F%B7.png"></p>
-<h4 id="8-出现以下页面则为成功-至此安装hexo则为完成"><a href="#8-出现以下页面则为成功-至此安装hexo则为完成" class="headerlink" title="8.出现以下页面则为成功,至此安装hexo则为完成"></a><strong>8.出现以下页面则为成功,至此安装hexo则为完成</strong></h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/hexo%E9%A1%B5%E9%9D%A2.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%94%B9%E5%8F%98%E7%AB%AF%E5%8F%A3%E5%8F%B7.png" alt></p>
+<h4 id="8-出现以下页面则为成功-至此安装hexo则为完成"><a href="#8-出现以下页面则为成功-至此安装hexo则为完成" class="headerlink" title="8.出现以下页面则为成功,至此安装hexo则为完成"></a><strong>8.出现以下页面则为成功,至此安装hexo则为完成</strong></h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/hexo%E9%A1%B5%E9%9D%A2.png" alt></p>
 <h2 id="四-将Hexo与Github-page联系起来"><a href="#四-将Hexo与Github-page联系起来" class="headerlink" title="四.将Hexo与Github page联系起来"></a>四.将Hexo与Github page联系起来</h2><h4 id="1-设置Git的user-name和email"><a href="#1-设置Git的user-name和email" class="headerlink" title="1.设置Git的user name和email"></a><strong>1.设置Git的user name和email</strong></h4><p>进入安装了hexo的文件夹空白处右键，点击Git Base Here(安装了git才会出现的)，</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;你的用户名&quot;</span><br><span class="line">git config --global user.email &quot;你的邮箱&quot;</span><br></pre></td></tr></table></figure>
-
-
 
 <h4 id="2-生成新的SSH-Key，如果没有-ssh文件，会为你自动创建-ssh文件夹"><a href="#2-生成新的SSH-Key，如果没有-ssh文件，会为你自动创建-ssh文件夹" class="headerlink" title="2.生成新的SSH Key，如果没有.ssh文件，会为你自动创建.ssh文件夹"></a><strong>2.生成新的SSH Key，如果没有.ssh文件，会为你自动创建.ssh文件夹</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱&quot;</span><br></pre></td></tr></table></figure>
 
@@ -283,17 +277,17 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br></pre></td></tr></table></figure>
 
 <p>输完密码后，你可以去开始，打开你的用户目录，有一个“.ssh”文件夹，里面有“id_rsa” “id_rsa.pub” 和 “known_hosts”这三个文件。其中“id_rsa”是你的私钥文件，“id_rsa.pub”是你的公钥文件，一会要用公钥文件。</p>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/sshkey.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/sshkey.png" alt></p>
 <h4 id="3-把上述文件id-rsa-pub用Notepad-或sublime打开，然后全选复制里面的内容"><a href="#3-把上述文件id-rsa-pub用Notepad-或sublime打开，然后全选复制里面的内容" class="headerlink" title="3.把上述文件id_rsa.pub用Notepad++或sublime打开，然后全选复制里面的内容"></a><strong>3.把上述文件id_rsa.pub用Notepad++或sublime打开，然后全选复制里面的内容</strong></h4><h4 id="4-登录到Github，然后新建一个仓库"><a href="#4-登录到Github，然后新建一个仓库" class="headerlink" title="4.登录到Github，然后新建一个仓库"></a><strong>4.登录到Github，然后新建一个仓库</strong></h4><blockquote>
 <p><strong>注意：新建仓库，项目名必须要遵守格式：账户名.github.io（即以下两个红框要一致），不然接下来会有很多麻烦，将来你的网站访问地址就是http://用户名.github.io 。并且需要勾选Initialize   this repository with a README</strong></p>
 <p><strong>由此可见，每一个github账户最多只能创建一个这样可以直接使用域名访问的仓库。</strong></p>
 </blockquote>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%96%B0%E5%BB%BA%E4%BB%93%E5%BA%93.png"></p>
-<h4 id="5-点击的settings后，点击Deploy-Keys"><a href="#5-点击的settings后，点击Deploy-Keys" class="headerlink" title="5.点击的settings后，点击Deploy Keys"></a><strong>5.点击的settings后，点击Deploy Keys</strong></h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%8A%E4%BC%A0%E5%85%AC%E9%92%A5.png"></p>
-<h4 id="6-点击Add-deploy-key，然后把刚刚复制的公钥粘贴进去-title可不填，勾选Allow-write-access"><a href="#6-点击Add-deploy-key，然后把刚刚复制的公钥粘贴进去-title可不填，勾选Allow-write-access" class="headerlink" title="6.点击Add deploy key，然后把刚刚复制的公钥粘贴进去,title可不填，勾选Allow write access"></a><strong>6.点击Add deploy key，然后把刚刚复制的公钥粘贴进去,title可不填，勾选Allow write access</strong></h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E7%82%B9%E5%87%BBdeploy.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%96%B0%E5%BB%BA%E4%BB%93%E5%BA%93.png" alt></p>
+<h4 id="5-点击的settings后，点击Deploy-Keys"><a href="#5-点击的settings后，点击Deploy-Keys" class="headerlink" title="5.点击的settings后，点击Deploy Keys"></a><strong>5.点击的settings后，点击Deploy Keys</strong></h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%8A%E4%BC%A0%E5%85%AC%E9%92%A5.png" alt></p>
+<h4 id="6-点击Add-deploy-key，然后把刚刚复制的公钥粘贴进去-title可不填，勾选Allow-write-access"><a href="#6-点击Add-deploy-key，然后把刚刚复制的公钥粘贴进去-title可不填，勾选Allow-write-access" class="headerlink" title="6.点击Add deploy key，然后把刚刚复制的公钥粘贴进去,title可不填，勾选Allow write access"></a><strong>6.点击Add deploy key，然后把刚刚复制的公钥粘贴进去,title可不填，勾选Allow write access</strong></h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E7%82%B9%E5%87%BBdeploy.png" alt></p>
 <h4 id="7-测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明本地就和Github服务端连接上了"><a href="#7-测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明本地就和Github服务端连接上了" class="headerlink" title="7.测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明本地就和Github服务端连接上了"></a><strong>7.测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明本地就和Github服务端连接上了</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%B5%8B%E8%AF%95.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%B5%8B%E8%AF%95.png" alt></p>
 <h2 id="五-把博客部署到Github"><a href="#五-把博客部署到Github" class="headerlink" title="五.把博客部署到Github"></a>五.把博客部署到Github</h2><h4 id="1-修改Hexo配置文件"><a href="#1-修改Hexo配置文件" class="headerlink" title="1.修改Hexo配置文件"></a><strong>1.修改Hexo配置文件</strong></h4><p>在 blog文件夹下找到 _config.yml 文件（站点配置文件），打开后，找到deploy进行如下设置。</p>
 <p><em>注意</em>：除了 “https://” 中的冒号以外，其他每个冒号后面都有个空格，最后保存。</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">git@github.com:yellowbp/yellowbp.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
@@ -301,50 +295,44 @@
 <p><u>hexo2.x版本的写法（新版本已经不管用了）</u></p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">github</span></span><br><span class="line">  <span class="attr">repository:</span> <span class="string">https://github.com/yellowbp/yellowbp.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
 
-
-
 <p>​      </p>
 <p>​      其中的repository，你可以到你github新建的仓库上复制</p>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%A4%8D%E5%88%B6%E4%BB%93%E5%BA%93%E5%9C%B0%E5%9D%80.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%A4%8D%E5%88%B6%E4%BB%93%E5%BA%93%E5%9C%B0%E5%9D%80.png" alt></p>
 <h4 id="2-新建一篇博客，在cmd执行命令：hexo-new-“你的博客名”"><a href="#2-新建一篇博客，在cmd执行命令：hexo-new-“你的博客名”" class="headerlink" title="2.新建一篇博客，在cmd执行命令：hexo new  “你的博客名”"></a><strong>2.新建一篇博客，在cmd执行命令：hexo new  “你的博客名”</strong></h4><p>或</p>
 <p>在blog目录内右键，选择Git Bash，打开后看到Git Bash标题栏的路径为/D/blog</p>
 <blockquote>
-<p><font color=blue>注意：以后我们很多的博客操作都要在此目录下运行Git Bash才行，比如新建博文、上传部署等等。</font></p>
+<p><font color="blue">注意：以后我们很多的博客操作都要在此目录下运行Git Bash才行，比如新建博文、上传部署等等。</font></p>
 </blockquote>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%96%B0%E5%BB%BA%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E6%96%B0%E5%BB%BA%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2.png" alt></p>
 <p>​       这时候在文件夹_posts目录下将会看到已经创建的文件</p>
-<p>​      <img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/posts%E7%9B%AE%E5%BD%95%E4%B8%8B%E5%88%9B%E5%BB%BA%E7%9A%84%E6%96%87%E4%BB%B6.png"></p>
+<p>​      <img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/posts%E7%9B%AE%E5%BD%95%E4%B8%8B%E5%88%9B%E5%BB%BA%E7%9A%84%E6%96%87%E4%BB%B6.png" alt></p>
 <h4 id="3-在生成以及部署文章之前，需要安装一个扩展："><a href="#3-在生成以及部署文章之前，需要安装一个扩展：" class="headerlink" title="3.在生成以及部署文章之前，需要安装一个扩展："></a><strong>3.在生成以及部署文章之前，需要安装一个扩展：</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%89%A9%E5%B1%95.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%89%A9%E5%B1%95.png" alt></p>
 <h4 id="4-使用编辑器编好文章（等下会说如何编写），那么现在就可以使用一下命令，生成以及部署了"><a href="#4-使用编辑器编好文章（等下会说如何编写），那么现在就可以使用一下命令，生成以及部署了" class="headerlink" title="4.使用编辑器编好文章（等下会说如何编写），那么现在就可以使用一下命令，生成以及部署了"></a><strong>4.使用编辑器编好文章（等下会说如何编写），那么现在就可以使用一下命令，生成以及部署了</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g -d</span><br></pre></td></tr></table></figure>
 
-
-
-<h4 id="5-部署成功后访问你的地址：http-用户名-github-io。那么将看到生成的文章"><a href="#5-部署成功后访问你的地址：http-用户名-github-io。那么将看到生成的文章" class="headerlink" title="5.部署成功后访问你的地址：http://用户名.github.io。那么将看到生成的文章"></a><strong>5.部署成功后访问你的地址：http://用户名.github.io。那么将看到生成的文章</strong></h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E9%83%A8%E7%BD%B2%E6%88%90%E5%8A%9F%E5%90%8E%E7%9A%84%E7%BD%91%E9%A1%B5.png"></p>
+<h4 id="5-部署成功后访问你的地址：http-用户名-github-io。那么将看到生成的文章"><a href="#5-部署成功后访问你的地址：http-用户名-github-io。那么将看到生成的文章" class="headerlink" title="5.部署成功后访问你的地址：http://用户名.github.io。那么将看到生成的文章"></a><strong>5.部署成功后访问你的地址：http://用户名.github.io。那么将看到生成的文章</strong></h4><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E9%83%A8%E7%BD%B2%E6%88%90%E5%8A%9F%E5%90%8E%E7%9A%84%E7%BD%91%E9%A1%B5.png" alt></p>
 <blockquote>
-<p><font color=blue>到此，以Hexo+Git+Github pages搭建博客完结！！！</font></p>
+<p><font color="blue">到此，以Hexo+Git+Github pages搭建博客完结！！！</font></p>
 </blockquote>
 <hr>
 <h2 id="六-Hexo主题"><a href="#六-Hexo主题" class="headerlink" title="六.Hexo主题"></a>六.Hexo主题</h2><blockquote>
 <p>前言：</p>
 <p>在成功用上述方法搭建好个人博客之后，你可能会觉得官方默认的主题不太好看。怎么办？幸好Hexo主题可以更改的，那么问题就简单了，在哪里可以选择自己喜欢的主题，然后更换</p>
 </blockquote>
-<h4 id="1-选择主题"><a href="#1-选择主题" class="headerlink" title="1.选择主题"></a><strong>1.选择主题</strong></h4><p>主题从哪里找呢？官方就有提供了不少好看的 <a target="_blank" rel="noopener" href="https://hexo.io/themes/">Hexo官网主题</a>，可以从中选择。</p>
-<p>比较多人用的主题是 <a target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">next</a>。具有简约，配置详细的特点</p>
-<h4 id="2-安装主题"><a href="#2-安装主题" class="headerlink" title="2.安装主题"></a><strong>2.安装主题</strong></h4><h5 id="2-1-在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）"><a href="#2-1-在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）" class="headerlink" title="2.1 在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）"></a>2.1 在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）</h5><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/themes%E5%AE%98%E7%BD%91.png"></p>
-<h5 id="2-2-到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到-你下载的Hexo目录右键选择Git-Bash，粘贴该命令，即可下载。"><a href="#2-2-到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到-你下载的Hexo目录右键选择Git-Bash，粘贴该命令，即可下载。" class="headerlink" title="2.2  到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到               你下载的Hexo目录右键选择Git Bash，粘贴该命令，即可下载。"></a>2.2  到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到               你下载的Hexo目录右键选择Git Bash，粘贴该命令，即可下载。</h5><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E4%BB%93%E5%BA%93%E9%A1%B5%E9%9D%A21.png"></p>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E4%BB%93%E5%BA%93%E9%A1%B5%E9%9D%A22.png"></p>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E4%BB%93%E5%BA%93%E9%A1%B5%E9%9D%A23.png"></p>
+<h4 id="1-选择主题"><a href="#1-选择主题" class="headerlink" title="1.选择主题"></a><strong>1.选择主题</strong></h4><p>主题从哪里找呢？官方就有提供了不少好看的 <a href="https://hexo.io/themes/" target="_blank" rel="noopener">Hexo官网主题</a>，可以从中选择。</p>
+<p>比较多人用的主题是 <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">next</a>。具有简约，配置详细的特点</p>
+<h4 id="2-安装主题"><a href="#2-安装主题" class="headerlink" title="2.安装主题"></a><strong>2.安装主题</strong></h4><h5 id="2-1-在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）"><a href="#2-1-在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）" class="headerlink" title="2.1 在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）"></a>2.1 在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）</h5><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/themes%E5%AE%98%E7%BD%91.png" alt></p>
+<h5 id="2-2-到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到-你下载的Hexo目录右键选择Git-Bash，粘贴该命令，即可下载。"><a href="#2-2-到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到-你下载的Hexo目录右键选择Git-Bash，粘贴该命令，即可下载。" class="headerlink" title="2.2  到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到               你下载的Hexo目录右键选择Git Bash，粘贴该命令，即可下载。"></a>2.2  到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到               你下载的Hexo目录右键选择Git Bash，粘贴该命令，即可下载。</h5><p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E4%BB%93%E5%BA%93%E9%A1%B5%E9%9D%A21.png" alt></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E4%BB%93%E5%BA%93%E9%A1%B5%E9%9D%A22.png" alt></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E4%BB%93%E5%BA%93%E9%A1%B5%E9%9D%A23.png" alt></p>
 <h4 id="3-应用主题"><a href="#3-应用主题" class="headerlink" title="3.应用主题"></a><strong>3.应用主题</strong></h4><p>到站点配置文件（_config.yml）下，Ctrl+F查找theme,根据详细文档来把主题更换一下,然后保存</p>
 <blockquote>
-<p><font color=blue><strong>注意冒号后面<u>都</u>一定要有一个空格</strong></font></p>
+<p><font color="blue"><strong>注意冒号后面<u>都</u>一定要有一个空格</strong></font></p>
 </blockquote>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E5%BA%94%E7%94%A8.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%BB%E9%A2%98%E5%BA%94%E7%94%A8.png" alt></p>
 <p>​        你可以在Git Bash输入以下命令，在本地测试一下（localhost:4000）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-
 
 <h4 id="4-把主题部署到Github-Pages上，在Git-Bash上输入以下命令"><a href="#4-把主题部署到Github-Pages上，在Git-Bash上输入以下命令" class="headerlink" title="4.把主题部署到Github Pages上，在Git Bash上输入以下命令"></a><strong>4.把主题部署到Github Pages上，在Git Bash上输入以下命令</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g -d</span><br></pre></td></tr></table></figure>
 
@@ -354,7 +342,7 @@
 <h2 id="七-写博客的工具-这里推荐用typora编译器"><a href="#七-写博客的工具-这里推荐用typora编译器" class="headerlink" title="七.写博客的工具(这里推荐用typora编译器)"></a>七.写博客的工具(这里推荐用typora编译器)</h2><blockquote>
 <p>大致过程：</p>
 <ol>
-<li><p>日志的书写，使用<a target="_blank" rel="noopener" href="https://www.runoob.com/markdown/md-tutorial.html">MarkDown</a>语法：</p>
+<li><p>日志的书写，使用<a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank" rel="noopener">MarkDown</a>语法：</p>
 </li>
 <li><p>写完后在本地把Hexo s跑起来，将日志生成为HTML，动态的看日志效果：</p>
 </li>
@@ -365,7 +353,7 @@
 <h4 id="1-在Git-Bash输入以下命令（在blog目录下右键）"><a href="#1-在Git-Bash输入以下命令（在blog目录下右键）" class="headerlink" title="1.在Git Bash输入以下命令（在blog目录下右键）"></a>1.<strong>在Git Bash输入以下命令</strong>（在blog目录下右键）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new “文章名”</span><br></pre></td></tr></table></figure>
 
 <p>  在/blog/source_posts目录下即可看到你新建的博客</p>
-<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/post%E6%96%87%E4%BB%B6%E5%A4%B9.png"></p>
+<p><img src="https://hexoimages.oss-cn-shenzhen.aliyuncs.com/post%E6%96%87%E4%BB%B6%E5%A4%B9.png" alt></p>
 <h4 id="2-通过typora打开，用markdown语法书写博客，然后保存"><a href="#2-通过typora打开，用markdown语法书写博客，然后保存" class="headerlink" title="2.通过typora打开，用markdown语法书写博客，然后保存"></a><strong>2.通过typora打开，用markdown语法书写博客，然后保存</strong></h4><h4 id="3-hexo-s本地测试一下"><a href="#3-hexo-s本地测试一下" class="headerlink" title="3.hexo s本地测试一下"></a><strong>3.hexo s本地测试一下</strong></h4><h4 id="4-本地成功后，hexo-g-d部署到Github上"><a href="#4-本地成功后，hexo-g-d部署到Github上" class="headerlink" title="4.本地成功后，hexo g -d部署到Github上"></a><strong>4.本地成功后，hexo g -d部署到Github上</strong></h4><hr>
 <h2 id="八-如何在Hexo博客文章中插入图片"><a href="#八-如何在Hexo博客文章中插入图片" class="headerlink" title="八.如何在Hexo博客文章中插入图片"></a>八.如何在Hexo博客文章中插入图片</h2><blockquote>
 <p>前言：</p>
@@ -377,10 +365,6 @@
 <p><strong>在typora里用以下格式进行引用图片(英文输入法)</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![](图片路径)</span><br></pre></td></tr></table></figure>
 
-
-
-
-
 <h2 id="九-hexo常用命令"><a href="#九-hexo常用命令" class="headerlink" title="九.hexo常用命令"></a>九.hexo常用命令</h2><blockquote>
 <p>hexo命令基本只需要记住下面的命令即可（左边是缩写 右边是完整的命令）：</p>
 <p>hexo g == hexo generate —生成静态文件</p>
@@ -391,7 +375,7 @@
 <p>hexo g -d –生成并上传</p>
 </blockquote>
 <h2 id="十-博客迁移到另一台电脑"><a href="#十-博客迁移到另一台电脑" class="headerlink" title="十.博客迁移到另一台电脑"></a>十.博客迁移到另一台电脑</h2><p>当重装电脑之后，或者想在其他电脑上修改博客，可以使用以下列2种方法：</p>
-<h3 id="法一："><a href="#法一：" class="headerlink" title="法一："></a>法一：</h3><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/21193762%E4%B8%AD%E7%9A%84CrazyMilk%E7%9A%84%E5%9B%9E%E7%AD%94%E5%BE%88%E4%B8%8D%E9%94%99%EF%BC%8C%E7%90%86%E8%AE%BA%E4%B8%8A%E5%8F%AF%E8%A1%8C%EF%BC%8C%E4%BD%86%E6%88%91%E8%BF%98%E6%B2%A1%E5%AE%9E%E6%93%8D%E8%BF%87">https://www.zhihu.com/question/21193762中的CrazyMilk的回答很不错，理论上可行，但我还没实操过</a></p>
+<h3 id="法一："><a href="#法一：" class="headerlink" title="法一："></a>法一：</h3><p><a href="https://www.zhihu.com/question/21193762中的CrazyMilk的回答很不错，理论上可行，但我还没实操过" target="_blank" rel="noopener">https://www.zhihu.com/question/21193762中的CrazyMilk的回答很不错，理论上可行，但我还没实操过</a></p>
 <h3 id="法一"><a href="#法一" class="headerlink" title="法一:"></a>法一:</h3><ul>
 <li>_config.yml、package.json、scaffolds/、source/、themes/替换hexo中的文件夹即可</li>
 <li>注意_config.yml中的url要改成<code>url: https://yellowbp.github.io/</code></li>
@@ -399,37 +383,35 @@
 <hr>
 <blockquote>
 <p>本文在安装Hexo的部分，主要参考了以下博客：</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fengxiongZz/p/7707219.html">https://www.cnblogs.com/fengxiongZz/p/7707219.html</a></p>
+<p><a href="https://www.cnblogs.com/fengxiongZz/p/7707219.html" target="_blank" rel="noopener">https://www.cnblogs.com/fengxiongZz/p/7707219.html</a></p>
 </blockquote>
 
       <blockquote class="mdui-m-t-5">
         
           <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
         
-        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/08/13/%E4%BD%BF%E7%94%A8Hexo+Github%20Pages+Git%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">https://yellowbp.github.io/2019/08/13/%E4%BD%BF%E7%94%A8Hexo+Github%20Pages+Git%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</a>
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/08/13/使用Hexo+Github Pages+Git搭建个人博客/">https://yellowbp.github.io/2019/08/13/使用Hexo+Github Pages+Git搭建个人博客/</a>
       </blockquote>
       
     </div>
     <footer class="mdui-card-actions">
       
-        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+        <a class="mdui-ripple article_categories-link" href="/categories/技术/">技术</a>
       
       
-        <a class="mdui-ripple article_tags-none-link" href="/tags/Hexo/" rel="tag">Hexo</a>
+        <a class="mdui-ripple article_tags-link" href="/tags/Hexo/">Hexo</a>
       
     </footer>
     
   </article>
-  
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
-
   <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
 
 
   <nav id="paginator">
     
-      <a rel="prev" class="extend prev" href="/2019/08/15/%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8CTomcat9%E7%9A%84%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/">
+      <a rel="prev" class="extend prev" href="/2019/08/15/解决数据库和Tomcat9的中文乱码问题/">
         <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
       </a>
@@ -441,7 +423,7 @@
 
   <div id="comment" class="mdui-m-t-5">
     <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
-<div id="SOHUCS" sid="ckoed7szn0011rctw4fktdzur"></div>
+<div id="SOHUCS" sid="ckoefg3mo002flwtwhp8n100x"></div>
 <script type="text/javascript">
 (function(){
 var appid = 'cyubhC2Dq';
@@ -456,7 +438,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
   <div style="position: fixed !important; right: 16px; top: 30%;">
     <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
     <ul class="mdui-menu" id="toc">
-      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Hexo-Git-Github-Pages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2"><span class="toc-number">1.</span> <span class="toc-text">使用Hexo+Git+Github Pages搭建个人博客</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E4%BB%80%E4%B9%88%E6%98%AFHexo%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">一.什么是Hexo？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8Hexo%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">二.为什么要用Hexo？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-Hexo%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.</span> <span class="toc-text">三.Hexo的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%87%86%E5%A4%87%E5%AE%B6%E5%BD%93%EF%BC%9A"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1-准备家当：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%BC%80%E5%A7%8B%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2-开始安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%9C%A8%E8%87%AA%E5%B7%B1%E8%AE%A4%E4%B8%BA%E5%90%88%E9%80%82%E7%9A%84%E7%9B%98%E7%AC%A6%E6%96%B0%E5%BB%BA%E4%B8%AA%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E6%88%91%E6%98%AF%E5%9C%A8D%E7%9B%98%E5%BB%BA%E4%BA%86%E4%B8%80%E4%B8%AAblog%E6%96%87%E4%BB%B6%E5%A4%B9%E3%80%82%E7%84%B6%E5%90%8E%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BF%9B%E5%85%A5%E5%88%B0%E8%AF%A5%E6%96%87%E4%BB%B6%E5%A4%B9%E9%87%8C%E9%9D%A2"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">1.在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E8%BE%93%E5%85%A5%E4%BB%A5%E4%B8%8B%E5%91%BD%E4%BB%A4%EF%BC%8C%E5%BC%80%E5%A7%8B%E5%AE%89%E8%A3%85Hexo"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">2.输入以下命令，开始安装Hexo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%A3%80%E6%9F%A5hexo%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">3.检查hexo是否安装成功</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%88%9D%E5%A7%8B%E5%8C%96%E8%AF%A5%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">4.初始化该文件夹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E5%AE%89%E8%A3%85%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E7%BB%84%E4%BB%B6"><span class="toc-number">1.3.2.5.</span> <span class="toc-text">5.安装所需要的组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E5%BC%80%E5%A7%8B%E4%BD%93%E9%AA%8CHexo%EF%BC%8C%E9%A6%96%E5%85%88%E7%BC%96%E8%AF%91%E7%94%9F%E6%88%90%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.2.6.</span> <span class="toc-text">6.开始体验Hexo，首先编译生成静态文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E5%BC%80%E5%90%AF%E6%9C%8D%E5%8A%A1%E5%99%A8-hexo-server-%EF%BC%8C%E8%AE%BF%E9%97%AE%E8%AF%A5%E7%BD%91%E5%9D%80-localhost-4000-%EF%BC%8C%E6%AD%A3%E5%BC%8F%E4%BD%93%E9%AA%8CHexo"><span class="toc-number">1.3.2.7.</span> <span class="toc-text">7.开启服务器(hexo server)，访问该网址(localhost:4000)，正式体验Hexo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-%E5%87%BA%E7%8E%B0%E4%BB%A5%E4%B8%8B%E9%A1%B5%E9%9D%A2%E5%88%99%E4%B8%BA%E6%88%90%E5%8A%9F-%E8%87%B3%E6%AD%A4%E5%AE%89%E8%A3%85hexo%E5%88%99%E4%B8%BA%E5%AE%8C%E6%88%90"><span class="toc-number">1.3.2.8.</span> <span class="toc-text">8.出现以下页面则为成功,至此安装hexo则为完成</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B-%E5%B0%86Hexo%E4%B8%8EGithub-page%E8%81%94%E7%B3%BB%E8%B5%B7%E6%9D%A5"><span class="toc-number">1.4.</span> <span class="toc-text">四.将Hexo与Github page联系起来</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E8%AE%BE%E7%BD%AEGit%E7%9A%84user-name%E5%92%8Cemail"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">1.设置Git的user name和email</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%94%9F%E6%88%90%E6%96%B0%E7%9A%84SSH-Key%EF%BC%8C%E5%A6%82%E6%9E%9C%E6%B2%A1%E6%9C%89-ssh%E6%96%87%E4%BB%B6%EF%BC%8C%E4%BC%9A%E4%B8%BA%E4%BD%A0%E8%87%AA%E5%8A%A8%E5%88%9B%E5%BB%BA-ssh%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">2.生成新的SSH Key，如果没有.ssh文件，会为你自动创建.ssh文件夹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%8A%8A%E4%B8%8A%E8%BF%B0%E6%96%87%E4%BB%B6id-rsa-pub%E7%94%A8Notepad-%E6%88%96sublime%E6%89%93%E5%BC%80%EF%BC%8C%E7%84%B6%E5%90%8E%E5%85%A8%E9%80%89%E5%A4%8D%E5%88%B6%E9%87%8C%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">3.把上述文件id_rsa.pub用Notepad++或sublime打开，然后全选复制里面的内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E7%99%BB%E5%BD%95%E5%88%B0Github%EF%BC%8C%E7%84%B6%E5%90%8E%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93"><span class="toc-number">1.4.0.4.</span> <span class="toc-text">4.登录到Github，然后新建一个仓库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E7%82%B9%E5%87%BB%E7%9A%84settings%E5%90%8E%EF%BC%8C%E7%82%B9%E5%87%BBDeploy-Keys"><span class="toc-number">1.4.0.5.</span> <span class="toc-text">5.点击的settings后，点击Deploy Keys</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E7%82%B9%E5%87%BBAdd-deploy-key%EF%BC%8C%E7%84%B6%E5%90%8E%E6%8A%8A%E5%88%9A%E5%88%9A%E5%A4%8D%E5%88%B6%E7%9A%84%E5%85%AC%E9%92%A5%E7%B2%98%E8%B4%B4%E8%BF%9B%E5%8E%BB-title%E5%8F%AF%E4%B8%8D%E5%A1%AB%EF%BC%8C%E5%8B%BE%E9%80%89Allow-write-access"><span class="toc-number">1.4.0.6.</span> <span class="toc-text">6.点击Add deploy key，然后把刚刚复制的公钥粘贴进去,title可不填，勾选Allow write access</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E6%B5%8B%E8%AF%95%E6%B7%BB%E5%8A%A0ssh%E6%98%AF%E5%90%A6%E6%88%90%E5%8A%9F%E3%80%82%E5%A6%82%E6%9E%9C%E7%9C%8B%E5%88%B0Hi%E5%90%8E%E9%9D%A2%E6%98%AF%E4%BD%A0%E7%9A%84%E7%94%A8%E6%88%B7%E5%90%8D%EF%BC%8C%E5%B0%B1%E8%AF%B4%E6%98%8E%E6%9C%AC%E5%9C%B0%E5%B0%B1%E5%92%8CGithub%E6%9C%8D%E5%8A%A1%E7%AB%AF%E8%BF%9E%E6%8E%A5%E4%B8%8A%E4%BA%86"><span class="toc-number">1.4.0.7.</span> <span class="toc-text">7.测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明本地就和Github服务端连接上了</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94-%E6%8A%8A%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0Github"><span class="toc-number">1.5.</span> <span class="toc-text">五.把博客部署到Github</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BF%AE%E6%94%B9Hexo%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.5.0.1.</span> <span class="toc-text">1.修改Hexo配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%96%B0%E5%BB%BA%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%EF%BC%8C%E5%9C%A8cmd%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%9Ahexo-new-%E2%80%9C%E4%BD%A0%E7%9A%84%E5%8D%9A%E5%AE%A2%E5%90%8D%E2%80%9D"><span class="toc-number">1.5.0.2.</span> <span class="toc-text">2.新建一篇博客，在cmd执行命令：hexo new  “你的博客名”</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%9C%A8%E7%94%9F%E6%88%90%E4%BB%A5%E5%8F%8A%E9%83%A8%E7%BD%B2%E6%96%87%E7%AB%A0%E4%B9%8B%E5%89%8D%EF%BC%8C%E9%9C%80%E8%A6%81%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AA%E6%89%A9%E5%B1%95%EF%BC%9A"><span class="toc-number">1.5.0.3.</span> <span class="toc-text">3.在生成以及部署文章之前，需要安装一个扩展：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E4%BD%BF%E7%94%A8%E7%BC%96%E8%BE%91%E5%99%A8%E7%BC%96%E5%A5%BD%E6%96%87%E7%AB%A0%EF%BC%88%E7%AD%89%E4%B8%8B%E4%BC%9A%E8%AF%B4%E5%A6%82%E4%BD%95%E7%BC%96%E5%86%99%EF%BC%89%EF%BC%8C%E9%82%A3%E4%B9%88%E7%8E%B0%E5%9C%A8%E5%B0%B1%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E4%B8%80%E4%B8%8B%E5%91%BD%E4%BB%A4%EF%BC%8C%E7%94%9F%E6%88%90%E4%BB%A5%E5%8F%8A%E9%83%A8%E7%BD%B2%E4%BA%86"><span class="toc-number">1.5.0.4.</span> <span class="toc-text">4.使用编辑器编好文章（等下会说如何编写），那么现在就可以使用一下命令，生成以及部署了</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E9%83%A8%E7%BD%B2%E6%88%90%E5%8A%9F%E5%90%8E%E8%AE%BF%E9%97%AE%E4%BD%A0%E7%9A%84%E5%9C%B0%E5%9D%80%EF%BC%9Ahttp-%E7%94%A8%E6%88%B7%E5%90%8D-github-io%E3%80%82%E9%82%A3%E4%B9%88%E5%B0%86%E7%9C%8B%E5%88%B0%E7%94%9F%E6%88%90%E7%9A%84%E6%96%87%E7%AB%A0"><span class="toc-number">1.5.0.5.</span> <span class="toc-text">5.部署成功后访问你的地址：http:&#x2F;&#x2F;用户名.github.io。那么将看到生成的文章</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD-Hexo%E4%B8%BB%E9%A2%98"><span class="toc-number">1.6.</span> <span class="toc-text">六.Hexo主题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%80%89%E6%8B%A9%E4%B8%BB%E9%A2%98"><span class="toc-number">1.6.0.1.</span> <span class="toc-text">1.选择主题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98"><span class="toc-number">1.6.0.2.</span> <span class="toc-text">2.安装主题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-%E5%9C%A8%E5%AE%98%E7%BD%91%E4%B8%8A%EF%BC%8C%E9%80%89%E6%8B%A9%E7%BA%A2%E6%A1%86%E7%9A%84%E9%83%A8%E5%88%86%EF%BC%88%E4%BD%A0%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E7%82%B9%E5%87%BB%E5%9B%BE%E7%89%87%E6%9D%A5%E8%A7%82%E7%9C%8B%E8%BF%99%E4%B8%AA%E4%B8%BB%E9%A2%98%E7%9A%84%E6%A0%B7%E5%BC%8F%EF%BC%89"><span class="toc-number">1.6.0.2.1.</span> <span class="toc-text">2.1 在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-%E5%88%B0%E4%BA%86%E5%A6%82%E4%B8%8B%E7%95%8C%E9%9D%A2%EF%BC%8C%E5%BE%80%E4%B8%8B%E6%8B%89%EF%BC%8C%E5%B0%B1%E6%98%AF%E5%85%B3%E4%BA%8E%E8%AF%A5%E4%B8%BB%E9%A2%98%E7%9A%84%E8%AF%A6%E7%BB%86%E6%96%87%E6%A1%A3%EF%BC%8C%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0install%E7%9A%84%E8%8B%B1%E6%96%87%EF%BC%8C%E5%A4%8D%E5%88%B6%E8%AF%A5%E5%91%BD%E4%BB%A4%EF%BC%8C%E7%84%B6%E5%90%8E%E5%88%B0-%E4%BD%A0%E4%B8%8B%E8%BD%BD%E7%9A%84Hexo%E7%9B%AE%E5%BD%95%E5%8F%B3%E9%94%AE%E9%80%89%E6%8B%A9Git-Bash%EF%BC%8C%E7%B2%98%E8%B4%B4%E8%AF%A5%E5%91%BD%E4%BB%A4%EF%BC%8C%E5%8D%B3%E5%8F%AF%E4%B8%8B%E8%BD%BD%E3%80%82"><span class="toc-number">1.6.0.2.2.</span> <span class="toc-text">2.2  到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到               你下载的Hexo目录右键选择Git Bash，粘贴该命令，即可下载。</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%BA%94%E7%94%A8%E4%B8%BB%E9%A2%98"><span class="toc-number">1.6.0.3.</span> <span class="toc-text">3.应用主题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E6%8A%8A%E4%B8%BB%E9%A2%98%E9%83%A8%E7%BD%B2%E5%88%B0Github-Pages%E4%B8%8A%EF%BC%8C%E5%9C%A8Git-Bash%E4%B8%8A%E8%BE%93%E5%85%A5%E4%BB%A5%E4%B8%8B%E5%91%BD%E4%BB%A4"><span class="toc-number">1.6.0.4.</span> <span class="toc-text">4.把主题部署到Github Pages上，在Git Bash上输入以下命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-Next%E7%9A%84%E4%B8%BB%E9%A2%98%E6%9C%89%E5%BE%88%E5%A4%9A%E5%A5%BD%E7%8E%A9%E7%9A%84%E4%B8%9C%E8%A5%BF%EF%BC%8C%E5%85%B7%E4%BD%93%E7%9C%8B%E5%AE%83%E7%9A%84%E8%AF%A6%E7%BB%86%E6%96%87%E6%A1%A3%E5%8D%B3%E5%8F%AF"><span class="toc-number">1.6.0.5.</span> <span class="toc-text">5.Next的主题有很多好玩的东西，具体看它的详细文档即可</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83-%E5%86%99%E5%8D%9A%E5%AE%A2%E7%9A%84%E5%B7%A5%E5%85%B7-%E8%BF%99%E9%87%8C%E6%8E%A8%E8%8D%90%E7%94%A8typora%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-number">1.7.</span> <span class="toc-text">七.写博客的工具(这里推荐用typora编译器)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%9C%A8Git-Bash%E8%BE%93%E5%85%A5%E4%BB%A5%E4%B8%8B%E5%91%BD%E4%BB%A4%EF%BC%88%E5%9C%A8blog%E7%9B%AE%E5%BD%95%E4%B8%8B%E5%8F%B3%E9%94%AE%EF%BC%89"><span class="toc-number">1.7.0.1.</span> <span class="toc-text">1.在Git Bash输入以下命令（在blog目录下右键）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E9%80%9A%E8%BF%87typora%E6%89%93%E5%BC%80%EF%BC%8C%E7%94%A8markdown%E8%AF%AD%E6%B3%95%E4%B9%A6%E5%86%99%E5%8D%9A%E5%AE%A2%EF%BC%8C%E7%84%B6%E5%90%8E%E4%BF%9D%E5%AD%98"><span class="toc-number">1.7.0.2.</span> <span class="toc-text">2.通过typora打开，用markdown语法书写博客，然后保存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-hexo-s%E6%9C%AC%E5%9C%B0%E6%B5%8B%E8%AF%95%E4%B8%80%E4%B8%8B"><span class="toc-number">1.7.0.3.</span> <span class="toc-text">3.hexo s本地测试一下</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E6%9C%AC%E5%9C%B0%E6%88%90%E5%8A%9F%E5%90%8E%EF%BC%8Chexo-g-d%E9%83%A8%E7%BD%B2%E5%88%B0Github%E4%B8%8A"><span class="toc-number">1.7.0.4.</span> <span class="toc-text">4.本地成功后，hexo g -d部署到Github上</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB-%E5%A6%82%E4%BD%95%E5%9C%A8Hexo%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0%E4%B8%AD%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87"><span class="toc-number">1.8.</span> <span class="toc-text">八.如何在Hexo博客文章中插入图片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D-hexo%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">1.9.</span> <span class="toc-text">九.hexo常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81-%E5%8D%9A%E5%AE%A2%E8%BF%81%E7%A7%BB%E5%88%B0%E5%8F%A6%E4%B8%80%E5%8F%B0%E7%94%B5%E8%84%91"><span class="toc-number">1.10.</span> <span class="toc-text">十.博客迁移到另一台电脑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%95%E4%B8%80%EF%BC%9A"><span class="toc-number">1.10.1.</span> <span class="toc-text">法一：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%95%E4%B8%80"><span class="toc-number">1.10.2.</span> <span class="toc-text">法一:</span></a></li></ol></li></ol></li></ol></li>
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#使用Hexo-Git-Github-Pages搭建个人博客"><span class="toc-number">1.</span> <span class="toc-text">使用Hexo+Git+Github Pages搭建个人博客</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-什么是Hexo？"><span class="toc-number">1.1.</span> <span class="toc-text">一.什么是Hexo？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-为什么要用Hexo？"><span class="toc-number">1.2.</span> <span class="toc-text">二.为什么要用Hexo？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-Hexo的安装"><span class="toc-number">1.3.</span> <span class="toc-text">三.Hexo的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-准备家当："><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1-准备家当：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-开始安装"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2-开始安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">1.在自己认为合适的盘符新建个文件夹，我是在D盘建了一个blog文件夹。然后通过命令行进入到该文件夹里面</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-输入以下命令，开始安装Hexo"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">2.输入以下命令，开始安装Hexo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-检查hexo是否安装成功"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">3.检查hexo是否安装成功</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-初始化该文件夹"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">4.初始化该文件夹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-安装所需要的组件"><span class="toc-number">1.3.2.5.</span> <span class="toc-text">5.安装所需要的组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-开始体验Hexo，首先编译生成静态文件"><span class="toc-number">1.3.2.6.</span> <span class="toc-text">6.开始体验Hexo，首先编译生成静态文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-开启服务器-hexo-server-，访问该网址-localhost-4000-，正式体验Hexo"><span class="toc-number">1.3.2.7.</span> <span class="toc-text">7.开启服务器(hexo server)，访问该网址(localhost:4000)，正式体验Hexo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-出现以下页面则为成功-至此安装hexo则为完成"><span class="toc-number">1.3.2.8.</span> <span class="toc-text">8.出现以下页面则为成功,至此安装hexo则为完成</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-将Hexo与Github-page联系起来"><span class="toc-number">1.4.</span> <span class="toc-text">四.将Hexo与Github page联系起来</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-设置Git的user-name和email"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">1.设置Git的user name和email</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-生成新的SSH-Key，如果没有-ssh文件，会为你自动创建-ssh文件夹"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">2.生成新的SSH Key，如果没有.ssh文件，会为你自动创建.ssh文件夹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-把上述文件id-rsa-pub用Notepad-或sublime打开，然后全选复制里面的内容"><span class="toc-number">1.4.0.3.</span> <span class="toc-text">3.把上述文件id_rsa.pub用Notepad++或sublime打开，然后全选复制里面的内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-登录到Github，然后新建一个仓库"><span class="toc-number">1.4.0.4.</span> <span class="toc-text">4.登录到Github，然后新建一个仓库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-点击的settings后，点击Deploy-Keys"><span class="toc-number">1.4.0.5.</span> <span class="toc-text">5.点击的settings后，点击Deploy Keys</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-点击Add-deploy-key，然后把刚刚复制的公钥粘贴进去-title可不填，勾选Allow-write-access"><span class="toc-number">1.4.0.6.</span> <span class="toc-text">6.点击Add deploy key，然后把刚刚复制的公钥粘贴进去,title可不填，勾选Allow write access</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明本地就和Github服务端连接上了"><span class="toc-number">1.4.0.7.</span> <span class="toc-text">7.测试添加ssh是否成功。如果看到Hi后面是你的用户名，就说明本地就和Github服务端连接上了</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五-把博客部署到Github"><span class="toc-number">1.5.</span> <span class="toc-text">五.把博客部署到Github</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-修改Hexo配置文件"><span class="toc-number">1.5.0.1.</span> <span class="toc-text">1.修改Hexo配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-新建一篇博客，在cmd执行命令：hexo-new-“你的博客名”"><span class="toc-number">1.5.0.2.</span> <span class="toc-text">2.新建一篇博客，在cmd执行命令：hexo new  “你的博客名”</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-在生成以及部署文章之前，需要安装一个扩展："><span class="toc-number">1.5.0.3.</span> <span class="toc-text">3.在生成以及部署文章之前，需要安装一个扩展：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-使用编辑器编好文章（等下会说如何编写），那么现在就可以使用一下命令，生成以及部署了"><span class="toc-number">1.5.0.4.</span> <span class="toc-text">4.使用编辑器编好文章（等下会说如何编写），那么现在就可以使用一下命令，生成以及部署了</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-部署成功后访问你的地址：http-用户名-github-io。那么将看到生成的文章"><span class="toc-number">1.5.0.5.</span> <span class="toc-text">5.部署成功后访问你的地址：http://用户名.github.io。那么将看到生成的文章</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六-Hexo主题"><span class="toc-number">1.6.</span> <span class="toc-text">六.Hexo主题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-选择主题"><span class="toc-number">1.6.0.1.</span> <span class="toc-text">1.选择主题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-安装主题"><span class="toc-number">1.6.0.2.</span> <span class="toc-text">2.安装主题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）"><span class="toc-number">1.6.0.2.1.</span> <span class="toc-text">2.1 在官网上，选择红框的部分（你可以通过点击图片来观看这个主题的样式）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到-你下载的Hexo目录右键选择Git-Bash，粘贴该命令，即可下载。"><span class="toc-number">1.6.0.2.2.</span> <span class="toc-text">2.2  到了如下界面，往下拉，就是关于该主题的详细文档，你可以看到install的英文，复制该命令，然后到               你下载的Hexo目录右键选择Git Bash，粘贴该命令，即可下载。</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-应用主题"><span class="toc-number">1.6.0.3.</span> <span class="toc-text">3.应用主题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-把主题部署到Github-Pages上，在Git-Bash上输入以下命令"><span class="toc-number">1.6.0.4.</span> <span class="toc-text">4.把主题部署到Github Pages上，在Git Bash上输入以下命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-Next的主题有很多好玩的东西，具体看它的详细文档即可"><span class="toc-number">1.6.0.5.</span> <span class="toc-text">5.Next的主题有很多好玩的东西，具体看它的详细文档即可</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七-写博客的工具-这里推荐用typora编译器"><span class="toc-number">1.7.</span> <span class="toc-text">七.写博客的工具(这里推荐用typora编译器)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-在Git-Bash输入以下命令（在blog目录下右键）"><span class="toc-number">1.7.0.1.</span> <span class="toc-text">1.在Git Bash输入以下命令（在blog目录下右键）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-通过typora打开，用markdown语法书写博客，然后保存"><span class="toc-number">1.7.0.2.</span> <span class="toc-text">2.通过typora打开，用markdown语法书写博客，然后保存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-hexo-s本地测试一下"><span class="toc-number">1.7.0.3.</span> <span class="toc-text">3.hexo s本地测试一下</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-本地成功后，hexo-g-d部署到Github上"><span class="toc-number">1.7.0.4.</span> <span class="toc-text">4.本地成功后，hexo g -d部署到Github上</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#八-如何在Hexo博客文章中插入图片"><span class="toc-number">1.8.</span> <span class="toc-text">八.如何在Hexo博客文章中插入图片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#九-hexo常用命令"><span class="toc-number">1.9.</span> <span class="toc-text">九.hexo常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#十-博客迁移到另一台电脑"><span class="toc-number">1.10.</span> <span class="toc-text">十.博客迁移到另一台电脑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#法一："><span class="toc-number">1.10.1.</span> <span class="toc-text">法一：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#法一"><span class="toc-number">1.10.2.</span> <span class="toc-text">法一:</span></a></li></ol></li></ol></li></ol></li>
     </ul>
   </div>
 </main>
@@ -493,9 +475,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
 </footer>
   <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
   <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  
-<script src="/js/mdui.js"></script>
+  <script src="/js/mdui.js"></script>
 <script src="/js/script.js"></script>
-
 </body>
 </html>

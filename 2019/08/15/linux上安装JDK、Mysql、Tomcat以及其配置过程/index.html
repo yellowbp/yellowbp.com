@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta http-equiv="Cache-Control" content="no-siteapp">
@@ -13,12 +13,13 @@
   <link rel="shortcut icon" href="/images/favicon.png">
   
   <meta name="description" content="如何在阿里云上安装JDK、Mysql、Tomcat一.准备家当 操作系统：购买阿里云的服务器：CentOS 7 工具：putty和winSCP JDK版本：1.8 Tomcat版本：9 Mysql版本：5.7  有2种方法安装软件：  傻瓜式(宝塔面板)  图形化界面  相当于在360中的一键安装    命令行（掌握）：安装软件一般有三种方式  rpm 解压缩 yum    二.JDK安装通过rp">
+<meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="阿里云上安装JDK、Mysql、Tomcat以及其配置过程">
-<meta property="og:url" content="https://yellowbp.github.io/2019/08/15/linux%E4%B8%8A%E5%AE%89%E8%A3%85JDK%E3%80%81Mysql%E3%80%81Tomcat%E4%BB%A5%E5%8F%8A%E5%85%B6%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:url" content="https://yellowbp.github.io/2019/08/15/linux上安装JDK、Mysql、Tomcat以及其配置过程/index.html">
 <meta property="og:site_name" content="bp的Blog">
 <meta property="og:description" content="如何在阿里云上安装JDK、Mysql、Tomcat一.准备家当 操作系统：购买阿里云的服务器：CentOS 7 工具：putty和winSCP JDK版本：1.8 Tomcat版本：9 Mysql版本：5.7  有2种方法安装软件：  傻瓜式(宝塔面板)  图形化界面  相当于在360中的一键安装    命令行（掌握）：安装软件一般有三种方式  rpm 解压缩 yum    二.JDK安装通过rp">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/jdk%E4%B8%8B%E8%BD%BD.png">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/winSCP%E7%99%BB%E5%BD%95.png">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E6%8B%96%E6%8B%BD.png">
@@ -32,7 +33,7 @@
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E7%A7%BB%E5%8A%A8%E6%96%87%E4%BB%B6.png">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E6%9F%A5%E8%AF%A2tomcat%E7%A7%BB%E5%8A%A8.png">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E8%A7%A3%E5%8E%8Btomcat.png">
-<meta property="og:image" content="c:/Users/hbp/AppData/Roaming/Typora/typora-user-images/1564246983916.png">
+<meta property="og:image" content="c:%5CUsers%5Chbp%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564246983916.png">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F.png">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E8%AE%A9%E9%85%8D%E7%BD%AE%E7%94%9F%E6%95%88.png">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%99.png">
@@ -44,21 +45,20 @@
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/mysql%E9%BB%98%E8%AE%A4%E5%AD%97%E7%AC%A6%E9%9B%86.png">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E4%BF%AE%E6%94%B9%E5%90%8E%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%86.png">
 <meta property="og:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/3306.png">
-<meta property="article:published_time" content="2019-08-15T03:27:23.000Z">
-<meta property="article:modified_time" content="2021-03-15T03:02:53.172Z">
-<meta property="article:author" content="hbp">
-<meta property="article:tag" content="linux">
+<meta property="og:updated_time" content="2021-03-15T03:02:53.172Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="阿里云上安装JDK、Mysql、Tomcat以及其配置过程">
+<meta name="twitter:description" content="如何在阿里云上安装JDK、Mysql、Tomcat一.准备家当 操作系统：购买阿里云的服务器：CentOS 7 工具：putty和winSCP JDK版本：1.8 Tomcat版本：9 Mysql版本：5.7  有2种方法安装软件：  傻瓜式(宝塔面板)  图形化界面  相当于在360中的一键安装    命令行（掌握）：安装软件一般有三种方式  rpm 解压缩 yum    二.JDK安装通过rp">
 <meta name="twitter:image" content="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/jdk%E4%B8%8B%E8%BD%BD.png">
 
   <meta name="format-detection" content="telephone=no,email=no">
   <meta name="theme-color" content="#9C27B0">
-  <meta name="description" content="">
+  <meta name="description" content>
   <meta name="keywords" content=",linux">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="bp的Blog">
-  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/08/15/linux%E4%B8%8A%E5%AE%89%E8%A3%85JDK%E3%80%81Mysql%E3%80%81Tomcat%E4%BB%A5%E5%8F%8A%E5%85%B6%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B/">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/08/15/linux上安装JDK、Mysql、Tomcat以及其配置过程/">
   <meta name="msapplication-navbutton-color" content="#9C27B0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="bp的Blog">
@@ -71,7 +71,7 @@
   
 
   
-    <link rel="canonical" href="https://yellowbp.github.io/2019/08/15/linux%E4%B8%8A%E5%AE%89%E8%A3%85JDK%E3%80%81Mysql%E3%80%81Tomcat%E4%BB%A5%E5%8F%8A%E5%85%B6%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B/">
+    <link rel="canonical" href="https://yellowbp.github.io/2019/08/15/linux上安装JDK、Mysql、Tomcat以及其配置过程/">
   
 
   <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
@@ -94,11 +94,9 @@
 </script>
   
 
-  
-<link rel="stylesheet" href="/css/mdui.css">
+  <link rel="stylesheet" href="/css/mdui.css">
 <link rel="stylesheet" href="/css/style.css">
-
-<meta name="generator" content="Hexo 5.4.0"></head>
+</head>
 <body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
   <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
   <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
@@ -149,7 +147,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
         
       </div>
     </div>
@@ -161,7 +159,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">37</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">36</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/服务器/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -173,7 +171,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-none-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/algorithm/" rel="tag">algorithm<span class="mdui-ripple sidebar_archives-none-count">7</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java/" rel="tag">java<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/javaWeb/" rel="tag">javaWeb<span class="mdui-ripple sidebar_archives-none-count">14</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/linux/" rel="tag">linux<span class="mdui-ripple sidebar_archives-none-count">2</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/mysql/" rel="tag">mysql<span class="mdui-ripple sidebar_archives-none-count">4</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/nginx/" rel="tag">nginx<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/redis/" rel="tag">redis<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/win7/" rel="tag">win7<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%85%B6%E4%BB%96/" rel="tag">其他<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/" rel="tag">笔记本选购<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AE%A1%E7%90%86/" rel="tag">管理<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式<span class="mdui-ripple sidebar_archives-none-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java/">java<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/管理/">管理<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -202,13 +200,11 @@
   </div>
 </aside>
   <main id="main" class="mdui-m-t-5 fadeIn animated">
-  
-<link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
-
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
   <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
   <article class="mdui-card mdui-m-b-5">
     <header class="mdui-card-media">
-      <img src="/images/random/material-16.png" style="max-height: 240px;">
+      <img src="/images/random/material-17.png" style="max-height: 240px;">
       <div class="mdui-card-media-covered">
         <div class="mdui-card-primary">
           <div class="mdui-card-primary-title">阿里云上安装JDK、Mysql、Tomcat以及其配置过程</div>
@@ -228,7 +224,7 @@
     <div class="mdui-card-content mdui-typo">
       <h1 id="如何在阿里云上安装JDK、Mysql、Tomcat"><a href="#如何在阿里云上安装JDK、Mysql、Tomcat" class="headerlink" title="如何在阿里云上安装JDK、Mysql、Tomcat"></a>如何在阿里云上安装JDK、Mysql、Tomcat</h1><h2 id="一-准备家当"><a href="#一-准备家当" class="headerlink" title="一.准备家当"></a><strong>一.准备家当</strong></h2><ul>
 <li>操作系统：购买阿里云的服务器：CentOS 7</li>
-<li>工具：<a target="_blank" rel="noopener" href="https://usualsoftware.oss-cn-shenzhen.aliyuncs.com/putty/putty.exe">putty</a>和winSCP</li>
+<li>工具：<a href="https://usualsoftware.oss-cn-shenzhen.aliyuncs.com/putty/putty.exe" target="_blank" rel="noopener">putty</a>和winSCP</li>
 <li>JDK版本：1.8</li>
 <li>Tomcat版本：9</li>
 <li>Mysql版本：5.7</li>
@@ -252,7 +248,7 @@
 </li>
 </ol>
 <h2 id="二-JDK安装"><a href="#二-JDK安装" class="headerlink" title="二.JDK安装"></a>二.JDK安装</h2><p>通过rpm方式</p>
-<h3 id="1-首先到官网下载jdk8到本地（此方法不需要配置环境变量）JDK下载"><a href="#1-首先到官网下载jdk8到本地（此方法不需要配置环境变量）JDK下载" class="headerlink" title="1.首先到官网下载jdk8到本地（此方法不需要配置环境变量）JDK下载"></a>1.首先到官网下载jdk8到本地（此方法不需要配置环境变量）<a target="_blank" rel="noopener" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">JDK下载</a></h3><p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/jdk%E4%B8%8B%E8%BD%BD.png" alt="1564241027161"></p>
+<h3 id="1-首先到官网下载jdk8到本地（此方法不需要配置环境变量）JDK下载"><a href="#1-首先到官网下载jdk8到本地（此方法不需要配置环境变量）JDK下载" class="headerlink" title="1.首先到官网下载jdk8到本地（此方法不需要配置环境变量）JDK下载"></a>1.首先到官网下载jdk8到本地（此方法不需要配置环境变量）<a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="noopener">JDK下载</a></h3><p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/jdk%E4%B8%8B%E8%BD%BD.png" alt="1564241027161"></p>
 <h3 id="2-通过winSCP把rpm文件上传到云服务器上"><a href="#2-通过winSCP把rpm文件上传到云服务器上" class="headerlink" title="2.通过winSCP把rpm文件上传到云服务器上"></a>2.通过winSCP把rpm文件上传到云服务器上</h3><ul>
 <li><p>2-1 进入登录界面，主机名为你服务器的外网ip，用户名和密码是进入你服务器的信息</p>
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/winSCP%E7%99%BB%E5%BD%95.png" alt="1564241239076"></p>
@@ -260,16 +256,20 @@
 </ul>
 <h3 id="3-把rpm文件直接拖拽到右侧"><a href="#3-把rpm文件直接拖拽到右侧" class="headerlink" title="3.把rpm文件直接拖拽到右侧"></a>3.把rpm文件直接拖拽到右侧</h3><p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E6%8B%96%E6%8B%BD.png" alt="1564241761116"></p>
 <h3 id="4-通过putty工具远程登录连接到服务器"><a href="#4-通过putty工具远程登录连接到服务器" class="headerlink" title="4.通过putty工具远程登录连接到服务器"></a>4.通过putty工具远程登录连接到服务器</h3><ul>
-<li><font size=4>4-1 填入你服务器的外网ip，接着点‘open’</font></li>
+<li><font size="4">4-1 填入你服务器的外网ip，接着点‘open’</font></li>
 </ul>
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/puttyLogin.png" alt="1564154862568"></p>
 <ul>
-<li><font size=4>4-2  用户名和密码与你上述输入winSCP的信息一致（密码需要你自行去你服务器的管理端设置），下面黑框的密码是隐藏的（不要以为是卡了）</font></li>
+<li><font size="4">4-2  用户名和密码与你上述输入winSCP的信息一致（密码需要你自行去你服务器的管理端设置），下面黑框的密码是隐藏的（不要以为是卡了）</font></li>
 </ul>
-<p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/putty%E9%BB%91%E6%A1%86%E7%99%BB%E5%BD%95.png"></p>
+<p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/putty%E9%BB%91%E6%A1%86%E7%99%BB%E5%BD%95.png" alt></p>
 <h3 id="5-安装jdk"><a href="#5-安装jdk" class="headerlink" title="5.安装jdk"></a>5.安装jdk</h3><ul>
 <li><p>5-1 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">查看当前目录下的文件：ls</span><br><span class="line"></span><br><span class="line">执行安装命令：rpm -ivh jdk-8u221-linux-x64.rpm</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">查看当前目录下的文件：ls</span><br><span class="line"></span><br><span class="line">执行安装命令：rpm -ivh jdk-8u221-linux-x64.rpm</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
 </ul>
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E5%AE%89%E8%A3%85%E7%95%8C%E9%9D%A2.png" alt="1564242402712"></p>
 <ul>
@@ -278,49 +278,45 @@
 
 
 
-<p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E9%AA%8Cjava.png" alt="1564242556940"></p>
 </li>
 </ul>
+<p>  <img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E9%AA%8Cjava.png" alt="1564242556940"></p>
 <h3 id="6、jdk卸载"><a href="#6、jdk卸载" class="headerlink" title="6、jdk卸载"></a>6、jdk卸载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检测当前系统是否存在java环境： java -version</span></span><br><span class="line"><span class="comment"># 先查看jdk版本的信息：rpm -qa|grep jdk</span></span><br><span class="line"><span class="comment"># 卸载：rpm -e --nodeps jdk的版本信息</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@iZwz9ick8j8tmsj93waiowZ java]<span class="comment"># rpm -qa|grep jdk</span></span><br><span class="line">jdk1.8-1.8.0_221-fcs.x86_64</span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ java]<span class="comment"># rpm -e --nodeps jdk1.8-1.8.0_221-fcs.x86_64</span></span><br><span class="line">[root@iZwz9ick8j8tmsj93waiowZ java]<span class="comment"># java -version</span></span><br><span class="line">-bash: /usr/bin/java: No such file or directory</span><br></pre></td></tr></table></figure>
 
-
-
 <h2 id="三-Tomcat的安装"><a href="#三-Tomcat的安装" class="headerlink" title="三.Tomcat的安装"></a>三.Tomcat的安装</h2><p>通过解压缩方式</p>
-<h3 id="1-下载Tomcat9"><a href="#1-下载Tomcat9" class="headerlink" title="1.下载Tomcat9"></a>1.下载<a target="_blank" rel="noopener" href="https://tomcat.apache.org/download-90.cgi">Tomcat9</a></h3><p>linux默认的解压格式是tar.gz</p>
+<h3 id="1-下载Tomcat9"><a href="#1-下载Tomcat9" class="headerlink" title="1.下载Tomcat9"></a>1.下载<a href="https://tomcat.apache.org/download-90.cgi" target="_blank" rel="noopener">Tomcat9</a></h3><p>linux默认的解压格式是tar.gz</p>
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/tomcat9%E4%B8%8B%E8%BD%BD.png" alt="1564243942352"></p>
 <h3 id="2-将此压缩包上传到服务器"><a href="#2-将此压缩包上传到服务器" class="headerlink" title="2.将此压缩包上传到服务器"></a>2.将此压缩包上传到服务器</h3><p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E4%B8%8A%E4%BC%A0tomca.png" alt="1564244017924"></p>
-<h3 id="3-新建tomcat文件夹"><a href="#3-新建tomcat文件夹" class="headerlink" title="3.新建tomcat文件夹"></a>3.新建tomcat文件夹</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">进入&#x2F;usr&#x2F;local：cd &#x2F;usr&#x2F;local</span><br><span class="line">新建文件夹：mkdir tomcat</span><br></pre></td></tr></table></figure>
+<h3 id="3-新建tomcat文件夹"><a href="#3-新建tomcat文件夹" class="headerlink" title="3.新建tomcat文件夹"></a>3.新建tomcat文件夹</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">进入/usr/local：cd /usr/local</span><br><span class="line">新建文件夹：mkdir tomcat</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E6%96%B0%E5%BB%BAtomcat%E6%96%87%E4%BB%B6%E5%A4%B9.png" alt="1564246013731"></p>
 <h3 id="4-移动tomcat压缩包至tomcat文件夹"><a href="#4-移动tomcat压缩包至tomcat文件夹" class="headerlink" title="4.移动tomcat压缩包至tomcat文件夹"></a>4.移动tomcat压缩包至tomcat文件夹</h3><p>考虑后面要做tomcat集群，所以新建立目录并将解压包移进去：</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">移动文件：mv /root/apache-tomcat-9.0.22.tar.gz /usr/local/tomcat</span><br><span class="line">进入文件：cd/usr/local/tomcat</span><br></pre></td></tr></table></figure>
-
-
 
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E7%A7%BB%E5%8A%A8%E6%96%87%E4%BB%B6.png" alt="1564246268768"></p>
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E6%9F%A5%E8%AF%A2tomcat%E7%A7%BB%E5%8A%A8.png" alt="1564246305016"></p>
 <h3 id="5-解压文件"><a href="#5-解压文件" class="headerlink" title="5.解压文件"></a>5.解压文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在此目录解压文件：tar -zxvf apache-tomcat-9.0.22.tar.gz</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E8%A7%A3%E5%8E%8Btomcat.png" alt="1564246496516"></p>
-<h3 id="6-配置环境变量"><a href="#6-配置环境变量" class="headerlink" title="6.配置环境变量"></a>6.配置环境变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">编辑：vim &#x2F;etc&#x2F;profile.d&#x2F;tomcat.sh</span><br><span class="line">编辑窗口下：CATALINA_BASE&#x3D;&#x2F;usr&#x2F;local&#x2F;tomcat</span><br><span class="line">          PATH&#x3D;$CATALINA_BASE&#x2F;bin:$PATH</span><br><span class="line">          export PATH CATALINA_BAS</span><br><span class="line">让配置生效：source  &#x2F;etc&#x2F;profile.d&#x2F;tomcat.sh</span><br></pre></td></tr></table></figure>
+<h3 id="6-配置环境变量"><a href="#6-配置环境变量" class="headerlink" title="6.配置环境变量"></a>6.配置环境变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">编辑：vim /etc/profile.d/tomcat.sh</span><br><span class="line">编辑窗口下：CATALINA_BASE=/usr/local/tomcat</span><br><span class="line">          PATH=$CATALINA_BASE/bin:$PATH</span><br><span class="line">          export PATH CATALINA_BAS</span><br><span class="line">让配置生效：source  /etc/profile.d/tomcat.sh</span><br></pre></td></tr></table></figure>
 
-<p><font size=3 color=blue>退出编辑模式：按下Esc后，输入冒号：然后输wq</font></p>
-<p><img src="C:\Users\hbp\AppData\Roaming\Typora\typora-user-images\1564246983916.png"></p>
+<p><font size="3" color="blue">退出编辑模式：按下Esc后，输入冒号：然后输wq</font></p>
+<p><img src="C:%5CUsers%5Chbp%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564246983916.png" alt></p>
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F.png" alt="1564246926530"></p>
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E8%AE%A9%E9%85%8D%E7%BD%AE%E7%94%9F%E6%95%88.png" alt="1564247149854"></p>
 <h3 id="7-开启防火墙"><a href="#7-开启防火墙" class="headerlink" title="7.开启防火墙"></a>7.开启防火墙</h3><p>确保Linux的防火墙端口是开启的，如果是阿里云，需要保证安全组策略对应的端口号也是开启的，下面有说明</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">查看防火墙状态：systemctl status firewalld</span><br><span class="line">显示running即已开启了</span><br><span class="line">或没有开启</span><br><span class="line">systemctl start firewalld</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%99.png"></p>
+<p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%99.png" alt></p>
 <h3 id="8-开放-8080-端口，重启防火墙"><a href="#8-开放-8080-端口，重启防火墙" class="headerlink" title="8.开放 8080 端口，重启防火墙"></a>8.开放 8080 端口，重启防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开放 8080 端口：</span></span><br><span class="line">firewall-cmd --zone=public --add-port=8080/tcp --permanent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启防火墙：</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line">或者：systemctl restart firewalld.service（有些系统版本是用这个的）</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有开启的端口</span></span><br><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E6%94%BE8080%20%E7%AB%AF%E5%8F%A3%E9%87%8D%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%99.png"></p>
+<p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E5%BC%80%E6%94%BE8080%20%E7%AB%AF%E5%8F%A3%E9%87%8D%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%99.png" alt></p>
 <h3 id="9-启动tomcat"><a href="#9-启动tomcat" class="headerlink" title="9.启动tomcat"></a>9.启动tomcat</h3><ul>
 <li>1.进入到tomcat的bin目录输入启动命令：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;startup.sh  </span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./startup.sh</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1.png" alt="1564248026806"></p>
 <h3 id="10-配置安全组"><a href="#10-配置安全组" class="headerlink" title="10.配置安全组"></a>10.配置安全组</h3><ul>
@@ -343,31 +339,32 @@
 
 <h3 id="5-查询mysql的运行状态"><a href="#5-查询mysql的运行状态" class="headerlink" title="5.查询mysql的运行状态"></a>5.查询mysql的运行状态</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status mysqld.service</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">● mysqld.service - MySQL Server</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/mysqld.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Mon 2021-03-01 19:39:44 CST; 3s ago</span><br><span class="line">     Docs: man:mysqld(8)</span><br><span class="line">           http://dev.mysql.com/doc/refman/en/using-systemd.html</span><br><span class="line">  Process: 15621 ExecStart=/usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid <span class="variable">$MYSQLD_OPTS</span> (code=exited, status=0/SUCCESS)</span><br><span class="line">  Process: 15567 ExecStartPre=/usr/bin/mysqld_pre_systemd (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 15625 (mysqld)</span><br><span class="line">   CGroup: /system.slice/mysqld.service</span><br><span class="line">           └─15625 /usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"></span><br><span class="line">Mar 01 19:39:39 iZwz9ick8j8tmsj93waiowZ systemd[1]: Starting MySQL Server...</span><br><span class="line">Mar 01 19:39:44 iZwz9ick8j8tmsj93waiowZ systemd[1]: Started MySQL Server.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">● mysqld.service - MySQL Server</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/mysqld.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Mon 2021-03-01 19:39:44 CST; 3s ago</span><br><span class="line">     Docs: man:mysqld(8)</span><br><span class="line">           http://dev.mysql.com/doc/refman/en/using-systemd.html</span><br><span class="line">  Process: 15621 ExecStart=/usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid <span class="variable">$MYSQLD_OPTS</span> (code=exited, status=0/SUCCESS)</span><br><span class="line">  Process: 15567 ExecStartPre=/usr/bin/mysqld_pre_systemd (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 15625 (mysqld)</span><br><span class="line">   CGroup: /system.slice/mysqld.service</span><br><span class="line">           └─15625 /usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid</span><br><span class="line"></span><br><span class="line">Mar 01 19:39:39 iZwz9ick8j8tmsj93waiowZ systemd[1]: Starting MySQL Server...</span><br><span class="line">Mar 01 19:39:44 iZwz9ick8j8tmsj93waiowZ systemd[1]: Started MySQL Server.</span><br></pre></td></tr></table></figure>
 
 <h3 id="5-开机启动"><a href="#5-开机启动" class="headerlink" title="5.开机启动"></a>5.开机启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> mysqld</span><br><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
 
 <h3 id="6-修改root本地登录密码"><a href="#6-修改root本地登录密码" class="headerlink" title="6. 修改root本地登录密码"></a>6. 修改root本地登录密码</h3><ol>
 <li><strong>mysql安装完成之后，在/var/log/mysqld.log文件中给root生成了一个默认密码。通过下面的方式找到root默认密码，然后登录mysql进行修改：</strong></li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&#x27;temporary password&#x27;</span> /var/<span class="built_in">log</span>/mysqld.log</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">'temporary password'</span> /var/<span class="built_in">log</span>/mysqld.log</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li><p><strong>这样会打印出一个分配到的密码。用root登陆mysql</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p</span><br></pre></td></tr></table></figure>
+
+<p>输入：分配到的新密码</p>
+</li>
+<li><p><strong>输入以下命令来修改密码</strong></p>
+</li>
 </ol>
-<p>   输入：分配到的新密码</p>
-<ol start="3">
-<li><strong>输入以下命令来修改密码</strong></li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;xxx&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER <span class="string">'root'</span>@<span class="string">'localhost'</span> IDENTIFIED BY <span class="string">'xxx'</span>;</span><br></pre></td></tr></table></figure>
 
 <p>注意：xxx要有大小写字母，数字，特殊字符</p>
 <p>（因为mysql5.7的安全机制，密码一定要有大小写字母和特殊符号和数字。）</p>
 <h3 id="7-重新启动mysql服务使配置生效："><a href="#7-重新启动mysql服务使配置生效：" class="headerlink" title="7.  重新启动mysql服务使配置生效："></a>7.  重新启动mysql服务使配置生效：</h3>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart mysqld</span><br></pre></td></tr></table></figure>
 
 <p>添加远程登录用户<br>默认只允许root帐户在本地登录，如果要在其它机器上连接mysql，必须修改root允许远程连接，或者添加一个允许远程连接的帐户，为了安全起见，我添加一个新的帐户并设置用户拥有所有权限也就是管理员：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grant all privileges on *.* to &#x27;新用户名&#x27;@&#x27;指定ip&#x27; identified by &#x27;新用户密码&#x27; WITH GRANT OPTION;</span></span><br><span class="line">mysql&gt; GRANT ALL PRIVILEGES ON *.* TO <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密码&#x27;</span> WITH GRANT OPTION;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grant all privileges on *.* to '新用户名'@'指定ip' identified by '新用户密码' WITH GRANT OPTION;</span></span><br><span class="line">mysql&gt; GRANT ALL PRIVILEGES ON *.* TO <span class="string">'root'</span>@<span class="string">'%'</span> IDENTIFIED BY <span class="string">'密码'</span> WITH GRANT OPTION;</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>这个的%表示所有的ip都可以远程访问此数据库</li>
@@ -378,14 +375,14 @@
 <li><p>如何查看默认的编码字符集：</p>
 </li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在linux登录mysql后</span></span><br><span class="line">status</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">show variables like <span class="string">&#x27;%char%&#x27;</span>;</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">show variables like <span class="string">&#x27;%character%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在linux登录mysql后</span></span><br><span class="line">status</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">show variables like <span class="string">'%char%'</span>;</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">show variables like <span class="string">'%character%'</span>;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/mysql%E9%BB%98%E8%AE%A4%E5%AD%97%E7%AC%A6%E9%9B%86.png"></p>
+<p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/mysql%E9%BB%98%E8%AE%A4%E5%AD%97%E7%AC%A6%E9%9B%86.png" alt></p>
 <h4 id="8-2-修改字符集"><a href="#8-2-修改字符集" class="headerlink" title="8.2 修改字符集"></a>8.2 修改字符集</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入/etc目录</span></span><br><span class="line"><span class="built_in">cd</span> /etc/my.cnf</span><br><span class="line"><span class="comment"># 修改配置文件my.cnf</span></span><br><span class="line">vim my.cnf</span><br><span class="line"><span class="comment"># 在输入模式下，把下面这些代码输入到首行</span></span><br><span class="line">[client]</span><br><span class="line">default-character-set=utf8</span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8</span><br><span class="line">[mysqld]</span><br><span class="line">character-set-server=utf8</span><br><span class="line">collation-server=utf8_unicode_ci</span><br></pre></td></tr></table></figure>
 
 <h4 id="8-3-重启mysql"><a href="#8-3-重启mysql" class="headerlink" title="8.3 重启mysql"></a>8.3 重启mysql</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart mysqld</span><br></pre></td></tr></table></figure>
 
-<h4 id="8-4-再看查看字符集"><a href="#8-4-再看查看字符集" class="headerlink" title="8.4 再看查看字符集"></a>8.4 再看查看字符集</h4><p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E4%BF%AE%E6%94%B9%E5%90%8E%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%86.png"></p>
+<h4 id="8-4-再看查看字符集"><a href="#8-4-再看查看字符集" class="headerlink" title="8.4 再看查看字符集"></a>8.4 再看查看字符集</h4><p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/%E4%BF%AE%E6%94%B9%E5%90%8E%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%86.png" alt></p>
 <h3 id="9-mysql安装位置"><a href="#9-mysql安装位置" class="headerlink" title="9.mysql安装位置"></a>9.mysql安装位置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name mysql</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -415,7 +412,7 @@
 <h3 id="10-开放3306端口，重启防火墙"><a href="#10-开放3306端口，重启防火墙" class="headerlink" title="10. 开放3306端口，重启防火墙"></a>10. 开放3306端口，重启防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开放 8080 端口：</span></span><br><span class="line">firewall-cmd --zone=public --add-port=3306/tcp --permanent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启防火墙：</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line">或者：systemctl restart firewalld.service（有些系统版本是用这个的）</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有开启的端口</span></span><br><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure>
 
 <h3 id="11-配置安全组"><a href="#11-配置安全组" class="headerlink" title="11.配置安全组"></a>11.配置安全组</h3><ul>
-<li> 到阿里云管理台的防火墙那添加规则</li>
+<li>到阿里云管理台的防火墙那添加规则</li>
 </ul>
 <p><img src="https://aliinstallimages.oss-cn-shenzhen.aliyuncs.com/3306.png" alt="1564249347611"></p>
 <h3 id="9-自行下载一个数据库客户端测试"><a href="#9-自行下载一个数据库客户端测试" class="headerlink" title="9.自行下载一个数据库客户端测试"></a>9.自行下载一个数据库客户端测试</h3><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>简单记录一下在Linux CentOS 7中安装jdk，tomcat，mysql的全过程，希望对有需求的朋友有所帮助</p>
@@ -424,37 +421,35 @@
         
           <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
         
-        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/08/15/linux%E4%B8%8A%E5%AE%89%E8%A3%85JDK%E3%80%81Mysql%E3%80%81Tomcat%E4%BB%A5%E5%8F%8A%E5%85%B6%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B/">https://yellowbp.github.io/2019/08/15/linux%E4%B8%8A%E5%AE%89%E8%A3%85JDK%E3%80%81Mysql%E3%80%81Tomcat%E4%BB%A5%E5%8F%8A%E5%85%B6%E9%85%8D%E7%BD%AE%E8%BF%87%E7%A8%8B/</a>
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/08/15/linux上安装JDK、Mysql、Tomcat以及其配置过程/">https://yellowbp.github.io/2019/08/15/linux上安装JDK、Mysql、Tomcat以及其配置过程/</a>
       </blockquote>
       
     </div>
     <footer class="mdui-card-actions">
       
-        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+        <a class="mdui-ripple article_categories-link" href="/categories/技术/">技术</a>
       
       
-        <a class="mdui-ripple article_tags-none-link" href="/tags/linux/" rel="tag">linux</a>
+        <a class="mdui-ripple article_tags-link" href="/tags/linux/">linux</a>
       
     </footer>
     
   </article>
-  
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
-
   <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
 
 
   <nav id="paginator">
     
-      <a rel="prev" class="extend prev" href="/2019/08/15/JAVA%E5%AE%9E%E7%8E%B0%E7%9F%AD%E4%BF%A1%E9%AA%8C%E8%AF%81%E7%A0%81/">
+      <a rel="prev" class="extend prev" href="/2019/08/15/JAVA实现短信验证码/">
         <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
       </a>
     
     <div class="spacer"></div>
     
-      <a rel="next" class="extend next" href="/2019/08/15/%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8CTomcat9%E7%9A%84%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/">
+      <a rel="next" class="extend next" href="/2019/08/15/解决数据库和Tomcat9的中文乱码问题/">
         下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
       </a>
@@ -464,7 +459,7 @@
 
   <div id="comment" class="mdui-m-t-5">
     <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
-<div id="SOHUCS" sid="ckoed7szf000frctw4er3cfkf"></div>
+<div id="SOHUCS" sid="ckoefg3lu000ulwtw8brnrgzs"></div>
 <script type="text/javascript">
 (function(){
 var appid = 'cyubhC2Dq';
@@ -479,7 +474,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
   <div style="position: fixed !important; right: 16px; top: 30%;">
     <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
     <ul class="mdui-menu" id="toc">
-      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%9C%A8%E9%98%BF%E9%87%8C%E4%BA%91%E4%B8%8A%E5%AE%89%E8%A3%85JDK%E3%80%81Mysql%E3%80%81Tomcat"><span class="toc-number">1.</span> <span class="toc-text">如何在阿里云上安装JDK、Mysql、Tomcat</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E5%87%86%E5%A4%87%E5%AE%B6%E5%BD%93"><span class="toc-number">1.1.</span> <span class="toc-text">一.准备家当</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-JDK%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">二.JDK安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%A6%96%E5%85%88%E5%88%B0%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BDjdk8%E5%88%B0%E6%9C%AC%E5%9C%B0%EF%BC%88%E6%AD%A4%E6%96%B9%E6%B3%95%E4%B8%8D%E9%9C%80%E8%A6%81%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%EF%BC%89JDK%E4%B8%8B%E8%BD%BD"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.首先到官网下载jdk8到本地（此方法不需要配置环境变量）JDK下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%80%9A%E8%BF%87winSCP%E6%8A%8Arpm%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%88%B0%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.通过winSCP把rpm文件上传到云服务器上</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8A%8Arpm%E6%96%87%E4%BB%B6%E7%9B%B4%E6%8E%A5%E6%8B%96%E6%8B%BD%E5%88%B0%E5%8F%B3%E4%BE%A7"><span class="toc-number">1.2.3.</span> <span class="toc-text">3.把rpm文件直接拖拽到右侧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%80%9A%E8%BF%87putty%E5%B7%A5%E5%85%B7%E8%BF%9C%E7%A8%8B%E7%99%BB%E5%BD%95%E8%BF%9E%E6%8E%A5%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.2.4.</span> <span class="toc-text">4.通过putty工具远程登录连接到服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%AE%89%E8%A3%85jdk"><span class="toc-number">1.2.5.</span> <span class="toc-text">5.安装jdk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6%E3%80%81jdk%E5%8D%B8%E8%BD%BD"><span class="toc-number">1.2.6.</span> <span class="toc-text">6、jdk卸载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-Tomcat%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.</span> <span class="toc-text">三.Tomcat的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%8B%E8%BD%BDTomcat9"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.下载Tomcat9</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B0%86%E6%AD%A4%E5%8E%8B%E7%BC%A9%E5%8C%85%E4%B8%8A%E4%BC%A0%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.将此压缩包上传到服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%96%B0%E5%BB%BAtomcat%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.新建tomcat文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%A7%BB%E5%8A%A8tomcat%E5%8E%8B%E7%BC%A9%E5%8C%85%E8%87%B3tomcat%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">1.3.4.</span> <span class="toc-text">4.移动tomcat压缩包至tomcat文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E8%A7%A3%E5%8E%8B%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.5.</span> <span class="toc-text">5.解压文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">1.3.6.</span> <span class="toc-text">6.配置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%BC%80%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-number">1.3.7.</span> <span class="toc-text">7.开启防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E5%BC%80%E6%94%BE-8080-%E7%AB%AF%E5%8F%A3%EF%BC%8C%E9%87%8D%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-number">1.3.8.</span> <span class="toc-text">8.开放 8080 端口，重启防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E5%90%AF%E5%8A%A8tomcat"><span class="toc-number">1.3.9.</span> <span class="toc-text">9.启动tomcat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E9%85%8D%E7%BD%AE%E5%AE%89%E5%85%A8%E7%BB%84"><span class="toc-number">1.3.10.</span> <span class="toc-text">10.配置安全组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AEtomcat%E4%B8%BB%E9%A1%B5%EF%BC%9Aip%E5%9C%B0%E5%9D%80%EF%BC%9A8080"><span class="toc-number">1.3.11.</span> <span class="toc-text">11.在浏览器访问tomcat主页：ip地址：8080</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-mysql%E5%AE%89%E8%A3%85"><span class="toc-number">1.4.</span> <span class="toc-text">三.mysql安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%8B%E8%BD%BDmysql%E6%BA%90%E5%AE%89%E8%A3%85%E5%8C%85%EF%BC%9A"><span class="toc-number">1.4.1.</span> <span class="toc-text">1.下载mysql源安装包：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85mysql%E6%BA%90%EF%BC%9A"><span class="toc-number">1.4.2.</span> <span class="toc-text">2.安装mysql源：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85MySQL"><span class="toc-number">1.4.3.</span> <span class="toc-text">3.安装MySQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%90%AF%E5%8A%A8MySQL%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.4.4.</span> <span class="toc-text">4.启动MySQL服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%9F%A5%E8%AF%A2mysql%E7%9A%84%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="toc-number">1.4.5.</span> <span class="toc-text">5.查询mysql的运行状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="toc-number">1.4.6.</span> <span class="toc-text">5.开机启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BF%AE%E6%94%B9root%E6%9C%AC%E5%9C%B0%E7%99%BB%E5%BD%95%E5%AF%86%E7%A0%81"><span class="toc-number">1.4.7.</span> <span class="toc-text">6. 修改root本地登录密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E9%87%8D%E6%96%B0%E5%90%AF%E5%8A%A8mysql%E6%9C%8D%E5%8A%A1%E4%BD%BF%E9%85%8D%E7%BD%AE%E7%94%9F%E6%95%88%EF%BC%9A"><span class="toc-number">1.4.8.</span> <span class="toc-text">7.  重新启动mysql服务使配置生效：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E4%BF%AE%E6%94%B9mysql%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="toc-number">1.4.9.</span> <span class="toc-text">8.修改mysql字符集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-1-%E6%9F%A5%E7%9C%8Bmysql%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="toc-number">1.4.9.1.</span> <span class="toc-text">8.1 查看mysql字符集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-2-%E4%BF%AE%E6%94%B9%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="toc-number">1.4.9.2.</span> <span class="toc-text">8.2 修改字符集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-3-%E9%87%8D%E5%90%AFmysql"><span class="toc-number">1.4.9.3.</span> <span class="toc-text">8.3 重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-%E5%86%8D%E7%9C%8B%E6%9F%A5%E7%9C%8B%E5%AD%97%E7%AC%A6%E9%9B%86"><span class="toc-number">1.4.9.4.</span> <span class="toc-text">8.4 再看查看字符集</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-mysql%E5%AE%89%E8%A3%85%E4%BD%8D%E7%BD%AE"><span class="toc-number">1.4.10.</span> <span class="toc-text">9.mysql安装位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E5%BC%80%E6%94%BE3306%E7%AB%AF%E5%8F%A3%EF%BC%8C%E9%87%8D%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-number">1.4.11.</span> <span class="toc-text">10. 开放3306端口，重启防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E9%85%8D%E7%BD%AE%E5%AE%89%E5%85%A8%E7%BB%84"><span class="toc-number">1.4.12.</span> <span class="toc-text">11.配置安全组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E8%87%AA%E8%A1%8C%E4%B8%8B%E8%BD%BD%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.13.</span> <span class="toc-text">9.自行下载一个数据库客户端测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol></li>
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#如何在阿里云上安装JDK、Mysql、Tomcat"><span class="toc-number">1.</span> <span class="toc-text">如何在阿里云上安装JDK、Mysql、Tomcat</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-准备家当"><span class="toc-number">1.1.</span> <span class="toc-text">一.准备家当</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-JDK安装"><span class="toc-number">1.2.</span> <span class="toc-text">二.JDK安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-首先到官网下载jdk8到本地（此方法不需要配置环境变量）JDK下载"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.首先到官网下载jdk8到本地（此方法不需要配置环境变量）JDK下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-通过winSCP把rpm文件上传到云服务器上"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.通过winSCP把rpm文件上传到云服务器上</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-把rpm文件直接拖拽到右侧"><span class="toc-number">1.2.3.</span> <span class="toc-text">3.把rpm文件直接拖拽到右侧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-通过putty工具远程登录连接到服务器"><span class="toc-number">1.2.4.</span> <span class="toc-text">4.通过putty工具远程登录连接到服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-安装jdk"><span class="toc-number">1.2.5.</span> <span class="toc-text">5.安装jdk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、jdk卸载"><span class="toc-number">1.2.6.</span> <span class="toc-text">6、jdk卸载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-Tomcat的安装"><span class="toc-number">1.3.</span> <span class="toc-text">三.Tomcat的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-下载Tomcat9"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.下载Tomcat9</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-将此压缩包上传到服务器"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.将此压缩包上传到服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-新建tomcat文件夹"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.新建tomcat文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-移动tomcat压缩包至tomcat文件夹"><span class="toc-number">1.3.4.</span> <span class="toc-text">4.移动tomcat压缩包至tomcat文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-解压文件"><span class="toc-number">1.3.5.</span> <span class="toc-text">5.解压文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-配置环境变量"><span class="toc-number">1.3.6.</span> <span class="toc-text">6.配置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-开启防火墙"><span class="toc-number">1.3.7.</span> <span class="toc-text">7.开启防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-开放-8080-端口，重启防火墙"><span class="toc-number">1.3.8.</span> <span class="toc-text">8.开放 8080 端口，重启防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-启动tomcat"><span class="toc-number">1.3.9.</span> <span class="toc-text">9.启动tomcat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-配置安全组"><span class="toc-number">1.3.10.</span> <span class="toc-text">10.配置安全组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-在浏览器访问tomcat主页：ip地址：8080"><span class="toc-number">1.3.11.</span> <span class="toc-text">11.在浏览器访问tomcat主页：ip地址：8080</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-mysql安装"><span class="toc-number">1.4.</span> <span class="toc-text">三.mysql安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-下载mysql源安装包："><span class="toc-number">1.4.1.</span> <span class="toc-text">1.下载mysql源安装包：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-安装mysql源："><span class="toc-number">1.4.2.</span> <span class="toc-text">2.安装mysql源：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-安装MySQL"><span class="toc-number">1.4.3.</span> <span class="toc-text">3.安装MySQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-启动MySQL服务"><span class="toc-number">1.4.4.</span> <span class="toc-text">4.启动MySQL服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-查询mysql的运行状态"><span class="toc-number">1.4.5.</span> <span class="toc-text">5.查询mysql的运行状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-开机启动"><span class="toc-number">1.4.6.</span> <span class="toc-text">5.开机启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-修改root本地登录密码"><span class="toc-number">1.4.7.</span> <span class="toc-text">6. 修改root本地登录密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-重新启动mysql服务使配置生效："><span class="toc-number">1.4.8.</span> <span class="toc-text">7.  重新启动mysql服务使配置生效：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-修改mysql字符集"><span class="toc-number">1.4.9.</span> <span class="toc-text">8.修改mysql字符集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-1-查看mysql字符集"><span class="toc-number">1.4.9.1.</span> <span class="toc-text">8.1 查看mysql字符集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-2-修改字符集"><span class="toc-number">1.4.9.2.</span> <span class="toc-text">8.2 修改字符集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-3-重启mysql"><span class="toc-number">1.4.9.3.</span> <span class="toc-text">8.3 重启mysql</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-4-再看查看字符集"><span class="toc-number">1.4.9.4.</span> <span class="toc-text">8.4 再看查看字符集</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-mysql安装位置"><span class="toc-number">1.4.10.</span> <span class="toc-text">9.mysql安装位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-开放3306端口，重启防火墙"><span class="toc-number">1.4.11.</span> <span class="toc-text">10. 开放3306端口，重启防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-配置安全组"><span class="toc-number">1.4.12.</span> <span class="toc-text">11.配置安全组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-自行下载一个数据库客户端测试"><span class="toc-number">1.4.13.</span> <span class="toc-text">9.自行下载一个数据库客户端测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol></li>
     </ul>
   </div>
 </main>
@@ -516,9 +511,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
 </footer>
   <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
   <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  
-<script src="/js/mdui.js"></script>
+  <script src="/js/mdui.js"></script>
 <script src="/js/script.js"></script>
-
 </body>
 </html>

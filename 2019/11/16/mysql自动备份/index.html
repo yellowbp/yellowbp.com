@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta http-equiv="Cache-Control" content="no-siteapp">
@@ -13,12 +13,14 @@
   <link rel="shortcut icon" href="/images/favicon.png">
   
   <meta name="description" content="脚本实现mysql自动备份一.实现技术： windows定时任务 脚本文件(.bat) 结合winRAR压缩.sql文件    二.准备家当 windows服务器 mysql winRAR  三.如何实现1.编写备份脚本文件 直接把下面的命令复制到记事本上，再慢慢修改  1234567891011121314rem auther:根据你自己的需要取名字rem date:xxxxrem ******">
+<meta name="keywords" content="mysql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="脚本实现mysql自动备份">
-<meta property="og:url" content="https://yellowbp.github.io/2019/11/16/mysql%E8%87%AA%E5%8A%A8%E5%A4%87%E4%BB%BD/index.html">
+<meta property="og:url" content="https://yellowbp.github.io/2019/11/16/mysql自动备份/index.html">
 <meta property="og:site_name" content="bp的Blog">
 <meta property="og:description" content="脚本实现mysql自动备份一.实现技术： windows定时任务 脚本文件(.bat) 结合winRAR压缩.sql文件    二.准备家当 windows服务器 mysql winRAR  三.如何实现1.编写备份脚本文件 直接把下面的命令复制到记事本上，再慢慢修改  1234567891011121314rem auther:根据你自己的需要取名字rem date:xxxxrem ******">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E4%BF%9D%E5%AD%98%E7%9A%84sql%E6%96%87%E4%BB%B6.png">
 <meta property="og:image" content="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%89%93%E5%BC%80%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86%E5%99%A8.png">
 <meta property="og:image" content="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E5%9F%BA%E6%9C%AC%E4%BB%BB%E5%8A%A1.png">
 <meta property="og:image" content="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E5%9F%BA%E6%9C%AC%E4%BB%BB%E5%8A%A1%E5%90%91%E5%AF%BC.png">
@@ -28,21 +30,20 @@
 <meta property="og:image" content="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E6%9F%A5%E4%B8%80%E9%81%8D.png">
 <meta property="og:image" content="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%9F%A5%E7%9C%8B%E4%BB%BB%E5%8A%A1.png">
 <meta property="og:image" content="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%8E%8B%E7%BC%A9%E5%8C%85.png">
-<meta property="article:published_time" content="2019-11-16T09:30:36.000Z">
-<meta property="article:modified_time" content="2019-11-22T05:35:00.023Z">
-<meta property="article:author" content="hbp">
-<meta property="article:tag" content="mysql">
+<meta property="og:updated_time" content="2019-11-22T05:35:00.023Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%89%93%E5%BC%80%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86%E5%99%A8.png">
+<meta name="twitter:title" content="脚本实现mysql自动备份">
+<meta name="twitter:description" content="脚本实现mysql自动备份一.实现技术： windows定时任务 脚本文件(.bat) 结合winRAR压缩.sql文件    二.准备家当 windows服务器 mysql winRAR  三.如何实现1.编写备份脚本文件 直接把下面的命令复制到记事本上，再慢慢修改  1234567891011121314rem auther:根据你自己的需要取名字rem date:xxxxrem ******">
+<meta name="twitter:image" content="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E4%BF%9D%E5%AD%98%E7%9A%84sql%E6%96%87%E4%BB%B6.png">
 
   <meta name="format-detection" content="telephone=no,email=no">
   <meta name="theme-color" content="#9C27B0">
-  <meta name="description" content="">
+  <meta name="description" content>
   <meta name="keywords" content=",mysql">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="bp的Blog">
-  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/11/16/mysql%E8%87%AA%E5%8A%A8%E5%A4%87%E4%BB%BD/">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2019/11/16/mysql自动备份/">
   <meta name="msapplication-navbutton-color" content="#9C27B0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="bp的Blog">
@@ -55,7 +56,7 @@
   
 
   
-    <link rel="canonical" href="https://yellowbp.github.io/2019/11/16/mysql%E8%87%AA%E5%8A%A8%E5%A4%87%E4%BB%BD/">
+    <link rel="canonical" href="https://yellowbp.github.io/2019/11/16/mysql自动备份/">
   
 
   <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
@@ -78,11 +79,9 @@
 </script>
   
 
-  
-<link rel="stylesheet" href="/css/mdui.css">
+  <link rel="stylesheet" href="/css/mdui.css">
 <link rel="stylesheet" href="/css/style.css">
-
-<meta name="generator" content="Hexo 5.4.0"></head>
+</head>
 <body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
   <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
   <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
@@ -133,7 +132,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
         
       </div>
     </div>
@@ -145,7 +144,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">37</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">36</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/服务器/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -157,7 +156,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-none-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/algorithm/" rel="tag">algorithm<span class="mdui-ripple sidebar_archives-none-count">7</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java/" rel="tag">java<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/javaWeb/" rel="tag">javaWeb<span class="mdui-ripple sidebar_archives-none-count">14</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/linux/" rel="tag">linux<span class="mdui-ripple sidebar_archives-none-count">2</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/mysql/" rel="tag">mysql<span class="mdui-ripple sidebar_archives-none-count">4</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/nginx/" rel="tag">nginx<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/redis/" rel="tag">redis<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/win7/" rel="tag">win7<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%85%B6%E4%BB%96/" rel="tag">其他<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/" rel="tag">笔记本选购<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AE%A1%E7%90%86/" rel="tag">管理<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式<span class="mdui-ripple sidebar_archives-none-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java/">java<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/管理/">管理<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -186,13 +185,11 @@
   </div>
 </aside>
   <main id="main" class="mdui-m-t-5 fadeIn animated">
-  
-<link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
-
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
   <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
   <article class="mdui-card mdui-m-b-5">
     <header class="mdui-card-media">
-      <img src="/images/random/material-5.png" style="max-height: 240px;">
+      <img src="/images/random/material-6.png" style="max-height: 240px;">
       <div class="mdui-card-media-covered">
         <div class="mdui-card-primary">
           <div class="mdui-card-primary-title">脚本实现mysql自动备份</div>
@@ -225,7 +222,7 @@
 <h2 id="三-如何实现"><a href="#三-如何实现" class="headerlink" title="三.如何实现"></a>三.如何实现</h2><h4 id="1-编写备份脚本文件"><a href="#1-编写备份脚本文件" class="headerlink" title="1.编写备份脚本文件"></a>1.编写备份脚本文件</h4><blockquote>
 <p><strong>直接把下面的命令复制到记事本上，再慢慢修改</strong></p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">rem auther:根据你自己的需要取名字</span><br><span class="line">rem date:xxxx</span><br><span class="line">rem ******MySQL backup start********</span><br><span class="line"><span class="meta">@echo</span> off</span><br><span class="line">forfiles /p <span class="string">&quot;I:\mysql backup&quot;</span> /m backup_*.sql -d -<span class="number">1</span> /c <span class="string">&quot;cmd /c del /f @path&quot;</span></span><br><span class="line">    </span><br><span class="line">set <span class="string">&quot;Ymd=%date:~0,4%%date:~5,2%%date:~8,2%0%time:~1,1%%time:~3,2%%time:~6,2%&quot;</span></span><br><span class="line">    </span><br><span class="line"><span class="string">&quot;H:\MySQL\MySQL Server 5.5\bin\mysqldump&quot;</span> --opt --single-transaction=TRUE --user=你mysql用户名 --password=你mysql的密码 --host=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> --protocol=tcp --port=<span class="number">3306</span> --<span class="keyword">default</span>-character-set=utf8 --single-transaction=TRUE --routines --events <span class="string">&quot;test&quot;</span> &gt; <span class="string">&quot;I:\mysql backup\backup_%Ymd%.sql&quot;</span></span><br><span class="line">    </span><br><span class="line">rem <span class="string">&quot;E:\winRAR\WinRAR.exe&quot;</span> a -ep1 -r -o+ -m5 -df <span class="string">&quot;I:\mysql backup\backup_%Ymd%.rar&quot;</span> <span class="string">&quot;I:\mysql backup\backup_%Ymd%.sql&quot;</span> </span><br><span class="line"></span><br><span class="line"><span class="meta">@echo</span> on</span><br><span class="line">rem ******MySQL backup end********s</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">rem auther:根据你自己的需要取名字</span><br><span class="line">rem date:xxxx</span><br><span class="line">rem ******MySQL backup start********</span><br><span class="line"><span class="meta">@echo</span> off</span><br><span class="line">forfiles /p <span class="string">"I:\mysql backup"</span> /m backup_*.sql -d -<span class="number">1</span> /c <span class="string">"cmd /c del /f @path"</span></span><br><span class="line">    </span><br><span class="line">set <span class="string">"Ymd=%date:~0,4%%date:~5,2%%date:~8,2%0%time:~1,1%%time:~3,2%%time:~6,2%"</span></span><br><span class="line">    </span><br><span class="line"><span class="string">"H:\MySQL\MySQL Server 5.5\bin\mysqldump"</span> --opt --single-transaction=TRUE --user=你mysql用户名 --password=你mysql的密码 --host=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> --protocol=tcp --port=<span class="number">3306</span> --<span class="keyword">default</span>-character-set=utf8 --single-transaction=TRUE --routines --events <span class="string">"test"</span> &gt; <span class="string">"I:\mysql backup\backup_%Ymd%.sql"</span></span><br><span class="line">    </span><br><span class="line">rem <span class="string">"E:\winRAR\WinRAR.exe"</span> a -ep1 -r -o+ -m5 -df <span class="string">"I:\mysql backup\backup_%Ymd%.rar"</span> <span class="string">"I:\mysql backup\backup_%Ymd%.sql"</span> </span><br><span class="line"></span><br><span class="line"><span class="meta">@echo</span> on</span><br><span class="line">rem ******MySQL backup end********s</span><br></pre></td></tr></table></figure>
 
 <br>
 
@@ -233,12 +230,30 @@
 <p>接下来解释上述代码的作用**</p>
 </blockquote>
 <ol>
-<li><p>~~~java<br>forfiles /p “I:\mysql backup” /m backup_*.sql -d -1 /c “cmd /c del /f @path” </p>
-<p>命令解释：<br>forfiles 用来对备份目录下的过期备份进行删除。“I:\mysql backup”是备份文件所在的路径，可以自行修改。“backup_*.sql”指的是该路径下所有以“backup_”开头，以“.sql”作为后缀名的备份文件。而后面的数字“1”表示1天过期。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. ~~~java</span><br><span class="line">   set &quot;Ymd&#x3D;%date:~0,4%%date:~5,2%%date:~8,2%0%time:~1,1%%time:~3,2%%time:~6,2%&quot;</span><br><span class="line">       </span><br><span class="line">   命令解释：</span><br><span class="line">   使用set命令来定义一个名为“Ymd”的变量，这个变量的值就是后面的一大串规则，简单说就是当前的日期和时间</span><br></pre></td></tr></table></figure></li>
-<li><p>~~~java<br>“H:\MySQL\MySQL Server 5.5\bin\mysqldump” –opt –single-transaction=TRUE –user=你mysql用户名 –password=你mysql的密码 –host=127.0.0.1 –protocol=tcp –port=3306 –default-character-set=utf8 –single-transaction=TRUE –routines –events “test” &gt; “I:\mysql backup\backup_%Ymd%.sql”</p>
-<p>命令解释：<br>“H:\MySQL\MySQL Server 5.5\bin\mysqldump”作用是调用mysql自带的备份工具；注意这个路径必须写成你自己的“mysqldump.exe”所在的路径，一般都是在MySQL安装路径的/bin目录下。而这一行命令后面紧跟着一大串的参数，我挑几个重点的解释：<br>–user=xxx   –password=xxx 连接MySQL数据库服务的账户和密码，通常该账户必须具备数据库备份操作的权限。<br>–host=127.0.0.1  数据库服务所在的服务器ip地址<br>–port=3306  数据库服务所在的服务器的端口号<br>–events “test” &gt; “I:\mysql backup\backup_%Ymd%.sql” events参数即实现了将数据库备份到一个指定的文件这一操作。”test”是需要做备份的数据库，而大于号“&gt;”右边的就是我们的备份文件所保存的服务器目录和文件名了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   &gt; 到这里你可以把上面的命令保存为 backup.bat 并右键已管理员身份运行！！（不然会出现拒绝访问的字眼，我给这里坑惨了），双击运行脚本文件，试试效果</span><br><span class="line"></span><br><span class="line">![](https:&#x2F;&#x2F;batimagess.oss-cn-shenzhen.aliyuncs.com&#x2F;%E4%BF%9D%E5%AD%98%E7%9A%84sql%E6%96%87%E4%BB%B6.png)</span><br><span class="line"></span><br><span class="line">&gt; **接下来就是对备份文件内存大小的优化了**</span><br><span class="line">&gt;</span><br><span class="line">&gt; **备份数据前用WinRAR压缩一下是个不错的注意，这样做至少有以下优点：**</span><br><span class="line">&gt;</span><br><span class="line">&gt; 1.节省空间。</span><br><span class="line">&gt;</span><br><span class="line">&gt; 2.保密。可以利用压缩密码来对文件进行加密。（&#x3D;下你就知道了）</span><br><span class="line"></span><br><span class="line">&lt;br&gt;</span><br><span class="line"></span><br><span class="line">4. ~~~java</span><br><span class="line">   rem &quot;E:\winRAR\WinRAR.exe&quot; a -ep1 -r -o+ -m5 -df &quot;I:\mysql backup\backup_%Ymd%.rar&quot; &quot;I:\mysql backup\backup_%Ymd%.sql&quot; </span><br><span class="line">       </span><br><span class="line">   注意：这里的rem可以把它去掉了 ，这个只是个注释；</span><br><span class="line">   </span><br><span class="line">   命令解释：</span><br><span class="line">   这条命令的作用使用 WinRAR 对备份的数据进行压缩，并存储为以 %Ymd% 变量值建立的RAR文件名，同时删除备份的 %Ymd% 目录。（也就是把前面新建的sql压缩成rar文件，然后把那sql文件给删除掉）</span><br><span class="line">   &quot;I:\mysql backup\backup_%Ymd%.rar&quot;：压缩文件后的名字</span><br><span class="line">   &quot;I:\mysql backup\backup_%Ymd%.sql&quot;：所要压缩的文件，压缩完后进行删除</span><br><span class="line">   </span><br><span class="line">   参数解释：</span><br><span class="line">   a   --添加文件到压缩文件，反正你要压缩的话就把a带上</span><br><span class="line">   ep1 --排除基准文件夹，不然压缩包会包含待压缩文件夹所在的完整路径</span><br><span class="line">   o+  --覆盖已经存在的文件</span><br><span class="line">   m5 --存储方式： 0存储、1最快、2快速、3标准、4较好、5最优</span><br><span class="line">   df --压缩完后删除文件 </span><br><span class="line">   </span><br><span class="line">   P.S. 如果你需要用到第四点的压缩功能，你需要把下面这句修改一下：</span><br><span class="line">   forfiles &#x2F;p &quot;I:\mysql backup&quot; &#x2F;m backup_*.sql -d -1 &#x2F;c &quot;cmd &#x2F;c del &#x2F;f @path&quot;</span><br><span class="line">       改成</span><br><span class="line">   forfiles &#x2F;p &quot;I:\mysql backup&quot; &#x2F;m backup_*.rar -d -1 &#x2F;c &quot;cmd &#x2F;c del &#x2F;f @path&quot;</span><br><span class="line">   不改的话，删除不了之前的.rar文件。</span><br></pre></td></tr></table></figure></li>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">forfiles /p <span class="string">"I:\mysql backup"</span> /m backup_*.sql -d -<span class="number">1</span> /c <span class="string">"cmd /c del /f @path"</span> </span><br><span class="line">    </span><br><span class="line">命令解释：</span><br><span class="line">forfiles 用来对备份目录下的过期备份进行删除。“I:\mysql backup”是备份文件所在的路径，可以自行修改。“backup_*.sql”指的是该路径下所有以“backup_”开头，以“.sql”作为后缀名的备份文件。而后面的数字“<span class="number">1</span>”表示<span class="number">1</span>天过期。</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set <span class="string">"Ymd=%date:~0,4%%date:~5,2%%date:~8,2%0%time:~1,1%%time:~3,2%%time:~6,2%"</span></span><br><span class="line">    </span><br><span class="line">命令解释：</span><br><span class="line">使用set命令来定义一个名为“Ymd”的变量，这个变量的值就是后面的一大串规则，简单说就是当前的日期和时间</span><br></pre></td></tr></table></figure>
+</li>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"H:\MySQL\MySQL Server 5.5\bin\mysqldump"</span> --opt --single-transaction=TRUE --user=你mysql用户名 --password=你mysql的密码 --host=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> --protocol=tcp --port=<span class="number">3306</span> --<span class="keyword">default</span>-character-set=utf8 --single-transaction=TRUE --routines --events <span class="string">"test"</span> &gt; <span class="string">"I:\mysql backup\backup_%Ymd%.sql"</span></span><br><span class="line">    </span><br><span class="line">命令解释：</span><br><span class="line"><span class="string">"H:\MySQL\MySQL Server 5.5\bin\mysqldump"</span>作用是调用mysql自带的备份工具；注意这个路径必须写成你自己的“mysqldump.exe”所在的路径，一般都是在MySQL安装路径的/bin目录下。而这一行命令后面紧跟着一大串的参数，我挑几个重点的解释：</span><br><span class="line">--user=xxx   --password=xxx 连接MySQL数据库服务的账户和密码，通常该账户必须具备数据库备份操作的权限。</span><br><span class="line">--host=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>  数据库服务所在的服务器ip地址</span><br><span class="line">--port=<span class="number">3306</span>  数据库服务所在的服务器的端口号</span><br><span class="line">--events <span class="string">"test"</span> &gt; <span class="string">"I:\mysql backup\backup_%Ymd%.sql"</span> events参数即实现了将数据库备份到一个指定的文件这一操作。<span class="string">"test"</span>是需要做备份的数据库，而大于号“&gt;”右边的就是我们的备份文件所保存的服务器目录和文件名了。</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>到这里你可以把上面的命令保存为 backup.bat 并右键已管理员身份运行！！（不然会出现拒绝访问的字眼，我给这里坑惨了），双击运行脚本文件，试试效果</p>
+</blockquote>
+</li>
+</ol>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E4%BF%9D%E5%AD%98%E7%9A%84sql%E6%96%87%E4%BB%B6.png" alt></p>
+<blockquote>
+<p><strong>接下来就是对备份文件内存大小的优化了</strong></p>
+<p><strong>备份数据前用WinRAR压缩一下是个不错的注意，这样做至少有以下优点：</strong></p>
+<p>1.节省空间。</p>
+<p>2.保密。可以利用压缩密码来对文件进行加密。（=下你就知道了）</p>
+</blockquote>
+<br>
+
+<ol start="4">
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">rem <span class="string">"E:\winRAR\WinRAR.exe"</span> a -ep1 -r -o+ -m5 -df <span class="string">"I:\mysql backup\backup_%Ymd%.rar"</span> <span class="string">"I:\mysql backup\backup_%Ymd%.sql"</span> </span><br><span class="line">    </span><br><span class="line">注意：这里的rem可以把它去掉了 ，这个只是个注释；</span><br><span class="line"></span><br><span class="line">命令解释：</span><br><span class="line">这条命令的作用使用 WinRAR 对备份的数据进行压缩，并存储为以 %Ymd% 变量值建立的RAR文件名，同时删除备份的 %Ymd% 目录。（也就是把前面新建的sql压缩成rar文件，然后把那sql文件给删除掉）</span><br><span class="line"><span class="string">"I:\mysql backup\backup_%Ymd%.rar"</span>：压缩文件后的名字</span><br><span class="line"><span class="string">"I:\mysql backup\backup_%Ymd%.sql"</span>：所要压缩的文件，压缩完后进行删除</span><br><span class="line"></span><br><span class="line">参数解释：</span><br><span class="line">a   --添加文件到压缩文件，反正你要压缩的话就把a带上</span><br><span class="line">ep1 --排除基准文件夹，不然压缩包会包含待压缩文件夹所在的完整路径</span><br><span class="line">o+  --覆盖已经存在的文件</span><br><span class="line">m5 --存储方式： <span class="number">0</span>存储、<span class="number">1</span>最快、<span class="number">2</span>快速、<span class="number">3</span>标准、<span class="number">4</span>较好、<span class="number">5</span>最优</span><br><span class="line">df --压缩完后删除文件 </span><br><span class="line"></span><br><span class="line">P.S. 如果你需要用到第四点的压缩功能，你需要把下面这句修改一下：</span><br><span class="line">forfiles /p <span class="string">"I:\mysql backup"</span> /m backup_*.sql -d -<span class="number">1</span> /c <span class="string">"cmd /c del /f @path"</span></span><br><span class="line">    改成</span><br><span class="line">forfiles /p <span class="string">"I:\mysql backup"</span> /m backup_*.rar -d -<span class="number">1</span> /c <span class="string">"cmd /c del /f @path"</span></span><br><span class="line">不改的话，删除不了之前的.rar文件。</span><br></pre></td></tr></table></figure>
+
+</li>
 </ol>
 <br>
 
@@ -248,77 +263,75 @@
 <ol>
 <li>打开服务管理器</li>
 </ol>
-<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%89%93%E5%BC%80%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86%E5%99%A8.png"></p>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%89%93%E5%BC%80%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86%E5%99%A8.png" alt></p>
 <br>
 
 <ol start="2">
 <li>点击右侧的“创建基本任务”</li>
 </ol>
-<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E5%9F%BA%E6%9C%AC%E4%BB%BB%E5%8A%A1.png"></p>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E5%9F%BA%E6%9C%AC%E4%BB%BB%E5%8A%A1.png" alt></p>
 <ol start="3">
 <li>填写任务的名称(必填)，以及描述信息(选填)：</li>
 </ol>
-<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E5%9F%BA%E6%9C%AC%E4%BB%BB%E5%8A%A1%E5%90%91%E5%AF%BC.png"></p>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%BB%BA%E5%9F%BA%E6%9C%AC%E4%BB%BB%E5%8A%A1%E5%90%91%E5%AF%BC.png" alt></p>
 <ol start="4">
 <li>设定任务的执行频率，我选择的是“每天”</li>
 </ol>
-<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E4%BB%BB%E5%8A%A1%E8%A7%A6%E5%8F%91%E5%99%A8.png"></p>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E4%BB%BB%E5%8A%A1%E8%A7%A6%E5%8F%91%E5%99%A8.png" alt></p>
 <ol start="5">
 <li>设置任务执行的时间(通常是夜深人静的一两点)：</li>
 </ol>
-<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%90%AF%E5%8A%A8%E7%A8%8B%E5%BA%8F.png"></p>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%90%AF%E5%8A%A8%E7%A8%8B%E5%BA%8F.png" alt></p>
 <ol start="6">
 <li>添加脚本</li>
 </ol>
-<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%B7%BB%E5%8A%A0%E8%84%9A%E6%9C%AC.png"></p>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%B7%BB%E5%8A%A0%E8%84%9A%E6%9C%AC.png" alt></p>
 <ol start="7">
 <li>检查信息</li>
 </ol>
-<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E6%9F%A5%E4%B8%80%E9%81%8D.png"></p>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%A3%80%E6%9F%A5%E4%B8%80%E9%81%8D.png" alt></p>
 <ol start="8">
 <li>查看Windows的任务列表</li>
 </ol>
-<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%9F%A5%E7%9C%8B%E4%BB%BB%E5%8A%A1.png"></p>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E6%9F%A5%E7%9C%8B%E4%BB%BB%E5%8A%A1.png" alt></p>
 <blockquote>
 <p><strong>至此，就ok啦，测试样例如下：</strong></p>
 </blockquote>
-<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%8E%8B%E7%BC%A9%E5%8C%85.png"></p>
+<p><img src="https://batimagess.oss-cn-shenzhen.aliyuncs.com/%E5%8E%8B%E7%BC%A9%E5%8C%85.png" alt></p>
 
       <blockquote class="mdui-m-t-5">
         
           <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
         
-        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/11/16/mysql%E8%87%AA%E5%8A%A8%E5%A4%87%E4%BB%BD/">https://yellowbp.github.io/2019/11/16/mysql%E8%87%AA%E5%8A%A8%E5%A4%87%E4%BB%BD/</a>
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2019/11/16/mysql自动备份/">https://yellowbp.github.io/2019/11/16/mysql自动备份/</a>
       </blockquote>
       
     </div>
     <footer class="mdui-card-actions">
       
-        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+        <a class="mdui-ripple article_categories-link" href="/categories/技术/">技术</a>
       
       
-        <a class="mdui-ripple article_tags-none-link" href="/tags/mysql/" rel="tag">mysql</a>
+        <a class="mdui-ripple article_tags-link" href="/tags/mysql/">mysql</a>
       
     </footer>
     
   </article>
-  
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
-
   <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
 
 
   <nav id="paginator">
     
-      <a rel="prev" class="extend prev" href="/2019/11/21/%E6%95%B0%E8%AE%BA/">
+      <a rel="prev" class="extend prev" href="/2019/11/21/数论/">
         <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
       </a>
     
     <div class="spacer"></div>
     
-      <a rel="next" class="extend next" href="/2019/11/06/%E5%A6%82%E4%BD%95%E4%B9%A6%E5%86%99Api%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3/">
+      <a rel="next" class="extend next" href="/2019/11/06/如何书写Api接口文档/">
         下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
       </a>
@@ -328,7 +341,7 @@
 
   <div id="comment" class="mdui-m-t-5">
     <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
-<div id="SOHUCS" sid="ckoed7szn000lrctwfgewf1zp"></div>
+<div id="SOHUCS" sid="ckoefg3le000alwtwhptqcyzl"></div>
 <script type="text/javascript">
 (function(){
 var appid = 'cyubhC2Dq';
@@ -343,7 +356,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
   <div style="position: fixed !important; right: 16px; top: 30%;">
     <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
     <ul class="mdui-menu" id="toc">
-      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E5%AE%9E%E7%8E%B0mysql%E8%87%AA%E5%8A%A8%E5%A4%87%E4%BB%BD"><span class="toc-number">1.</span> <span class="toc-text">脚本实现mysql自动备份</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E5%AE%9E%E7%8E%B0%E6%8A%80%E6%9C%AF%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">一.实现技术：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-%E5%87%86%E5%A4%87%E5%AE%B6%E5%BD%93"><span class="toc-number">1.2.</span> <span class="toc-text">二.准备家当</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">三.如何实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%BC%96%E5%86%99%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">1.编写备份脚本文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B-%E8%AE%BE%E7%BD%AEwindows%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.4.</span> <span class="toc-text">四.设置windows定时任务</span></a></li></ol></li></ol></li>
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#脚本实现mysql自动备份"><span class="toc-number">1.</span> <span class="toc-text">脚本实现mysql自动备份</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-实现技术："><span class="toc-number">1.1.</span> <span class="toc-text">一.实现技术：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-准备家当"><span class="toc-number">1.2.</span> <span class="toc-text">二.准备家当</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-如何实现"><span class="toc-number">1.3.</span> <span class="toc-text">三.如何实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-编写备份脚本文件"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">1.编写备份脚本文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-设置windows定时任务"><span class="toc-number">1.4.</span> <span class="toc-text">四.设置windows定时任务</span></a></li></ol></li></ol></li>
     </ul>
   </div>
 </main>
@@ -380,9 +393,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
 </footer>
   <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
   <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  
-<script src="/js/mdui.js"></script>
+  <script src="/js/mdui.js"></script>
 <script src="/js/script.js"></script>
-
 </body>
 </html>

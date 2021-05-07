@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta http-equiv="Cache-Control" content="no-siteapp">
@@ -13,32 +13,32 @@
   <link rel="shortcut icon" href="/images/favicon.png">
   
   <meta name="description" content="最小生成树(一)算法种类介绍1.Kruskal  好理解 基于贪心的策略  2.Prim  跟Dijkstra很像  (二)Kruskal算法的描述 要求以某个点出发，到达图上任意一个点，使得它们的花费是最少的 换句话来说：用最少的边让图连通(任意两点之间可以互相到达)，其实就是将多余的边去掉；并且边的总长度之和是最短的。显然，要让n个顶点连通，那么至少需要n-1条边。如果一个连通无向图不包含回路">
+<meta name="keywords" content="algorithm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="最小生成树">
-<meta property="og:url" content="https://yellowbp.github.io/2020/03/15/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:url" content="https://yellowbp.github.io/2020/03/15/最小生成树算法/index.html">
 <meta property="og:site_name" content="bp的Blog">
 <meta property="og:description" content="最小生成树(一)算法种类介绍1.Kruskal  好理解 基于贪心的策略  2.Prim  跟Dijkstra很像  (二)Kruskal算法的描述 要求以某个点出发，到达图上任意一个点，使得它们的花费是最少的 换句话来说：用最少的边让图连通(任意两点之间可以互相到达)，其实就是将多余的边去掉；并且边的总长度之和是最短的。显然，要让n个顶点连通，那么至少需要n-1条边。如果一个连通无向图不包含回路">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91.png">
 <meta property="og:image" content="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B1.png">
 <meta property="og:image" content="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B2.png">
 <meta property="og:image" content="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B3.png">
 <meta property="og:image" content="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B4.png">
-<meta property="article:published_time" content="2020-03-15T03:50:06.000Z">
-<meta property="article:modified_time" content="2020-03-15T06:23:02.016Z">
-<meta property="article:author" content="hbp">
-<meta property="article:tag" content="algorithm">
+<meta property="og:updated_time" content="2020-03-15T06:23:02.016Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="最小生成树">
+<meta name="twitter:description" content="最小生成树(一)算法种类介绍1.Kruskal  好理解 基于贪心的策略  2.Prim  跟Dijkstra很像  (二)Kruskal算法的描述 要求以某个点出发，到达图上任意一个点，使得它们的花费是最少的 换句话来说：用最少的边让图连通(任意两点之间可以互相到达)，其实就是将多余的边去掉；并且边的总长度之和是最短的。显然，要让n个顶点连通，那么至少需要n-1条边。如果一个连通无向图不包含回路">
 <meta name="twitter:image" content="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91.png">
 
   <meta name="format-detection" content="telephone=no,email=no">
   <meta name="theme-color" content="#9C27B0">
-  <meta name="description" content="">
+  <meta name="description" content>
   <meta name="keywords" content=",algorithm">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="bp的Blog">
-  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2020/03/15/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E7%AE%97%E6%B3%95/">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2020/03/15/最小生成树算法/">
   <meta name="msapplication-navbutton-color" content="#9C27B0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="bp的Blog">
@@ -51,7 +51,7 @@
   
 
   
-    <link rel="canonical" href="https://yellowbp.github.io/2020/03/15/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E7%AE%97%E6%B3%95/">
+    <link rel="canonical" href="https://yellowbp.github.io/2020/03/15/最小生成树算法/">
   
 
   <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
@@ -74,11 +74,9 @@
 </script>
   
 
-  
-<link rel="stylesheet" href="/css/mdui.css">
+  <link rel="stylesheet" href="/css/mdui.css">
 <link rel="stylesheet" href="/css/style.css">
-
-<meta name="generator" content="Hexo 5.4.0"></head>
+</head>
 <body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
   <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
   <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
@@ -129,7 +127,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
         
       </div>
     </div>
@@ -141,7 +139,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术<span class="mdui-ripple sidebar_archives-count">37</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">36</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/服务器/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -153,7 +151,7 @@
       </div>
       <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
         
-        <a class="mdui-ripple sidebar_archives-none-link" href="/tags/Hexo/" rel="tag">Hexo<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/algorithm/" rel="tag">algorithm<span class="mdui-ripple sidebar_archives-none-count">7</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/git/" rel="tag">git<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java/" rel="tag">java<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/javaWeb/" rel="tag">javaWeb<span class="mdui-ripple sidebar_archives-none-count">14</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/linux/" rel="tag">linux<span class="mdui-ripple sidebar_archives-none-count">2</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/mysql/" rel="tag">mysql<span class="mdui-ripple sidebar_archives-none-count">4</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/nginx/" rel="tag">nginx<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/redis/" rel="tag">redis<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/win7/" rel="tag">win7<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%85%B6%E4%BB%96/" rel="tag">其他<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/" rel="tag">笔记本选购<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E7%AE%A1%E7%90%86/" rel="tag">管理<span class="mdui-ripple sidebar_archives-none-count">1</span></a><a class="mdui-ripple sidebar_archives-none-link" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag">设计模式<span class="mdui-ripple sidebar_archives-none-count">1</span></a>
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Hexo/">Hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java/">java<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/管理/">管理<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
         
       </div>
     </div>
@@ -182,13 +180,11 @@
   </div>
 </aside>
   <main id="main" class="mdui-m-t-5 fadeIn animated">
-  
-<link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
-
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
   <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
   <article class="mdui-card mdui-m-b-5">
     <header class="mdui-card-media">
-      <img src="/images/random/material-2.png" style="max-height: 240px;">
+      <img src="/images/random/material-3.png" style="max-height: 240px;">
       <div class="mdui-card-media-covered">
         <div class="mdui-card-primary">
           <div class="mdui-card-primary-title">最小生成树</div>
@@ -206,12 +202,12 @@
       </div>
     </header>
     <div class="mdui-card-content mdui-typo">
-      <h1 id="最小生成树"><a href="#最小生成树" class="headerlink" title="最小生成树"></a>最小生成树</h1><h2 id="一-算法种类介绍"><a href="#一-算法种类介绍" class="headerlink" title="(一)算法种类介绍"></a>(一)算法种类介绍</h2><p><font size=5><strong>1.Kruskal</strong></font></p>
+      <h1 id="最小生成树"><a href="#最小生成树" class="headerlink" title="最小生成树"></a>最小生成树</h1><h2 id="一-算法种类介绍"><a href="#一-算法种类介绍" class="headerlink" title="(一)算法种类介绍"></a>(一)算法种类介绍</h2><p><font size="5"><strong>1.Kruskal</strong></font></p>
 <ul>
 <li>好理解</li>
 <li>基于贪心的策略</li>
 </ul>
-<p><font size=5><strong>2.Prim</strong></font></p>
+<p><font size="5"><strong>2.Prim</strong></font></p>
 <ul>
 <li>跟Dijkstra很像</li>
 </ul>
@@ -220,7 +216,7 @@
 <p>换句话来说：用最少的边让图连通(任意两点之间可以互相到达)，其实就是将多余的边去掉；并且边的总长度之和是最短的。显然，要让n个顶点连通，那么至少需要n-1条边。如果一个连通无向图不包含回路，那么这就是一棵树，其实这里就是求一个图的最小生成树</p>
 <p>//分别为 点 点 边：<br>2 4 11<br>3 5 13<br>4 6 3<br>5 6 4<br>2 3 6<br>4 5 7<br>1 2 1<br>3 4 9<br>1 3 2</p>
 </blockquote>
-<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91.png"></p>
+<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91.png" alt></p>
 <br>
 
 <p>现在的关键问题：如何选出这n-1条边，使得边的总长度之和最短？</p>
@@ -235,10 +231,10 @@
 <ol start="2">
 <li>选择过程如下</li>
 </ol>
-<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B1.png"></p>
-<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B2.png"></p>
-<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B3.png"></p>
-<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B4.png"></p>
+<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B1.png" alt></p>
+<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B2.png" alt></p>
+<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B3.png" alt></p>
+<p><img src="https://algorithmimages.oss-cn-shenzhen.aliyuncs.com/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%80%89%E6%8B%A9%E8%BF%87%E7%A8%8B4.png" alt></p>
 <br>
 
 <ol start="3">
@@ -256,37 +252,35 @@
         
           <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
         
-        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2020/03/15/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E7%AE%97%E6%B3%95/">https://yellowbp.github.io/2020/03/15/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E7%AE%97%E6%B3%95/</a>
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2020/03/15/最小生成树算法/">https://yellowbp.github.io/2020/03/15/最小生成树算法/</a>
       </blockquote>
       
     </div>
     <footer class="mdui-card-actions">
       
-        <a class="mdui-ripple article_categories-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+        <a class="mdui-ripple article_categories-link" href="/categories/技术/">技术</a>
       
       
-        <a class="mdui-ripple article_tags-none-link" href="/tags/algorithm/" rel="tag">algorithm</a>
+        <a class="mdui-ripple article_tags-link" href="/tags/algorithm/">algorithm</a>
       
     </footer>
     
   </article>
-  
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
-
   <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
 
 
   <nav id="paginator">
     
-      <a rel="prev" class="extend prev" href="/2021/01/12/%E6%8F%90%E9%AB%98IDEA%E5%90%AF%E5%8A%A8%E9%80%9F%E5%BA%A6/">
+      <a rel="prev" class="extend prev" href="/2021/01/12/提高IDEA启动速度/">
         <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
       </a>
     
     <div class="spacer"></div>
     
-      <a rel="next" class="extend next" href="/2020/03/15/%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95%E6%A8%A1%E6%9D%BF/">
+      <a rel="next" class="extend next" href="/2020/03/15/常见算法模板/">
         下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
       </a>
@@ -296,7 +290,7 @@
 
   <div id="comment" class="mdui-m-t-5">
     <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
-<div id="SOHUCS" sid="ckoed7szy001yrctw664kaqpq"></div>
+<div id="SOHUCS" sid="ckoefg3m4001elwtwvc8tyf4a"></div>
 <script type="text/javascript">
 (function(){
 var appid = 'cyubhC2Dq';
@@ -311,7 +305,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
   <div style="position: fixed !important; right: 16px; top: 30%;">
     <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
     <ul class="mdui-menu" id="toc">
-      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91"><span class="toc-number">1.</span> <span class="toc-text">最小生成树</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E7%AE%97%E6%B3%95%E7%A7%8D%E7%B1%BB%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">(一)算法种类介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-Kruskal%E7%AE%97%E6%B3%95%E7%9A%84%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">(二)Kruskal算法的描述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">思路：</span></a></li></ol></li></ol></li></ol></li></ol></li>
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#最小生成树"><span class="toc-number">1.</span> <span class="toc-text">最小生成树</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-算法种类介绍"><span class="toc-number">1.1.</span> <span class="toc-text">(一)算法种类介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-Kruskal算法的描述"><span class="toc-number">1.2.</span> <span class="toc-text">(二)Kruskal算法的描述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#思路："><span class="toc-number">1.2.0.1.</span> <span class="toc-text">思路：</span></a></li></ol></li></ol></li></ol></li></ol></li>
     </ul>
   </div>
 </main>
@@ -348,9 +342,7 @@ window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="tex
 </footer>
   <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
   <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  
-<script src="/js/mdui.js"></script>
+  <script src="/js/mdui.js"></script>
 <script src="/js/script.js"></script>
-
 </body>
 </html>
