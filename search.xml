@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Swagger2</title>
+      <link href="2021/05/08/Swagger2/"/>
+      <url>2021/05/08/Swagger2/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Swagger2"><a href="#Swagger2" class="headerlink" title="Swagger2"></a>Swagger2</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><strong>前后端分离</strong></p><ul><li>前后端通过API接口进行交互</li><li>前后端相对独立且松耦合</li></ul><p><strong>前后端产生的问题痛点</strong></p><ul><li>接口文档来不及更新或者维护</li><li>接口文档与实际情况不一致</li><li>随着时间推移，版本迭代，接口文档往往很容易就跟不上代码了</li></ul><p><strong>痛点解决</strong></p><p>实时跟踪最新的API，降低集成风险</p><p><strong>Swagger</strong></p><ul><li>Restful Api 文档在线自动生成器 =&gt; <strong>API 文档 与API 定义同步更新</strong></li><li>直接运行，在线测试API</li><li>通过这套规范，你只需要按照它的规范去定义接口及接口相关的信息。再通过Swagger衍生出来的一系列项目和工具，就可以做到生成各种格式的接口文档</li></ul><h2 id="SpringBoot集成Swagger"><a href="#SpringBoot集成Swagger" class="headerlink" title="SpringBoot集成Swagger"></a>SpringBoot集成Swagger</h2><p><strong>SpringBoot集成Swagger</strong> =&gt; <strong>springfox</strong>，两个jar包</p><ul><li><strong>Springfox-swagger2</strong></li><li>swagger-springmvc</li></ul><p><strong>使用Swagger</strong></p><p>要求：jdk 1.8 + 否则swagger2无法运行</p><p><strong>步骤</strong></p><ol><li><p>新建一个SpringBoot-web项目</p></li><li><p>添加maven依赖</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></li><li><p>编写HelloController，保证搭建环境没有问题</p></li><li><p>要使用Swagger，我们需要编写一个配置类 SwaggerConfig来配置Swagger</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger</span>2 <span class="comment">//开启Swagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>访问测试：localhost:8080/swagger-ui.html，可以看到swagger的界面</p><p>界面描述从上到下依次是：组、Swagger信息、接口文档、实体类信息</p></li></ol><h2 id="配置Swagger"><a href="#配置Swagger" class="headerlink" title="配置Swagger"></a>配置Swagger</h2><ol><li><p>Swagger实体Bean是Docket，所以通过配置Docket实例来配置Swagger</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//配置docket以配置Swagger具体参数</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>可以通过apiInfo()属性配置文档信息</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//配置文档信息</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   Contact contact = <span class="keyword">new</span> Contact(<span class="string">"联系人名字"</span>, <span class="string">"http://xxx.xxx.com/联系人访问链接"</span>, <span class="string">"联系人邮箱"</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">new</span> ApiInfo(</span><br><span class="line">           <span class="string">"Swagger学习"</span>, <span class="comment">// 标题</span></span><br><span class="line">           <span class="string">"学习演示如何配置Swagger"</span>, <span class="comment">// 描述</span></span><br><span class="line">           <span class="string">"v1.0"</span>, <span class="comment">// 版本</span></span><br><span class="line">           <span class="string">"http://terms.service.url/组织链接"</span>, <span class="comment">// 组织链接</span></span><br><span class="line">           contact, <span class="comment">// 联系人信息</span></span><br><span class="line">           <span class="string">"Apach 2.0 许可"</span>, <span class="comment">// 许可</span></span><br><span class="line">           <span class="string">"许可链接"</span>, <span class="comment">// 许可连接</span></span><br><span class="line">           <span class="keyword">new</span> ArrayList&lt;&gt;()<span class="comment">// 扩展</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>Docket 实例关联上 apiInfo()</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>重启项目，访问测试 ：localhost:8080/swagger-ui.html</p></li></ol><h2 id="配置扫描接口"><a href="#配置扫描接口" class="headerlink" title="配置扫描接口"></a>配置扫描接口</h2><ol><li><p>构建Docket时通过select()方法配置怎么扫描接口</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">        .apiInfo(apiInfo())</span><br><span class="line">        <span class="comment">//通过select()方法，去配置扫描接口。RequestHandlerSelectors使用什么方式描述接口</span></span><br><span class="line">        .select()</span><br><span class="line">        <span class="comment">//通常是使用扫描包的方式</span></span><br><span class="line">        .apis(RequestHandlerSelectors.basePackage(<span class="string">"com.hbp.swagger.controller"</span>))</span><br><span class="line">        .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>重启项目测试，由于我们配置根据包的路径扫描接口，所以我们只能看到一个类（看不见error）</p></li><li><p>除了通过包路径配置扫描接口外，还可以通过配置其他方式扫描接口，这里注释一下所有的配置方式</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">any() <span class="comment">// 扫描所有，项目中的所有接口都会被扫描到</span></span><br><span class="line">none() <span class="comment">// 不扫描接口</span></span><br><span class="line"><span class="comment">// 通过方法上的注解扫描，如withMethodAnnotation(GetMapping.class)只扫描get请求</span></span><br><span class="line">withMethodAnnotation(<span class="keyword">final</span> Class&lt;? extends Annotation&gt; annotation)</span><br><span class="line"><span class="comment">// 通过类上的注解扫描，如.withClassAnnotation(Controller.class)只扫描有controller注解的类中的接口</span></span><br><span class="line">withClassAnnotation(<span class="keyword">final</span> Class&lt;? extends Annotation&gt; annotation)</span><br><span class="line">basePackage(<span class="keyword">final</span> String basePackage) <span class="comment">// 根据包路径扫描接口</span></span><br></pre></td></tr></table></figure></li><li><p>除此之外，我们还可以配置接口扫描过滤</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">        .apiInfo(apiInfo())</span><br><span class="line">        <span class="comment">//通过select()方法，去配置扫描接口。RequestHandlerSelectors使用什么方式描述接口</span></span><br><span class="line">        .select()</span><br><span class="line">        .apis(RequestHandlerSelectors.basePackage(<span class="string">"com.hbp.swagger.controller"</span>))</span><br><span class="line">        <span class="comment">// 配置如何通过path过滤,即这里只扫描请求以/kuang开头的接口。通常是使用这种方式过滤</span></span><br><span class="line">        .paths(PathSelectors.ant(<span class="string">"/hbp/**"</span>))</span><br><span class="line">        .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ol><h2 id="配置Swagger开关"><a href="#配置Swagger开关" class="headerlink" title="配置Swagger开关"></a>配置Swagger开关</h2><ol><li><p>通过enable()方法配置是否启用swagger，如果是false，swagger将不能在浏览器中访问了</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket</span><span class="params">()</span> </span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)      .apiInfo(apiInfo())      .enable(<span class="keyword">false</span>) <span class="comment">//配置是否启用Swagger，如果是false，在浏览器将无法访问      .select()      .apis(RequestHandlerSelectors.basePackage("com.hbp.swagger.controller"))      .paths(PathSelectors.ant("/hbp/**"))      .build();&#125;</span></span><br></pre></td></tr></table></figure></li><li><p><strong>如何动态配置当项目处于生产环境或发布环境时显示swagger？</strong></p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket</span><span class="params">(Environment environment)</span> </span>&#123;   <span class="comment">// 设置要显示swagger的环境   Profiles of = Profiles.of("dev", "test");   // 判断当前是否处于该环境   // 通过 enable() 接收此参数判断是否要显示   boolean flag = environment.acceptsProfiles(of);      return new Docket(DocumentationType.SWAGGER_2)      .apiInfo(apiInfo())      .enable(flag) //配置是否启用Swagger，如果是false，在浏览器将无法访问      .select()      .apis(RequestHandlerSelectors.basePackage("com.hbp.swagger.controller"))      .paths(PathSelectors.ant("/hbp/**"))      .build();&#125;</span></span><br></pre></td></tr></table></figure></li></ol><h2 id="配置API分组"><a href="#配置API分组" class="headerlink" title="配置API分组"></a>配置API分组</h2><p>通过api分组我们就知道哪些接口是谁写的，在哪里</p><ol><li><p>如果没有配置分组，默认是default。通过groupName()方法即可配置分组</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket</span><span class="params">(Environment environment)</span> </span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())      .groupName(<span class="string">"根据需要写自己的名字"</span>) <span class="comment">// 配置分组       // 省略配置....&#125;</span></span><br></pre></td></tr></table></figure></li><li><p>重启项目查看分组</p></li><li><p>如何配置多个分组？配置多个分组只需要配置多个docket即可</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket1</span><span class="params">()</span></span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">"group1"</span>);&#125;<span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket2</span><span class="params">()</span></span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">"group2"</span>);&#125;<span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket3</span><span class="params">()</span></span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">"group3"</span>);&#125;</span><br></pre></td></tr></table></figure></li><li><p>重启项目查看即可</p></li></ol><h2 id="实体配置"><a href="#实体配置" class="headerlink" title="实体配置"></a>实体配置</h2><ol><li><p>新建一个实体类</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span><span class="meta">@ApiModel</span>(<span class="string">"用户基本信息"</span>)<span class="comment">//文档注释，不至于让前端的人看不懂该实体类的意思public class User &#123;    @ApiModelProperty("用户姓名")    private String userName;    @ApiModelProperty("用户密码")    private String password;&#125;</span></span><br></pre></td></tr></table></figure></li><li><p>只要这个实体在<strong>请求接口</strong>的返回值上（即使是泛型），都能映射到实体项中：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/getUser"</span>)<span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">()</span></span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> User();&#125;</span><br></pre></td></tr></table></figure></li><li><p>重启查看测试 Models</p><p>注：并不是因为@ApiModel这个注解让实体显示在这里了，而是只要出现在接口方法的返回值上的实体都会显示在这里，而@ApiModel和@ApiModelProperty这两个注解只是为实体添加注释的。</p><p>@ApiModel为类添加注释</p><p>@ApiModelProperty为类属性添加注释</p></li></ol><h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><table><thead><tr><th>Swagger注解</th><th>描述</th></tr></thead><tbody><tr><td>@Api(tags = “xxx模块说明”)</td><td>作用在模块类上</td></tr><tr><td>@ApiOperation(“xxx接口说明”)</td><td>作用在接口方法上</td></tr><tr><td>@ApiModel(“xxxPOJO说明”)</td><td>作用在模型类上：如VO、BO</td></tr><tr><td>@ApiModelProperty(value = “xxx属性说明”,hidden = true)</td><td>作用在类方法和属性上，hidden设置为true可以隐藏该属性</td></tr><tr><td>@ApiParam(“xxx参数说明”)</td><td>作用在参数、方法和字段上，类似@ApiModelProperty</td></tr></tbody></table><p>示例：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation</span>(<span class="string">"用户详情"</span>)<span class="meta">@GetMapping</span>(<span class="string">"/users/&#123;userName&#125;"</span>)<span class="function"><span class="keyword">public</span> String <span class="title">findByUserName</span><span class="params">(@ApiParam(<span class="string">"用户名"</span>)</span> @<span class="title">PathVariable</span><span class="params">(<span class="string">"userName"</span>)</span> String userName) </span>&#123;    <span class="keyword">return</span> <span class="string">"hello"</span>+userName;&#125;</span><br></pre></td></tr></table></figure><p>总结：</p><ol><li>可以给一些比较难理解的属性或者接口，增加一些配置信息，让人更容易阅读</li><li>接口文档实时更新</li><li>相较于传统的Postman或Curl方式测试接口，使用swagger简直就是傻瓜式操作，不需要额外说明文档(写得好本身就是文档)而且更不容易出错</li><li>可以在线测试</li></ol><p>【注意点】在正式发布的时候，关闭Swagger！出于安全考虑，而且节省运行内存</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 规范 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 接口文档 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>SpringBoot2</title>
       <link href="2021/05/08/SpringBoot2/"/>
       <url>2021/05/08/SpringBoot2/</url>
@@ -88,7 +113,7 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 基础 </category>
           
       </categories>
       
@@ -113,14 +138,14 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 基础 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> java </tag>
+            <tag> java基础 </tag>
             
         </tags>
       
@@ -213,7 +238,7 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 数据库 </category>
           
       </categories>
       
@@ -238,7 +263,7 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 数据库 </category>
           
       </categories>
       
@@ -638,7 +663,7 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 数据库 </category>
           
       </categories>
       
@@ -663,14 +688,14 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 规范 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 管理 </tag>
+            <tag> 接口文档 </tag>
             
         </tags>
       
@@ -763,7 +788,7 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 数据库 </category>
           
       </categories>
       
@@ -813,7 +838,7 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 数据库 </category>
           
       </categories>
       
@@ -838,7 +863,7 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 重装 </category>
           
       </categories>
       
@@ -913,7 +938,7 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 搭建 </category>
           
       </categories>
       
@@ -963,14 +988,14 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> 搭建 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> Hexo </tag>
+            <tag> hexo </tag>
             
         </tags>
       

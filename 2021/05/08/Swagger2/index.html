@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Swagger2 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="Swagger2简介前后端分离  前后端通过API接口进行交互 前后端相对独立且松耦合  前后端产生的问题痛点  接口文档来不及更新或者维护 接口文档与实际情况不一致 随着时间推移，版本迭代，接口文档往往很容易就跟不上代码了  痛点解决 实时跟踪最新的API，降低集成风险 Swagger  Restful Api 文档在线自动生成器 =&amp;gt; API 文档 与API 定义同步更新 直接运行，在线">
+<meta name="keywords" content="接口文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swagger2">
+<meta property="og:url" content="https://yellowbp.github.io/2021/05/08/Swagger2/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="Swagger2简介前后端分离  前后端通过API接口进行交互 前后端相对独立且松耦合  前后端产生的问题痛点  接口文档来不及更新或者维护 接口文档与实际情况不一致 随着时间推移，版本迭代，接口文档往往很容易就跟不上代码了  痛点解决 实时跟踪最新的API，降低集成风险 Swagger  Restful Api 文档在线自动生成器 =&amp;gt; API 文档 与API 定义同步更新 直接运行，在线">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-05-08T13:24:47.225Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Swagger2">
+<meta name="twitter:description" content="Swagger2简介前后端分离  前后端通过API接口进行交互 前后端相对独立且松耦合  前后端产生的问题痛点  接口文档来不及更新或者维护 接口文档与实际情况不一致 随着时间推移，版本迭代，接口文档往往很容易就跟不上代码了  痛点解决 实时跟踪最新的API，降低集成风险 Swagger  Restful Api 文档在线自动生成器 =&amp;gt; API 文档 与API 定义同步更新 直接运行，在线">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",接口文档">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2021/05/08/Swagger2/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Sat May 08 2021 21:23:42 GMT+0800">
+    <meta property="article:modified_time" content="Sat May 08 2021 21:24:47 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2021/05/08/Swagger2/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/基础/">基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">26</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建/">搭建<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/数据库/">数据库<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/服务器/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-11.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Swagger2</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2021-05-08 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="Swagger2"><a href="#Swagger2" class="headerlink" title="Swagger2"></a>Swagger2</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><strong>前后端分离</strong></p>
+<ul>
+<li>前后端通过API接口进行交互</li>
+<li>前后端相对独立且松耦合</li>
+</ul>
+<p><strong>前后端产生的问题痛点</strong></p>
+<ul>
+<li>接口文档来不及更新或者维护</li>
+<li>接口文档与实际情况不一致</li>
+<li>随着时间推移，版本迭代，接口文档往往很容易就跟不上代码了</li>
+</ul>
+<p><strong>痛点解决</strong></p>
+<p>实时跟踪最新的API，降低集成风险</p>
+<p><strong>Swagger</strong></p>
+<ul>
+<li>Restful Api 文档在线自动生成器 =&gt; <strong>API 文档 与API 定义同步更新</strong></li>
+<li>直接运行，在线测试API</li>
+<li>通过这套规范，你只需要按照它的规范去定义接口及接口相关的信息。再通过Swagger衍生出来的一系列项目和工具，就可以做到生成各种格式的接口文档</li>
+</ul>
+<h2 id="SpringBoot集成Swagger"><a href="#SpringBoot集成Swagger" class="headerlink" title="SpringBoot集成Swagger"></a>SpringBoot集成Swagger</h2><p><strong>SpringBoot集成Swagger</strong> =&gt; <strong>springfox</strong>，两个jar包</p>
+<ul>
+<li><strong>Springfox-swagger2</strong></li>
+<li>swagger-springmvc</li>
+</ul>
+<p><strong>使用Swagger</strong></p>
+<p>要求：jdk 1.8 + 否则swagger2无法运行</p>
+<p><strong>步骤</strong></p>
+<ol>
+<li><p>新建一个SpringBoot-web项目</p>
+</li>
+<li><p>添加maven依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写HelloController，保证搭建环境没有问题</p>
+</li>
+<li><p>要使用Swagger，我们需要编写一个配置类 SwaggerConfig来配置Swagger</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger</span>2 <span class="comment">//开启Swagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>访问测试：localhost:8080/swagger-ui.html，可以看到swagger的界面</p>
+<p>界面描述从上到下依次是：组、Swagger信息、接口文档、实体类信息</p>
+</li>
+</ol>
+<h2 id="配置Swagger"><a href="#配置Swagger" class="headerlink" title="配置Swagger"></a>配置Swagger</h2><ol>
+<li><p>Swagger实体Bean是Docket，所以通过配置Docket实例来配置Swagger</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//配置docket以配置Swagger具体参数</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可以通过apiInfo()属性配置文档信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//配置文档信息</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   Contact contact = <span class="keyword">new</span> Contact(<span class="string">"联系人名字"</span>, <span class="string">"http://xxx.xxx.com/联系人访问链接"</span>, <span class="string">"联系人邮箱"</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">new</span> ApiInfo(</span><br><span class="line">           <span class="string">"Swagger学习"</span>, <span class="comment">// 标题</span></span><br><span class="line">           <span class="string">"学习演示如何配置Swagger"</span>, <span class="comment">// 描述</span></span><br><span class="line">           <span class="string">"v1.0"</span>, <span class="comment">// 版本</span></span><br><span class="line">           <span class="string">"http://terms.service.url/组织链接"</span>, <span class="comment">// 组织链接</span></span><br><span class="line">           contact, <span class="comment">// 联系人信息</span></span><br><span class="line">           <span class="string">"Apach 2.0 许可"</span>, <span class="comment">// 许可</span></span><br><span class="line">           <span class="string">"许可链接"</span>, <span class="comment">// 许可连接</span></span><br><span class="line">           <span class="keyword">new</span> ArrayList&lt;&gt;()<span class="comment">// 扩展</span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Docket 实例关联上 apiInfo()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启项目，访问测试 ：localhost:8080/swagger-ui.html</p>
+</li>
+</ol>
+<h2 id="配置扫描接口"><a href="#配置扫描接口" class="headerlink" title="配置扫描接口"></a>配置扫描接口</h2><ol>
+<li><p>构建Docket时通过select()方法配置怎么扫描接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">        .apiInfo(apiInfo())</span><br><span class="line">        <span class="comment">//通过select()方法，去配置扫描接口。RequestHandlerSelectors使用什么方式描述接口</span></span><br><span class="line">        .select()</span><br><span class="line">        <span class="comment">//通常是使用扫描包的方式</span></span><br><span class="line">        .apis(RequestHandlerSelectors.basePackage(<span class="string">"com.hbp.swagger.controller"</span>))</span><br><span class="line">        .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启项目测试，由于我们配置根据包的路径扫描接口，所以我们只能看到一个类（看不见error）</p>
+</li>
+<li><p>除了通过包路径配置扫描接口外，还可以通过配置其他方式扫描接口，这里注释一下所有的配置方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">any() <span class="comment">// 扫描所有，项目中的所有接口都会被扫描到</span></span><br><span class="line">none() <span class="comment">// 不扫描接口</span></span><br><span class="line"><span class="comment">// 通过方法上的注解扫描，如withMethodAnnotation(GetMapping.class)只扫描get请求</span></span><br><span class="line">withMethodAnnotation(<span class="keyword">final</span> Class&lt;? extends Annotation&gt; annotation)</span><br><span class="line"><span class="comment">// 通过类上的注解扫描，如.withClassAnnotation(Controller.class)只扫描有controller注解的类中的接口</span></span><br><span class="line">withClassAnnotation(<span class="keyword">final</span> Class&lt;? extends Annotation&gt; annotation)</span><br><span class="line">basePackage(<span class="keyword">final</span> String basePackage) <span class="comment">// 根据包路径扫描接口</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>除此之外，我们还可以配置接口扫描过滤</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)</span><br><span class="line">        .apiInfo(apiInfo())</span><br><span class="line">        <span class="comment">//通过select()方法，去配置扫描接口。RequestHandlerSelectors使用什么方式描述接口</span></span><br><span class="line">        .select()</span><br><span class="line">        .apis(RequestHandlerSelectors.basePackage(<span class="string">"com.hbp.swagger.controller"</span>))</span><br><span class="line">        <span class="comment">// 配置如何通过path过滤,即这里只扫描请求以/kuang开头的接口。通常是使用这种方式过滤</span></span><br><span class="line">        .paths(PathSelectors.ant(<span class="string">"/hbp/**"</span>))</span><br><span class="line">        .build();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="配置Swagger开关"><a href="#配置Swagger开关" class="headerlink" title="配置Swagger开关"></a>配置Swagger开关</h2><ol>
+<li><p>通过enable()方法配置是否启用swagger，如果是false，swagger将不能在浏览器中访问了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket</span><span class="params">()</span> </span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2)      .apiInfo(apiInfo())      .enable(<span class="keyword">false</span>) <span class="comment">//配置是否启用Swagger，如果是false，在浏览器将无法访问      .select()      .apis(RequestHandlerSelectors.basePackage("com.hbp.swagger.controller"))      .paths(PathSelectors.ant("/hbp/**"))      .build();&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>如何动态配置当项目处于生产环境或发布环境时显示swagger？</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket</span><span class="params">(Environment environment)</span> </span>&#123;   <span class="comment">// 设置要显示swagger的环境   Profiles of = Profiles.of("dev", "test");   // 判断当前是否处于该环境   // 通过 enable() 接收此参数判断是否要显示   boolean flag = environment.acceptsProfiles(of);      return new Docket(DocumentationType.SWAGGER_2)      .apiInfo(apiInfo())      .enable(flag) //配置是否启用Swagger，如果是false，在浏览器将无法访问      .select()      .apis(RequestHandlerSelectors.basePackage("com.hbp.swagger.controller"))      .paths(PathSelectors.ant("/hbp/**"))      .build();&#125;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="配置API分组"><a href="#配置API分组" class="headerlink" title="配置API分组"></a>配置API分组</h2><p>通过api分组我们就知道哪些接口是谁写的，在哪里</p>
+<ol>
+<li><p>如果没有配置分组，默认是default。通过groupName()方法即可配置分组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket</span><span class="params">(Environment environment)</span> </span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())      .groupName(<span class="string">"根据需要写自己的名字"</span>) <span class="comment">// 配置分组       // 省略配置....&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启项目查看分组</p>
+</li>
+<li><p>如何配置多个分组？配置多个分组只需要配置多个docket即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket1</span><span class="params">()</span></span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">"group1"</span>);&#125;<span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket2</span><span class="params">()</span></span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">"group2"</span>);&#125;<span class="meta">@Beanpublic</span> <span class="function">Docket <span class="title">docket3</span><span class="params">()</span></span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">"group3"</span>);&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启项目查看即可</p>
+</li>
+</ol>
+<h2 id="实体配置"><a href="#实体配置" class="headerlink" title="实体配置"></a>实体配置</h2><ol>
+<li><p>新建一个实体类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span><span class="meta">@ApiModel</span>(<span class="string">"用户基本信息"</span>)<span class="comment">//文档注释，不至于让前端的人看不懂该实体类的意思public class User &#123;    @ApiModelProperty("用户姓名")    private String userName;    @ApiModelProperty("用户密码")    private String password;&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>只要这个实体在<strong>请求接口</strong>的返回值上（即使是泛型），都能映射到实体项中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/getUser"</span>)<span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">()</span></span>&#123;   <span class="keyword">return</span> <span class="keyword">new</span> User();&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启查看测试 Models</p>
+<p>注：并不是因为@ApiModel这个注解让实体显示在这里了，而是只要出现在接口方法的返回值上的实体都会显示在这里，而@ApiModel和@ApiModelProperty这两个注解只是为实体添加注释的。</p>
+<p>@ApiModel为类添加注释</p>
+<p>@ApiModelProperty为类属性添加注释</p>
+</li>
+</ol>
+<h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><table>
+<thead>
+<tr>
+<th>Swagger注解</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Api(tags = “xxx模块说明”)</td>
+<td>作用在模块类上</td>
+</tr>
+<tr>
+<td>@ApiOperation(“xxx接口说明”)</td>
+<td>作用在接口方法上</td>
+</tr>
+<tr>
+<td>@ApiModel(“xxxPOJO说明”)</td>
+<td>作用在模型类上：如VO、BO</td>
+</tr>
+<tr>
+<td>@ApiModelProperty(value = “xxx属性说明”,hidden = true)</td>
+<td>作用在类方法和属性上，hidden设置为true可以隐藏该属性</td>
+</tr>
+<tr>
+<td>@ApiParam(“xxx参数说明”)</td>
+<td>作用在参数、方法和字段上，类似@ApiModelProperty</td>
+</tr>
+</tbody></table>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApiOperation</span>(<span class="string">"用户详情"</span>)<span class="meta">@GetMapping</span>(<span class="string">"/users/&#123;userName&#125;"</span>)<span class="function"><span class="keyword">public</span> String <span class="title">findByUserName</span><span class="params">(@ApiParam(<span class="string">"用户名"</span>)</span> @<span class="title">PathVariable</span><span class="params">(<span class="string">"userName"</span>)</span> String userName) </span>&#123;    <span class="keyword">return</span> <span class="string">"hello"</span>+userName;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总结：</p>
+<ol>
+<li>可以给一些比较难理解的属性或者接口，增加一些配置信息，让人更容易阅读</li>
+<li>接口文档实时更新</li>
+<li>相较于传统的Postman或Curl方式测试接口，使用swagger简直就是傻瓜式操作，不需要额外说明文档(写得好本身就是文档)而且更不容易出错</li>
+<li>可以在线测试</li>
+</ol>
+<p>【注意点】在正式发布的时候，关闭Swagger！出于安全考虑，而且节省运行内存</p>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2021/05/08/Swagger2/">https://yellowbp.github.io/2021/05/08/Swagger2/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/规范/">规范</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/接口文档/">接口文档</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2021/05/08/SpringBoot2/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckofs4pks000sictwdw66a4z2"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Swagger2"><span class="toc-number">1.</span> <span class="toc-text">Swagger2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SpringBoot集成Swagger"><span class="toc-number">1.2.</span> <span class="toc-text">SpringBoot集成Swagger</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置Swagger"><span class="toc-number">1.3.</span> <span class="toc-text">配置Swagger</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置扫描接口"><span class="toc-number">1.4.</span> <span class="toc-text">配置扫描接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置Swagger开关"><span class="toc-number">1.5.</span> <span class="toc-text">配置Swagger开关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置API分组"><span class="toc-number">1.6.</span> <span class="toc-text">配置API分组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实体配置"><span class="toc-number">1.7.</span> <span class="toc-text">实体配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用注解"><span class="toc-number">1.8.</span> <span class="toc-text">常用注解</span></a></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2021 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>Peyton Wong All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
