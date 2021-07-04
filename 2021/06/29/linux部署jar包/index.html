@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Linux部署项目 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="Linux中部署jar包并指定日志输出文件要运行java的项目需要先将项目打包成war包或者jar包，打包成war包需要将war包部署到tomcat服务器上才能运行。而打包成jar包可以直接在命令行使用java命令执行。 在linux系统中运行jar包有多种方式，在介绍这些方式之前，我们先了解一下linux的一些基本知识和命令。 Linux中的输入文件、输出文件、错误输出   名称 代码 操作符">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux部署项目">
+<meta property="og:url" content="https://yellowbp.github.io/2021/06/29/linux部署jar包/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="Linux中部署jar包并指定日志输出文件要运行java的项目需要先将项目打包成war包或者jar包，打包成war包需要将war包部署到tomcat服务器上才能运行。而打包成jar包可以直接在命令行使用java命令执行。 在linux系统中运行jar包有多种方式，在介绍这些方式之前，我们先了解一下linux的一些基本知识和命令。 Linux中的输入文件、输出文件、错误输出   名称 代码 操作符">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-06-29T14:37:18.574Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux部署项目">
+<meta name="twitter:description" content="Linux中部署jar包并指定日志输出文件要运行java的项目需要先将项目打包成war包或者jar包，打包成war包需要将war包部署到tomcat服务器上才能运行。而打包成jar包可以直接在命令行使用java命令执行。 在linux系统中运行jar包有多种方式，在介绍这些方式之前，我们先了解一下linux的一些基本知识和命令。 Linux中的输入文件、输出文件、错误输出   名称 代码 操作符">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",linux">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2021/06/29/linux部署jar包/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Tue Jun 29 2021 22:34:03 GMT+0800">
+    <meta property="article:modified_time" content="Tue Jun 29 2021 22:37:18 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2021/06/29/linux部署jar包/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/Spring-Cloud-Alibaba/">Spring Cloud Alibaba<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/基础/">基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/安全框架/">安全框架<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/工具类/">工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">29</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建/">搭建<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/数据库/">数据库<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/服务器/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-6.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Linux部署项目</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2021-06-29 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="Linux中部署jar包并指定日志输出文件"><a href="#Linux中部署jar包并指定日志输出文件" class="headerlink" title="Linux中部署jar包并指定日志输出文件"></a>Linux中部署jar包并指定日志输出文件</h1><p>要运行java的项目需要先将项目打包成war包或者jar包，打包成war包需要将war包部署到tomcat服务器上才能运行。而打包成jar包可以直接在命令行使用java命令执行。</p>
+<p>在linux系统中运行jar包有多种方式，在介绍这些方式之前，我们先了解一下linux的一些基本知识和命令。</p>
+<h2 id="Linux中的输入文件、输出文件、错误输出"><a href="#Linux中的输入文件、输出文件、错误输出" class="headerlink" title="Linux中的输入文件、输出文件、错误输出"></a>Linux中的输入文件、输出文件、错误输出</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>代码</th>
+<th>操作符</th>
+<th>Java中表示</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>stdin（标准输入）</td>
+<td>0</td>
+<td>&lt; 或 &lt;&lt;</td>
+<td>System.in</td>
+</tr>
+<tr>
+<td>stdout（标准输出）</td>
+<td>1</td>
+<td>&gt;, &gt;&gt;, 1&gt; 或 1&gt;&gt;</td>
+<td>System.out</td>
+</tr>
+<tr>
+<td>stderr（标准错误输出）</td>
+<td>2</td>
+<td>2&gt; 或 2&gt;&gt;</td>
+<td>System.err</td>
+</tr>
+</tbody></table>
+<h2 id="输出重定向"><a href="#输出重定向" class="headerlink" title="输出重定向"></a>输出重定向</h2><blockquote>
+<p>&gt; 表示输出重定向</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>command &gt;     file</td>
+<td>标准输出重定向到文件中，文件不存在时会自动创建再写入，文件存在时会先删除文件中的内容再写入</td>
+</tr>
+<tr>
+<td>command &gt;&gt; file</td>
+<td>标准输出重定向到文件中，文件不存在时会自动创建再写入命令产生的标准输出，<br>文件存在时不改变原文件内容写入再写入命令产生的标准输出</td>
+</tr>
+<tr>
+<td>command &gt; file 2&gt;&amp;1</td>
+<td>标准输出和错误输出重定向到文件中，若文件不存在则会新建文件再写入，<br>若文件存在会先删除文件中的原本内容再写入(2&gt;&amp;1表示标准错误以后台模式重新向到标准输出中)</td>
+</tr>
+<tr>
+<td>command &gt;&gt; file 2&gt;&amp;1</td>
+<td>标准输出和错误输出重定向到文件中，若文件不存在，则会新建文件再写入；<br>若文件存在，则会在不改变文件原本内容的情况下再写入文件</td>
+</tr>
+<tr>
+<td>command  2&gt; file</td>
+<td>标准错误重定向到文件中，若文件不存在则会新建文件再写入，若文件存<br>在会先删除文件中的原本内容再写入</td>
+</tr>
+<tr>
+<td>command 2&gt;&gt; file</td>
+<td>标准错误重定向到文件中，若文件不存在，则会新建文件再写入；若文件<br>存在，则会在不改变文件原本内容的情况下再写入文件</td>
+</tr>
+</tbody></table>
+<h2 id="输入重定向"><a href="#输入重定向" class="headerlink" title="输入重定向"></a>输入重定向</h2><blockquote>
+<p>&lt; 表示输入重定向</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>command &lt; file1 &gt; file2</td>
+<td>command命令以file1为标准输入，以file2为标准输出</td>
+</tr>
+<tr>
+<td>command &lt; file</td>
+<td>command命令以file为标准输入</td>
+</tr>
+<tr>
+<td>command &lt;&lt; del</td>
+<td>command以键盘为标准输入，直到遇到del结束</td>
+</tr>
+</tbody></table>
+<h2 id="linux下运行jar包方式介绍"><a href="#linux下运行jar包方式介绍" class="headerlink" title="linux下运行jar包方式介绍"></a>linux下运行jar包方式介绍</h2><h3 id="最基本的jar包运行方式-不常用"><a href="#最基本的jar包运行方式-不常用" class="headerlink" title="最基本的jar包运行方式(不常用)"></a><strong>最基本的jar包运行方式(不常用)</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar xxxx.jar</span><br></pre></td></tr></table></figure>
+
+<p>【说明】此运行方式有个极其严重的缺点：锁定当前窗口，当然我们可以通过<code>Ctrl+c</code>中断或者直接关闭窗口，不过当中断或窗口关闭的话，程序也会中断执行，所以此方式在实际工作环境，是绝对不允许的。</p>
+<h3 id="保持jar包在后台运行的方式-不常用"><a href="#保持jar包在后台运行的方式-不常用" class="headerlink" title="保持jar包在后台运行的方式(不常用)"></a><strong>保持jar包在后台运行的方式(不常用)</strong></h3><blockquote>
+<p>linux中 &amp; 表示后台运行</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar xxx.jar &amp;</span><br></pre></td></tr></table></figure>
+
+<p>【说明】此运行方式的优点是当前窗口不会锁定，使用ctrl+c不会中断程序的运行，但是关闭窗口还是会中断程序的运行。</p>
+<h3 id="不挂断地运行jar包-常用"><a href="#不挂断地运行jar包-常用" class="headerlink" title="不挂断地运行jar包(常用)"></a><strong>不挂断地运行jar包(常用)</strong></h3><blockquote>
+<p>linux中 nohup 表示不挂断地执行命令，当账号退出或终端关闭或ctrl+c，程序依然会运行</p>
+<p>通常我们在执行Linux命令时会使用 &amp; 使应用在后台运行而不影响终端窗口的正常使用，而&amp;存在一个问题：关闭终端窗口会导致使用&amp;的命令中断，这时就需要<code>nohup command &amp;</code>，最直接简单的命令就是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment"># 命令执行，正常日志会自定写入到file中，但如果有错误信息，则错误信息会直接打印到屏幕上</span></span><br><span class="line">&gt; nohup <span class="built_in">command</span> &gt; file &amp;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>如果我们不想把错误信息打印到屏幕上</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment"># 命令执行，生成的正常日志和错误信息会记录在file中</span></span><br><span class="line">&gt; nohup <span class="built_in">command</span> &amp;gt; file 2&amp;gt;&amp;amp;1 &amp;amp;z</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="该命令具体使用主要包括下面三种方式"><a href="#该命令具体使用主要包括下面三种方式" class="headerlink" title="该命令具体使用主要包括下面三种方式"></a>该命令具体使用主要包括下面三种方式</h4><ol>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup java -jar xxx.jar &amp;</span><br></pre></td></tr></table></figure>
+
+<p>【<strong>说明</strong>】当用上述命令运行jar包时，缺省情况下该应用的控制台日志输出被重定向到nohup.out（自动生成到当前目录下）的文件中，除非另外指定了输出文件。我们可以用vim nohup.out查看应用运行的日志信息。</p>
+</li>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup java -jar xxx.jar &gt; 文件名.log &amp;</span><br></pre></td></tr></table></figure>
+
+<p>【<strong>说明</strong>】该方式是把该应用的所有控制台日志输出重定向到你指定的文件中(没有则自动创建)，而不是nohup.out，当时文件的类型还可以为txt等</p>
+</li>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup java -jar xxx.jar &gt; 文件名.<span class="built_in">log</span> 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p>【<strong>说明</strong>】<strong>比较常用到此方式在linux中运行jar包</strong></p>
+<p>【解释】</p>
+<p>其实就是两个要点：输出什么 和 输出到哪 。<br>他们以符号“&gt;”进行划分，符号左边是输出什么，符号右边是输出到哪。</p>
+<p><strong>1.输出什么？</strong></p>
+<p>首先输出类型分为标准输出和错误输出，标准输出就是全输出，输出控制台信息；错误输出只是输出错误日志信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;     :符号左边没有<span class="number">1</span>和<span class="number">2</span>，啥数字也不写只有一个右箭头，默认标准输出。</span><br><span class="line"><span class="number">1</span>&gt;    :符号左边是<span class="number">1</span>，即stdout 标准输出。</span><br><span class="line"><span class="number">2</span>&gt;    :符号左边是<span class="number">2</span>，即stderr 错误输出。</span><br></pre></td></tr></table></figure>
+
+<p>因此上述命令中的<code>xxx.jar &gt;文件名.log 2&gt;&amp;1</code>可以拆分成<code>xxx.jar &gt;文件名.log</code> 和 <code>2&gt;&amp;1</code> 两个输出</p>
+<ol>
+<li><code>xxx.jar &gt;文件名.log</code> 中的 &gt; 因为左右两边没有数字，即默认的标准输出</li>
+<li><code>2&gt;&amp;1</code> 中的 &gt; 左边有个2，即为错误日志输出，而错误日志输出到什么地方呢，下面会继续讲解</li>
+</ol>
+<p><strong>2.输出到哪？</strong></p>
+<p>输出的位置分为输出到指定路径的日志文件 和 重定向位置。</p>
+<ol>
+<li><p>指定路径的日志文件好理解，就是指定一个地址而已，如： &gt; /usr/local/work/log.log文件，这样便是指定输出到路径/usr/local/work/log.log文件</p>
+</li>
+<li><p>至于重定向，就是将文件重定向到一个地址，如：</p>
+<p><code>&gt; &amp;1</code>  重定向到标准输出的地址，也就是输出到已指定的标准输出的地址。</p>
+<p><code>&gt; &amp;2</code>  重定向到错误输出的地址，就是输出到已指定的错误输出的地址。</p>
+</li>
+</ol>
+<p>因此上述中的<code>2&gt;&amp;1</code> ，意思就是将错误日志重定向到标准输出的地址，而因为<code>xxx.jar &gt;文件名.log</code>  指定了标准输出到了文件名.log文件下，所以错误日志输出也指向标准输出的地址，即 文件名.log下。</p>
+<p>总的来说，这命令<code>nohup java -jar xxx.jar &gt; 文件名.log 2&gt;&amp;1 &amp;</code> 就是把所有的日志（标准输出+错误）输出到 文件名.log 中</p>
+</li>
+<li><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup java -jar jar包名 &gt;/dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>/dev/null在Linux中充当黑洞(只进不出)的作用，任何写入到/dev/null中的内容都会被自动永久地删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment"># 将命令产生的错误重定向到/dev/null，即命令执行不会在屏幕上显示任何错误信息</span></span><br><span class="line">&gt; <span class="built_in">command</span> 2 &gt; /dev/null</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>【说明】<strong>通常结合3一起使用。</strong>/dev/null 它等价于一个只写文件，所有写入它的内容都会永远丢失。如果尝试从它那儿读取内容，那么什么也读不到。所以说执行上述命令，不同于前面的那些命令，可以看到各种标准输出，而这里什么也看不到。所以我们可以把一些没用的输出信息丢进去，把一些重要的错误信息单独形成一个日志文件。</p>
+</li>
+</ol>
+<h4 id="举例再解释"><a href="#举例再解释" class="headerlink" title="举例再解释"></a>举例再解释</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 标准日志输出到/data/log.log文件，错误日志输出到/data/err.log文件。</span></span><br><span class="line">（1）nohup java -jar ***.jar &gt;/data/log.log 2&gt;/data/err.log &amp;  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准日志输出到/data/log.log文件，错误日志重定向也同样输出到/data/log.log文件。</span></span><br><span class="line">（2）nohup java -jar ***.jar &gt;/data/log.log 2&gt;&amp;1 &amp;  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准日志输出到/dev/null，也就是不输出标准日志，错误日志输出到/data/err.log文件。</span></span><br><span class="line">（3）nohup java -jar ***.jar &gt;/dev/null 2&gt;/data/err.log &amp;  </span><br><span class="line"></span><br><span class="line">一般采用上面（3）只输出错误日志就可以了，有需要的按照（1）或（2）进行输出。</span><br></pre></td></tr></table></figure>
+
+<h2 id="结合运行jar包命令，设置环境配置"><a href="#结合运行jar包命令，设置环境配置" class="headerlink" title="结合运行jar包命令，设置环境配置"></a>结合运行jar包命令，设置环境配置</h2><p>开发中通常分有开发环境、测试环境、预发布环境、生产环境，而且一般这些环境配置会各不相同，手动改配置麻烦且容易出错，那么在不手动更改程序中环境配置的情况下，如何在运行jar时使用不同的环境配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动jar包时设置spring.profiles.active 即可，然后结合上述介绍的运行jar包方式，其实只需要紧跟着java后面加参数即可</span></span><br><span class="line">java -jar xxx.jar --spring.profiles.active=prod &gt;file.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2021/06/29/linux部署jar包/">https://yellowbp.github.io/2021/06/29/linux部署jar包/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/技术/">技术</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/linux/">linux</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2021/07/04/Spring Could Alibaba(1.基本开发框架搭建)/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2021/06/21/Maven/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckqpf9a1e002j10twsd3w2rn3"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux中部署jar包并指定日志输出文件"><span class="toc-number">1.</span> <span class="toc-text">Linux中部署jar包并指定日志输出文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux中的输入文件、输出文件、错误输出"><span class="toc-number">1.1.</span> <span class="toc-text">Linux中的输入文件、输出文件、错误输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#输出重定向"><span class="toc-number">1.2.</span> <span class="toc-text">输出重定向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#输入重定向"><span class="toc-number">1.3.</span> <span class="toc-text">输入重定向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linux下运行jar包方式介绍"><span class="toc-number">1.4.</span> <span class="toc-text">linux下运行jar包方式介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#最基本的jar包运行方式-不常用"><span class="toc-number">1.4.1.</span> <span class="toc-text">最基本的jar包运行方式(不常用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#保持jar包在后台运行的方式-不常用"><span class="toc-number">1.4.2.</span> <span class="toc-text">保持jar包在后台运行的方式(不常用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不挂断地运行jar包-常用"><span class="toc-number">1.4.3.</span> <span class="toc-text">不挂断地运行jar包(常用)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#该命令具体使用主要包括下面三种方式"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">该命令具体使用主要包括下面三种方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#举例再解释"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">举例再解释</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结合运行jar包命令，设置环境配置"><span class="toc-number">1.5.</span> <span class="toc-text">结合运行jar包命令，设置环境配置</span></a></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2021 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>Peyton Wong All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
