@@ -2,9 +2,6 @@
 html {
   height: 100%;
 }
-#sidebar>.mdui-list>.mdui-collapse-item:nth-child(5) {
-    display:none;
-}
 
 body {
   display: -webkit-box;

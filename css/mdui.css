@@ -5401,6 +5401,17 @@ body.mdui-locked {
     display:none;
 }
 
+#sidebar>.mdui-list>.mdui-collapse-item:nth-child(6) {
+    display:none;
+}
+#sidebar>.mdui-list>.mdui-collapse-item:nth-child(7) {
+    display:none;
+}
+#sidebar>.mdui-list>.mdui-collapse-item:nth-child(3) {
+    display:none;
+}
+
+
 .mdui-typo small {
   font-size: 80%;
 }
