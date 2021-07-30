@@ -5394,22 +5394,10 @@ body.mdui-locked {
           transform: scaleX(1);
 }
 
-#sidebar>.mdui-list>.mdui-collapse-item:nth-child(4) {
-    display:none;
-}
 #sidebar>.mdui-list>.mdui-collapse-item:nth-child(5) {
     display:none;
 }
 
-#sidebar>.mdui-list>.mdui-collapse-item:nth-child(6) {
-    display:none;
-}
-#sidebar>.mdui-list>.mdui-collapse-item:nth-child(7) {
-    display:none;
-}
-#sidebar>.mdui-list>.mdui-collapse-item:nth-child(3) {
-    display:none;
-}
 
 
 .mdui-typo small {
