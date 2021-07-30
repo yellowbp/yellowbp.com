@@ -300,6 +300,10 @@ img.avatar-animation:hover {
   float: left;
 }
 
+#sidebar>.mdui-list>.mdui-collapse-item:nth-child(4) {
+    display:none;
+}
+
 .article_tags-link:hover {
   background-color: rgba(0, 0, 0, .1);
 }
