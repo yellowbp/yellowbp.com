@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Spring为什么建议使用构造器来注入 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="Spring为什么建议使用构造器来注入首先给出三个问题：  @Autowired, @Resource, @Inject 三个注解的区别 ？ 当使用@Autowired时，是否有出现过Field injection is not recommended的警告？这是为什么 ？ Spring 依赖注入有哪几种方式？官方是建议哪种方式 ？  首先，其实可以把bean理解成对象，这样好理解一点 @Auto">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring为什么建议使用构造器来注入">
+<meta property="og:url" content="https://yellowbp.github.io/2021/07/20/Spring为什么建议使用构造器来注入/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="Spring为什么建议使用构造器来注入首先给出三个问题：  @Autowired, @Resource, @Inject 三个注解的区别 ？ 当使用@Autowired时，是否有出现过Field injection is not recommended的警告？这是为什么 ？ Spring 依赖注入有哪几种方式？官方是建议哪种方式 ？  首先，其实可以把bean理解成对象，这样好理解一点 @Auto">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-07-21T10:15:16.602Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring为什么建议使用构造器来注入">
+<meta name="twitter:description" content="Spring为什么建议使用构造器来注入首先给出三个问题：  @Autowired, @Resource, @Inject 三个注解的区别 ？ 当使用@Autowired时，是否有出现过Field injection is not recommended的警告？这是为什么 ？ Spring 依赖注入有哪几种方式？官方是建议哪种方式 ？  首先，其实可以把bean理解成对象，这样好理解一点 @Auto">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",Spring">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2021/07/20/Spring为什么建议使用构造器来注入/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Tue Jul 20 2021 11:01:39 GMT+0800">
+    <meta property="article:modified_time" content="Wed Jul 21 2021 18:15:16 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2021/07/20/Spring为什么建议使用构造器来注入/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring-Cloud-Alibaba/">Spring Cloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/基础/">基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/安全框架/">安全框架<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/工具类/">工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">24</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建/">搭建<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/数据库/">数据库<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/服务器/">服务器<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-17.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Spring为什么建议使用构造器来注入</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2021-07-20 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="Spring为什么建议使用构造器来注入"><a href="#Spring为什么建议使用构造器来注入" class="headerlink" title="Spring为什么建议使用构造器来注入"></a>Spring为什么建议使用构造器来注入</h1><p>首先给出三个问题：</p>
+<ul>
+<li>@Autowired, @Resource, @Inject 三个注解的区别 ？</li>
+<li>当使用@Autowired时，是否有出现过Field injection is not recommended的警告？这是为什么 ？</li>
+<li>Spring 依赖注入有哪几种方式？官方是建议哪种方式 ？</li>
+</ul>
+<p>首先，其实可以把bean理解成对象，这样好理解一点</p>
+<h2 id="Autowired-Resource-Inject-三个注解的区别"><a href="#Autowired-Resource-Inject-三个注解的区别" class="headerlink" title="@Autowired, @Resource, @Inject 三个注解的区别"></a>@Autowired, @Resource, @Inject 三个注解的区别</h2><p>Spring 支持使用@Autowired, @Resource, @Inject 三个注解进行依赖注入</p>
+<p>这里先给出一段准备代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ser</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">serImplA</span> <span class="keyword">implements</span> <span class="title">ser</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"hello, this is service A"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">serImplB</span> <span class="keyword">implements</span> <span class="title">ser</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"hello, this is service B"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Autowired"><a href="#Autowired" class="headerlink" title="@Autowired"></a>@Autowired</h3><p>@Autowired为Spring 框架提供的注解，需要导入包org.springframework.beans.factory.annotation.Autowired</p>
+<p>示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="comment">// @Qualifier("serImplB")</span></span><br><span class="line">    Ser serImplA; <span class="comment">// 这里不能命名为ser</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">diTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Assertions.assertNotNull(serImplA);</span><br><span class="line">        serImplA.sayHello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>装配顺序(如果找不到才会继续下一步)：</strong></p>
+<ol>
+<li><p>按照type在上下文中查找匹配的bean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">查找type为Ser的bean</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果有多个bean，则按照name进行匹配，这里的name还要继续分2种情况</p>
+<ol>
+<li><p>如果有@Qualifier注解，则按照@Qualifier指定的name进行匹配</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">查找name为serverImplB的bean</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果没有@Qualifier注解，则按照变量名进行匹配</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">查找name为serImplA的bean</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>匹配不到，则报错。（@Autowired(required=false)，如果设置required为false(默认为true)，则注入失败时不会抛出异常）</p>
+</li>
+</ol>
+<h3 id="Inject"><a href="#Inject" class="headerlink" title="@Inject"></a>@Inject</h3><p>在 Spring 的环境下，@Inject和@Autowired 是相同的 ，因为它们的依赖注入都是使用AutowiredAnnotationBeanPostProcessor来处理的。</p>
+<p>如果硬要说两个的区别，首先@Inject是Java EE包里的，在SE环境需要单独引入。另一个区别在于@Autowired可以设置required=false而@Inject并没有这个属性。</p>
+<p>所以既然@Autowired比@Inject更好，@Inject自然就很少人使用</p>
+<h3 id="Resource"><a href="#Resource" class="headerlink" title="@Resource"></a>@Resource</h3><p><code>@Resource</code>有两个重要的属性：<code>name</code>和<code>type</code>，而Spring 将<code>@Resource</code>注解的<code>name</code>属性解析为bean的名字，而<code>type</code>属性则解析为bean的类型。</p>
+<p>示例代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span>(name = <span class="string">"serImplB"</span>,type = SerImplB<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">Ser</span> <span class="title">ser</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">diTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Assertions.assertNotNull(ser);</span><br><span class="line">        ser.sayHello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>装配顺序(如果找不到才会继续下一步)：</strong></p>
+<ol>
+<li>如果同时指定了<code>name</code>和<code>type</code>，则从Spring上下文中找到唯一匹配的bean进行装配，找不到则抛出异常。</li>
+<li>如果指定了<code>name</code>，则从上下文中查找名称（id）匹配的bean进行装配，找不到则抛出异常。</li>
+<li>如果指定了<code>type</code>，则从上下文中找到类型匹配的唯一bean进行装配，找不到或是找到多个，都会抛出异常。</li>
+<li>如果既没有指定<code>name</code>，又没有指定<code>type</code>，则默认先按照<code>byName</code>方式进行装配；如果没有匹配，按照<code>byType</code>进行装配。</li>
+</ol>
+<h2 id="Field-injection-is-not-recommended"><a href="#Field-injection-is-not-recommended" class="headerlink" title="Field injection is not recommended"></a>Field injection is not recommended</h2><p>示例代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelpService</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="meta">@Qualifier</span>(<span class="string">"serviceImplA"</span>)</span><br><span class="line">    <span class="keyword">private</span> Servicee servicee;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        servicee.sayHello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在使用IDEA 进行Spring 开发的时候，当你在字段上面使用<code>@Autowired</code>注解的时候，IDEA 会有警告提示：@Autowired会高亮或波浪线，并且把鼠标悬停在上面会显示<code>Field injection is not recommended</code></p>
+<blockquote>
+<p>Field injection is not recommended</p>
+</blockquote>
+<p>翻译过来的意思是：</p>
+<blockquote>
+<p>不建议使用基于 Field 的注入方式。</p>
+<p>Spring 开发团队建议：在你的Spring Bean 永远使用基于constructor 的方式进行依赖注入。</p>
+</blockquote>
+<p>将光标放到<code>@Autowired</code>处，使用<code>Alt + Enter</code> 快捷进行修改之后，代码就会变成基于Constructor的注入方式，修改之后 ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelpService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Ser serImplA;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HelpService</span><span class="params">(Ser serImplA)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.serImplA = serImplA;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        serImplA.sayHello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">diTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        HelpService ser = <span class="keyword">new</span> HelpService(<span class="keyword">new</span> SerImplA());</span><br><span class="line">        Assertions.assertNotNull(ser);</span><br><span class="line">        ser.sayHello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修正这个警告提示固然简单，但是更重要是去理解为什么Spring 团队会提出这样的建议？直接使用这种基于 field 的注入方式有什么问题？</p>
+<h2 id="Spring-的3种依赖注入方式-："><a href="#Spring-的3种依赖注入方式-：" class="headerlink" title="Spring 的3种依赖注入方式 ："></a><strong>Spring 的3种依赖注入方式</strong> ：</h2><ul>
+<li>基于 Field 注入（属性注入）</li>
+<li>基于 setter 注入</li>
+<li>基于 constructor 注入（构造器注入）</li>
+</ul>
+<h3 id="基于属性注入"><a href="#基于属性注入" class="headerlink" title="基于属性注入"></a>基于属性注入</h3><p>所谓基于 Field 注入，就是在bean变量上使用上述介绍的三种注解进行依赖注入。本质上是通过反射的方式直接注入到Field。这是平常开发中看的最多也是最熟悉的一种方式，同时，也正是 Spring 团队所不推荐的方式。比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> Ser ser;</span><br></pre></td></tr></table></figure>
+
+<h3 id="基于setter方法注入"><a href="#基于setter方法注入" class="headerlink" title="基于setter方法注入"></a>基于setter方法注入</h3><p>通过对应变量的<code>setXXX()</code>方法以及在方法上面使用注解，来完成依赖注入。比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> HelpService helper;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setHelper</span><span class="params">(HelpService helper)</span> </span>&#123;   </span><br><span class="line">    <span class="keyword">this</span>.helper = helper;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：在 <code>Spring 4.3</code> 及以后的版本中，setter 上面的 <code>@Autowired</code> 注解是可以不写的。</p>
+</blockquote>
+<h3 id="基于constructor注入"><a href="#基于constructor注入" class="headerlink" title="基于constructor注入"></a>基于constructor注入</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiTest</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Ser ser;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DiTest</span><span class="params">(@Qualifier(<span class="string">"serImplA"</span>)</span>Ser ser) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.ser = ser;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">diTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Assertions.assertNotNull(ser);</span><br><span class="line">        ser.sayHello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在 <code>Spring 4.3</code> 及以后的版本中，如果这个类只有一个构造方法，那么这个构造方法上面也可以不写 <code>@Autowired</code> 注解。</p>
+</blockquote>
+<h2 id="各注入方式的优缺点"><a href="#各注入方式的优缺点" class="headerlink" title="各注入方式的优缺点"></a>各注入方式的优缺点</h2><h3 id="基于属性注入-1"><a href="#基于属性注入-1" class="headerlink" title="基于属性注入"></a>基于属性注入</h3><p><strong>好处</strong></p>
+<ul>
+<li>注入方式简单</li>
+<li>代码整洁</li>
+</ul>
+<p><strong>坏处</strong></p>
+<ul>
+<li><p><strong>容易违背了单一职责原则</strong> ，使用这种基于 field 注入的方式，依赖注入是很简单的，就算类中有十几个依赖开发者可能都觉得没有什么问题，普通的开发者很可能会无意识地给一个类添加很多基于属性的DI。拥有太多的依赖通常意味着你的类要承担更多的责任，明显违背了单一职责原则。</p>
+</li>
+<li><p><strong>不能使用属性注入的方式构建不可变对象(<code>final</code> 修饰的变量)</strong></p>
+</li>
+<li><p><strong>依赖注入与容器强耦合</strong></p>
+<p>依赖注入的核心思想之一就是：受容器管理的类不应该再与容器强耦合。简单点来说就是：这个类应该是一个简单的类并且能够被单独实例化，这样在进行单元测试中实例化这个类时不必去启动IOC容器。</p>
+<p>这个问题具体可以表现在单元测试的时候，开发者很容易出现一个问题就是，在测试类中，明明注入了这个依赖，但是在调用的时候就是报NPE，而此时解决办法就是，把那个依赖所在的启动类启动。</p>
+<p>所以它造成了问题就是：通过依赖容器才能实例化</p>
+<ul>
+<li>类和依赖容器强耦合，不能在容器外使用</li>
+<li>必须通过依赖容器才能实例化</li>
+</ul>
+</li>
+</ul>
+<h3 id="基于setter注入"><a href="#基于setter注入" class="headerlink" title="基于setter注入"></a>基于setter注入</h3><blockquote>
+<p>Setter injection should primarily only be used for optional dependencies that can be assigned reasonable default values within the class. Otherwise, not-null checks must be performed everywhere the code uses the dependency. One benefit of setter injection is that setter methods make objects of that class amenable to reconfiguration or re-injection later.</p>
+</blockquote>
+<p>基于 setter 的注入，则只应该被用于注入非必需的依赖，同时在类中应该对这个依赖提供一个合理的默认值。如果使用 setter 注入必需的依赖，那么将会有过多的 null 检查充斥在代码中。<strong>使用 setter 注入的一个优点是，这个依赖可以很方便的被改变或者重新注入</strong> </p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>灵活</li>
+</ul>
+<h3 id="基于constructor注入-推荐"><a href="#基于constructor注入-推荐" class="headerlink" title="基于constructor注入(推荐)"></a>基于constructor注入(推荐)</h3><blockquote>
+<p>The Spring team generally advocates constructor injection as it enables one to implement application components as immutable objects and to ensure that required dependencies are not null. Furthermore constructor-injected components are always returned to client (calling) code in a fully initialized state. As a side note, a large number of constructor arguments is a bad code smell, implying that the class likely has too many responsibilities and should be refactored to better address proper separation of concerns.</p>
+</blockquote>
+<p>Spring 团队提倡使用基于构造方法的注入，因为这样一方面可以<strong>保证将依赖注入到一个不可变的变量中 (<code>final</code> 修饰的变量)</strong> ，另一方面也可以<strong>保证这些变量的值不会是 null</strong> 。此外，经过构造方法完成依赖注入的组件 (注：比如各个 <code>service</code>)，在被调用时可以<strong>保证完全初始化的状态</strong> 。</p>
+<p><strong>优点：</strong></p>
+<p>总结起来如下几点：</p>
+<ul>
+<li><p>依赖不可变：final关键字修饰</p>
+</li>
+<li><p>依赖不为空（省去了我们对其检查）：当要实例化组件依赖的时候，由于实现了有参数的构造函数，所以不会调用默认构造函数，那么就需要Spring容器传入所需要的参数，所以就两种情况：1、有该类型的参数-&gt;传入，OK 。2：无该类型的参数-&gt;报错。所以保证不会为空，Spring总不至于传一个null进去吧 </p>
+</li>
+<li><p>完全初始化的状态：这个可以跟上面的依赖不为空结合起来，向构造器传参之前，要确保注入的内容不为空，那么肯定要调用依赖组件的构造方法完成实例化。而在Java类加载实例化的过程中，构造方法是最后一步（之前如果有父类先初始化父类，然后自己的成员变量，最后才是构造方法。）所以返回来的都是初始化之后的状态。</p>
+</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>一个巨大的构造方法通常代表着出现了代码异味，这个类可能承担了过多的责任</li>
+</ul>
+<hr>
+<p><strong>Q：</strong>这里有个疑问就是：要是有大量的依赖要注入，构造方法不会显得很臃肿吗？</p>
+<p><strong>A：</strong>对于这个问题，说明你的类当中有太多的责任，那么你要好好想一想是不是自己违反了类的<strong>单一性职责原则</strong>，从而导致有这么多的依赖要注入。</p>
+<h2 id="Spring-开发团队的建议"><a href="#Spring-开发团队的建议" class="headerlink" title="Spring 开发团队的建议"></a>Spring 开发团队的建议</h2><blockquote>
+<p>Since you can mix constructor-based and setter-based DI, it is a good rule of thumb to use constructors for mandatory dependencies and setter methods or configuration methods for optional dependencies.</p>
+</blockquote>
+<p>简单来说，就是</p>
+<ul>
+<li>强制依赖就用构造器方式</li>
+<li>可选、可变的依赖就用setter 注入</li>
+</ul>
+<p>当然你可以在同一个类中使用这两种方法。构造器注入更适合强制性的注入旨在不变性，Setter注入更适合可变性的注入。</p>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2021/07/20/Spring为什么建议使用构造器来注入/">https://yellowbp.github.io/2021/07/20/Spring为什么建议使用构造器来注入/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/Spring/">Spring</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Spring/">Spring</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2021/07/22/jenkins/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2021/07/19/linux虚拟机安装/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckrq3cr0m002tkwtwcngayf00"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring为什么建议使用构造器来注入"><span class="toc-number">1.</span> <span class="toc-text">Spring为什么建议使用构造器来注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Autowired-Resource-Inject-三个注解的区别"><span class="toc-number">1.1.</span> <span class="toc-text">@Autowired, @Resource, @Inject 三个注解的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Autowired"><span class="toc-number">1.1.1.</span> <span class="toc-text">@Autowired</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Inject"><span class="toc-number">1.1.2.</span> <span class="toc-text">@Inject</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Resource"><span class="toc-number">1.1.3.</span> <span class="toc-text">@Resource</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Field-injection-is-not-recommended"><span class="toc-number">1.2.</span> <span class="toc-text">Field injection is not recommended</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-的3种依赖注入方式-："><span class="toc-number">1.3.</span> <span class="toc-text">Spring 的3种依赖注入方式 ：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基于属性注入"><span class="toc-number">1.3.1.</span> <span class="toc-text">基于属性注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于setter方法注入"><span class="toc-number">1.3.2.</span> <span class="toc-text">基于setter方法注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于constructor注入"><span class="toc-number">1.3.3.</span> <span class="toc-text">基于constructor注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#各注入方式的优缺点"><span class="toc-number">1.4.</span> <span class="toc-text">各注入方式的优缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基于属性注入-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">基于属性注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于setter注入"><span class="toc-number">1.4.2.</span> <span class="toc-text">基于setter注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于constructor注入-推荐"><span class="toc-number">1.4.3.</span> <span class="toc-text">基于constructor注入(推荐)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-开发团队的建议"><span class="toc-number">1.5.</span> <span class="toc-text">Spring 开发团队的建议</span></a></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2021 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
