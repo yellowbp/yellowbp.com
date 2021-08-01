@@ -5398,6 +5398,9 @@ body.mdui-locked {
     display:none;
 }
 
+#sidebar>.mdui-list>.mdui-collapse-item:nth-child(5) {
+    display:none;
+}
 
 
 .mdui-typo small {
