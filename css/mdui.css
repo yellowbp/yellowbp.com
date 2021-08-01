@@ -5394,7 +5394,7 @@ body.mdui-locked {
           transform: scaleX(1);
 }
 
-#sidebar>.mdui-list>.mdui-collapse-item:nth-child(5) {
+#sidebar>.mdui-list>.mdui-collapse-item:nth-child(4) {
     display:none;
 }
 
@@ -9834,8 +9834,8 @@ select.mdui-select[multiple] option:last-child {
 .mdui-card-content {
   position: relative;
   padding: 16px;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 16px;
+  line-height: 32px;
 }
 /**
  * ============================ 卡片菜单
