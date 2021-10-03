@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>ES--集群部署 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="ES环境–集群部署相关概念单机 &amp;amp; 集群单台 Elasticsearch 服务器提供服务，往往都有最大的负载能力，超过这个阈值，服务器性能就会大大降低甚至不可用，所以生产环境中，一般都是运行在指定服务器集群中。 除了负载能力，单点服务器也存在其他问题：  单台机器存储容量有限 单服务器容易出现单点故障，无法实现高可用 单服务的并发处理能力有限  配置服务器集群时，集群中节点数量没有限制，大">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES--集群部署">
+<meta property="og:url" content="https://yellowbp.github.io/2021/09/21/ElasticSearch--集群部署/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="ES环境–集群部署相关概念单机 &amp;amp; 集群单台 Elasticsearch 服务器提供服务，往往都有最大的负载能力，超过这个阈值，服务器性能就会大大降低甚至不可用，所以生产环境中，一般都是运行在指定服务器集群中。 除了负载能力，单点服务器也存在其他问题：  单台机器存储容量有限 单服务器容易出现单点故障，无法实现高可用 单服务的并发处理能力有限  配置服务器集群时，集群中节点数量没有限制，大">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/win%E9%83%A8%E7%BD%B2--%E5%A4%8D%E5%88%B6%E6%9C%8D%E5%8A%A1.png">
+<meta property="og:image" content="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/win%E9%83%A8%E7%BD%B2--%E5%88%A0%E9%99%A4data%E7%9B%AE%E5%BD%95.png">
+<meta property="og:image" content="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/win%E9%83%A8%E7%BD%B2--%E6%B5%8B%E8%AF%95%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81.png">
+<meta property="og:image" content="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/linux%E9%9B%86%E7%BE%A4--%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD.png">
+<meta property="og:image" content="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/linux%E9%9B%86%E7%BE%A4--es%E5%90%AF%E5%8A%A8%E5%BC%82%E5%B8%B8.jpg">
+<meta property="og:updated_time" content="2021-10-03T07:58:34.601Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ES--集群部署">
+<meta name="twitter:description" content="ES环境–集群部署相关概念单机 &amp;amp; 集群单台 Elasticsearch 服务器提供服务，往往都有最大的负载能力，超过这个阈值，服务器性能就会大大降低甚至不可用，所以生产环境中，一般都是运行在指定服务器集群中。 除了负载能力，单点服务器也存在其他问题：  单台机器存储容量有限 单服务器容易出现单点故障，无法实现高可用 单服务的并发处理能力有限  配置服务器集群时，集群中节点数量没有限制，大">
+<meta name="twitter:image" content="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/win%E9%83%A8%E7%BD%B2--%E5%A4%8D%E5%88%B6%E6%9C%8D%E5%8A%A1.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",git">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2021/09/21/ElasticSearch--集群部署/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Tue Sep 21 2021 11:24:35 GMT+0800">
+    <meta property="article:modified_time" content="Sun Oct 03 2021 15:58:34 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2021/09/21/ElasticSearch--集群部署/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux搭建/">linux搭建<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/安全框架/">安全框架<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/接发图片/">接发图片<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/数据库/">数据库<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/源码分析/">源码分析<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/虚拟机/">虚拟机<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/负载均衡/">负载均衡<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/通用工具类/">通用工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-7.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">ES--集群部署</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2021-09-21 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="ES环境–集群部署"><a href="#ES环境–集群部署" class="headerlink" title="ES环境–集群部署"></a>ES环境–集群部署</h1><h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a><strong>相关概念</strong></h2><h3 id="单机-amp-集群"><a href="#单机-amp-集群" class="headerlink" title="单机 &amp; 集群"></a><strong>单机</strong> <strong>&amp;</strong> <strong>集群</strong></h3><p>单台 Elasticsearch 服务器提供服务，往往都有最大的负载能力，超过这个阈值，服务器性能就会大大降低甚至不可用，所以生产环境中，一般都是运行在指定服务器集群中。</p>
+<p>除了负载能力，单点服务器也存在其他问题：</p>
+<ul>
+<li>单台机器存储容量有限</li>
+<li>单服务器容易出现单点故障，无法实现高可用</li>
+<li>单服务的并发处理能力有限</li>
+</ul>
+<p>配置服务器集群时，集群中节点数量没有限制，大于等于 2 个节点就可以看做是集群了。一般出于高性能及高可用方面来考虑集群中节点数量都是 3 个以上。</p>
+<h3 id="集群-Cluster"><a href="#集群-Cluster" class="headerlink" title="集群 Cluster"></a><strong>集群</strong> <strong>Cluster</strong></h3><p>一个集群就是由一个或多个服务器节点组织在一起，共同持有整个的数据，并一起提供索引和搜索功能。一个 Elasticsearch 集群有一个唯一的名字标识，这个名字默认就是”elasticsearch”。这个名字是重要的，因为一个节点只能通过指定某个集群的名字，来加入这个集群。</p>
+<h3 id="节点-Node"><a href="#节点-Node" class="headerlink" title="节点 Node"></a><strong>节点</strong> <strong>Node</strong></h3><p>集群中包含很多服务器，一个节点就是其中的一个服务器。作为集群的一部分，它存储数据，参与集群的索引和搜索功能。</p>
+<p>一个节点也是由一个名字来标识的，默认情况下，这个名字是一个随机的漫威漫画角色的名字，这个名字会在启动的时候赋予节点。这个名字对于管理工作来说挺重要的，因为在这个管理过程中，你会去确定网络中的哪些服务器对应于 Elasticsearch 集群中的哪些节点。</p>
+<p>一个节点可以通过配置集群名称的方式来加入一个指定的集群。默认情况下，每个节点都会被安排加入到一个叫做“elasticsearch”的集群中，这意味着，如果你在你的网络中启动了若干个节点，并假定它们能够相互发现彼此，它们将会自动地形成并加入到一个叫做“elasticsearch”的集群中。</p>
+<p>在一个集群里，只要你想，可以拥有任意多个节点。而且，如果当前你的网络中没有运行任何 Elasticsearch 节点，这时启动一个节点，会默认创建并加入一个叫做“elasticsearch”的集群。</p>
+<h2 id="Windows-集群"><a href="#Windows-集群" class="headerlink" title="Windows 集群"></a><strong>Windows</strong> <strong>集群</strong></h2><h3 id="部署集群"><a href="#部署集群" class="headerlink" title="部署集群"></a><strong>部署集群</strong></h3><ol>
+<li><p>创建 elasticsearch-cluster 文件夹，在内部复制三个 elasticsearch 服务</p>
+<img src="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/win%E9%83%A8%E7%BD%B2--%E5%A4%8D%E5%88%B6%E6%9C%8D%E5%8A%A1.png" style="zoom:60%;">
+</li>
+<li><p>修改集群文件目录中每个节点的 config/elasticsearch.yml 配置文件</p>
+<ul>
+<li><p>node-1001 节点</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#节点 1 的配置信息：</span></span><br><span class="line"><span class="comment">#集群名称，节点之间要保持一致</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">my-elasticsearch</span></span><br><span class="line"><span class="comment">#节点名称，集群内要唯一</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">node-1001</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">node.data:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment">#ip 地址</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="string">localhost</span></span><br><span class="line"><span class="comment">#http 端口</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">1001</span></span><br><span class="line"><span class="comment">#tcp 监听端口</span></span><br><span class="line"><span class="attr">transport.tcp.port:</span> <span class="number">9301</span></span><br><span class="line"><span class="comment">#discovery.seed_hosts: ["localhost:9301", "localhost:9302","localhost:9303"]</span></span><br><span class="line"><span class="comment">#discovery.zen.fd.ping_timeout: 1m</span></span><br><span class="line"><span class="comment">#discovery.zen.fd.ping_retries: 5</span></span><br><span class="line"><span class="comment">#集群内的可以被选为主节点的节点列表</span></span><br><span class="line"><span class="comment">#cluster.initial_master_nodes: ["node-1", "node-2","node-3"]</span></span><br><span class="line"><span class="comment">#跨域配置</span></span><br><span class="line"><span class="comment">#action.destructive_requires_name: true</span></span><br><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">"*"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>node-1002 节点</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#节点 2 的配置信息：</span></span><br><span class="line"><span class="comment">#集群名称，节点之间要保持一致</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">my-elasticsearch</span></span><br><span class="line"><span class="comment">#节点名称，集群内要唯一</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">node-1002</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">node.data:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ip 地址</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="string">localhost</span></span><br><span class="line"><span class="comment">#http 端口</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">1002</span></span><br><span class="line"><span class="comment">#tcp 监听端口</span></span><br><span class="line"><span class="attr">transport.tcp.port:</span> <span class="number">9302</span></span><br><span class="line"><span class="attr">discovery.seed_hosts:</span> <span class="string">["localhost:9301"]</span></span><br><span class="line"><span class="attr">discovery.zen.fd.ping_timeout:</span> <span class="string">1m</span></span><br><span class="line"><span class="attr">discovery.zen.fd.ping_retries:</span> <span class="number">5</span></span><br><span class="line"><span class="comment">#集群内的可以被选为主节点的节点列表</span></span><br><span class="line"><span class="comment">#cluster.initial_master_nodes: ["node-1", "node-2","node-3"]</span></span><br><span class="line"><span class="comment">#跨域配置</span></span><br><span class="line"><span class="comment">#action.destructive_requires_name: true</span></span><br><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">"*"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>node-1003 节点</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#节点 3 的配置信息：</span></span><br><span class="line"><span class="comment">#集群名称，节点之间要保持一致</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">my-elasticsearch</span></span><br><span class="line"><span class="comment">#节点名称，集群内要唯一</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">node-1003</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">node.data:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment">#ip 地址</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="string">localhost</span></span><br><span class="line"><span class="comment">#http 端口</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">1003</span></span><br><span class="line"><span class="comment">#tcp 监听端口</span></span><br><span class="line"><span class="attr">transport.tcp.port:</span> <span class="number">9303</span></span><br><span class="line"><span class="comment">#候选主节点的地址，在开启服务后可以被选为主节点</span></span><br><span class="line"><span class="attr">discovery.seed_hosts:</span> <span class="string">["localhost:9301",</span> <span class="string">"localhost:9302"</span><span class="string">]</span></span><br><span class="line"><span class="attr">discovery.zen.fd.ping_timeout:</span> <span class="string">1m</span></span><br><span class="line"><span class="attr">discovery.zen.fd.ping_retries:</span> <span class="number">5</span></span><br><span class="line"><span class="comment">#集群内的可以被选为主节点的节点列表</span></span><br><span class="line"><span class="comment">#cluster.initial_master_nodes: ["node-1", "node-2","node-3"]</span></span><br><span class="line"><span class="comment">#跨域配置</span></span><br><span class="line"><span class="comment">#action.destructive_requires_name: true</span></span><br><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">"*"</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="启动集群"><a href="#启动集群" class="headerlink" title="启动集群"></a><strong>启动集群</strong></h3><ol>
+<li><p>启动前先删除每个节点中的 data 目录中所有内容（如果存在）</p>
+<img src="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/win%E9%83%A8%E7%BD%B2--%E5%88%A0%E9%99%A4data%E7%9B%AE%E5%BD%95.png" style="zoom:67%;">
+</li>
+<li><p>分别双击执行 bin/elasticsearch.bat, 启动节点服务器，启动后，会自动加入指定名称的集群</p>
+</li>
+<li><p>测试集群</p>
+<ol>
+<li><p>查看集群状态</p>
+<ul>
+<li><p>node-1001 节点 ： GET  127.0.0.1:1001/_cluster/health</p>
+</li>
+<li><p>node-1002 节点 ： GET  127.0.0.1:1002/_cluster/health</p>
+</li>
+<li><p>node-1002 节点 ： GET  127.0.0.1:1003/_cluster/health</p>
+<p>其中status字段指示当前集群在总体上是否工作正常，三种颜色含义如下：</p>
+<ul>
+<li><p>green ：所有的主分片和副本分片都能正常工作，集群完整且正常</p>
+</li>
+<li><p>yellow ：所有的主分片都正常运行，但不是所有的副本分片都正常运行，一般单节点时就是此状态，单点正常、集群不可靠</p>
+</li>
+<li><p>red ：有主分片没能正常运行，集群不可用，单点不正常</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>在集群中的 node-1001 节点<strong>增加</strong>索引 ：PUT 127.0.0.1:1001/user</p>
+</li>
+<li><p>在集群中的 node-1002 节点<strong>查询</strong>索引 ：GET 127.0.0.1:1001/user   如果能查询到user索引，则表明集群部署成功</p>
+<img src="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/win%E9%83%A8%E7%BD%B2--%E6%B5%8B%E8%AF%95%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81.png" style="zoom:50%;">
+
+
+
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="Linux-集群"><a href="#Linux-集群" class="headerlink" title="Linux 集群"></a>Linux 集群</h2><h3 id="es下载"><a href="#es下载" class="headerlink" title="es下载"></a>es下载</h3><p><a href="https://www.elastic.co/cn/downloads/past-releases/elasticsearch-7-8-0" target="_blank" rel="noopener">https://www.elastic.co/cn/downloads/past-releases/elasticsearch-7-8-0</a></p>
+<img src="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/linux%E9%9B%86%E7%BE%A4--%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD.png" style="zoom:50%;">
+
+<h3 id="Linux单机"><a href="#Linux单机" class="headerlink" title="Linux单机"></a>Linux单机</h3><h4 id="es安装"><a href="#es安装" class="headerlink" title="es安装"></a>es安装</h4><h5 id="解压软件"><a href="#解压软件" class="headerlink" title="解压软件"></a><strong>解压软件</strong></h5><p>将下载的软件解压缩</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压缩</span></span><br><span class="line">tar -zxvf elasticsearch-7.8.0-linux-x86_64.tar.gz -C /opt/module</span><br><span class="line"><span class="comment"># 改名</span></span><br><span class="line">mv elasticsearch-7.8.0 es</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a><strong>创建用户</strong></h5><p>因为安全问题，Elasticsearch 不允许 root 用户直接运行，所以要创建新用户，在 root 用户中创建新用户</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#新增 es 用户</span></span><br><span class="line">useradd es </span><br><span class="line"><span class="comment">#为 es 用户设置密码</span></span><br><span class="line">passwd es </span><br><span class="line"><span class="comment">#如果错了，可以删除再加</span></span><br><span class="line">userdel -r es </span><br><span class="line"><span class="comment">#文件夹所有者</span></span><br><span class="line">chown -R es:es /opt/module/es</span><br></pre></td></tr></table></figure>
+
+<h5 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a><strong>修改配置文件</strong></h5><p>修改/opt/module/es/config/elasticsearch.yml 文件</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加入如下配置</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">elasticsearch</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">node-1</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> <span class="string">["node-1"]</span></span><br></pre></td></tr></table></figure>
+
+<p>修改/etc/security/limits.conf </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 在文件末尾中增加下面内容</span><br><span class="line"># 每个进程可以打开的文件数的限制</span><br><span class="line">es soft nofile 65536</span><br><span class="line">es hard nofile 65536</span><br></pre></td></tr></table></figure>
+
+<p>修改/etc/security/limits.d/20-nproc.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 在文件末尾中增加下面内容</span><br><span class="line"># 每个进程可以打开的文件数的限制</span><br><span class="line">es soft nofile 65536</span><br><span class="line">es hard nofile 65536</span><br><span class="line"># 操作系统级别对每个用户创建的进程数的限制</span><br><span class="line">* hard nproc 4096</span><br><span class="line"># 注：* 带表 Linux 所有用户名称</span><br></pre></td></tr></table></figure>
+
+<p>修改/etc/sysctl.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 在文件中增加下面内容</span><br><span class="line"># 一个进程可以拥有的 VMA(虚拟内存区域)的数量,默认值为 65536</span><br><span class="line">vm.max_map_count=655360</span><br></pre></td></tr></table></figure>
+
+<p>重新加载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动软件"><a href="#启动软件" class="headerlink" title="启动软件"></a><strong>启动软件</strong></h5><p>使用 ES 用户启动</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/module/es/</span><br><span class="line"><span class="comment">#启动</span></span><br><span class="line">bin/elasticsearch</span><br><span class="line"><span class="comment">#后台启动</span></span><br><span class="line">bin/elasticsearch -d</span><br></pre></td></tr></table></figure>
+
+<p>启动时，会动态生成文件，如果文件所属用户不匹配，会发生错误，需要重新进行修改用户和用户组</p>
+<img src="https://esimages.oss-cn-guangzhou.aliyuncs.com/esimages/linux%E9%9B%86%E7%BE%A4--es%E5%90%AF%E5%8A%A8%E5%BC%82%E5%B8%B8.jpg" style="zoom:67%;">
+
+<h5 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#暂时关闭防火墙</span></span><br><span class="line">systemctl stop firewalld</span><br><span class="line"><span class="comment">#永久关闭防火墙</span></span><br><span class="line">systemctl <span class="built_in">enable</span> firewalld.service <span class="comment">#打开放货抢永久性生效，重启后不会复原</span></span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld.service <span class="comment">#关闭防火墙，永久性生效，重启后不会复原</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="测试es"><a href="#测试es" class="headerlink" title="测试es"></a><strong>测试es</strong></h5><p>浏览器中输入地址：ip:port:9200</p>
+<h3 id="Linux集群"><a href="#Linux集群" class="headerlink" title="Linux集群"></a>Linux集群</h3><p>集群中 es的下载包跟单机的是一致的</p>
+<h4 id="es安装-1"><a href="#es安装-1" class="headerlink" title="es安装"></a>es安装</h4><h5 id="解压软件-1"><a href="#解压软件-1" class="headerlink" title="解压软件"></a><strong>解压软件</strong></h5><p>将下载的软件解压缩</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解压缩</span></span><br><span class="line">tar -zxvf elasticsearch-7.8.0-linux-x86_64.tar.gz -C /opt/module</span><br><span class="line"><span class="comment"># 改名</span></span><br><span class="line">mv elasticsearch-7.8.0 es-cluster</span><br></pre></td></tr></table></figure>
+
+<p>将软件分发到其他节点(服务器)：linux2, linux3</p>
+<h5 id="创建用户-1"><a href="#创建用户-1" class="headerlink" title="创建用户"></a><strong>创建用户</strong></h5><p>因为安全问题，Elasticsearch 不允许 root 用户直接运行，所以要在每个节点中创建新用户，在 root 用户中创建新用户</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#新增 es 用户</span></span><br><span class="line">useradd es </span><br><span class="line"><span class="comment">#为 es 用户设置密码</span></span><br><span class="line">passwd es </span><br><span class="line"><span class="comment">#如果错了，可以删除再加</span></span><br><span class="line">userdel -r es </span><br><span class="line"><span class="comment">#文件夹所有者</span></span><br><span class="line">chown -R es:es /opt/module/es-cluster</span><br></pre></td></tr></table></figure>
+
+<h5 id="修改配置文件-1"><a href="#修改配置文件-1" class="headerlink" title="修改配置文件"></a><strong>修改配置文件</strong></h5><p>修改/opt/module/es/config/elasticsearch.yml 文件，分发文件</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加入如下配置</span></span><br><span class="line"><span class="comment">#集群名称</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">cluster-es</span></span><br><span class="line"><span class="comment">#节点名称，每个节点的名称不能重复</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">node-1</span></span><br><span class="line"><span class="comment">#ip 地址，每个节点的地址不能重复</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="string">linux1</span></span><br><span class="line"><span class="comment">#是不是有资格主节点</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">node.data:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9200</span></span><br><span class="line"><span class="comment"># head 插件需要这打开这两个配置</span></span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">"*"</span></span><br><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.max_content_length:</span> <span class="string">200mb</span></span><br><span class="line"><span class="comment">#es7.x 之后新增的配置，初始化一个新的集群时需要此配置来选举 master</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> <span class="string">["node-1"]</span></span><br><span class="line"><span class="comment">#es7.x 之后新增的配置，节点发现</span></span><br><span class="line"><span class="attr">discovery.seed_hosts:</span> <span class="string">["linux1:9300","linux2:9300","linux3:9300"]</span></span><br><span class="line"><span class="attr">gateway.recover_after_nodes:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">network.tcp.keep_alive:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">network.tcp.no_delay:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">transport.tcp.compress:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment">#集群内同时启动的数据任务个数，默认是 2 个</span></span><br><span class="line"><span class="attr">cluster.routing.allocation.cluster_concurrent_rebalance:</span> <span class="number">16</span></span><br><span class="line"><span class="comment">#添加或删除节点及负载均衡时并发恢复的线程个数，默认 4 个</span></span><br><span class="line"><span class="attr">cluster.routing.allocation.node_concurrent_recoveries:</span> <span class="number">16</span></span><br><span class="line"><span class="comment">#初始化数据恢复时，并发恢复线程的个数，默认 4 个</span></span><br><span class="line"><span class="attr">cluster.routing.allocation.node_initial_primaries_recoveries:</span> <span class="number">16</span></span><br></pre></td></tr></table></figure>
+
+<p>修改/etc/security/limits.conf ，分发文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 在文件末尾中增加下面内容</span><br><span class="line">es soft nofile 65536</span><br><span class="line">es hard nofile 65536</span><br></pre></td></tr></table></figure>
+
+<p>修改/etc/security/limits.d/20-nproc.conf，分发文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 在文件末尾中增加下面内容</span><br><span class="line">es soft nofile 65536</span><br><span class="line">es hard nofile 65536</span><br><span class="line">* hard nproc 4096</span><br><span class="line"># 注：* 带表 Linux 所有用户名称</span><br></pre></td></tr></table></figure>
+
+<p>修改/etc/sysctl.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 在文件中增加下面内容</span><br><span class="line">vm.max_map_count=655360</span><br></pre></td></tr></table></figure>
+
+<p>重新加载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动软件-1"><a href="#启动软件-1" class="headerlink" title="启动软件"></a><strong>启动软件</strong></h5><p>分别在不同节点上启动 ES 软件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/module/es-cluster</span><br><span class="line"><span class="comment">#启动</span></span><br><span class="line">bin/elasticsearch</span><br><span class="line"><span class="comment">#后台启动</span></span><br><span class="line">bin/elasticsearch -d</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试集群</strong></p>
+<p>linux1是设置位master节点的</p>
+<p>linux1:9200/_cat/nodes</p>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2021/09/21/ElasticSearch--集群部署/">https://yellowbp.github.io/2021/09/21/ElasticSearch--集群部署/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/ElasticSearch/">ElasticSearch</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/git/">git</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2021/10/01/java8--Lambda表达式/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2021/08/28/Springboot缓存/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckuaxonqn0012b0tweubgjo2o"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ES环境–集群部署"><span class="toc-number">1.</span> <span class="toc-text">ES环境–集群部署</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#相关概念"><span class="toc-number">1.1.</span> <span class="toc-text">相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单机-amp-集群"><span class="toc-number">1.1.1.</span> <span class="toc-text">单机 &amp; 集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集群-Cluster"><span class="toc-number">1.1.2.</span> <span class="toc-text">集群 Cluster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#节点-Node"><span class="toc-number">1.1.3.</span> <span class="toc-text">节点 Node</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows-集群"><span class="toc-number">1.2.</span> <span class="toc-text">Windows 集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部署集群"><span class="toc-number">1.2.1.</span> <span class="toc-text">部署集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动集群"><span class="toc-number">1.2.2.</span> <span class="toc-text">启动集群</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-集群"><span class="toc-number">1.3.</span> <span class="toc-text">Linux 集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#es下载"><span class="toc-number">1.3.1.</span> <span class="toc-text">es下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux单机"><span class="toc-number">1.3.2.</span> <span class="toc-text">Linux单机</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#es安装"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">es安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#解压软件"><span class="toc-number">1.3.2.1.1.</span> <span class="toc-text">解压软件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建用户"><span class="toc-number">1.3.2.1.2.</span> <span class="toc-text">创建用户</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#修改配置文件"><span class="toc-number">1.3.2.1.3.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启动软件"><span class="toc-number">1.3.2.1.4.</span> <span class="toc-text">启动软件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#关闭防火墙"><span class="toc-number">1.3.2.1.5.</span> <span class="toc-text">关闭防火墙</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#测试es"><span class="toc-number">1.3.2.1.6.</span> <span class="toc-text">测试es</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux集群"><span class="toc-number">1.3.3.</span> <span class="toc-text">Linux集群</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#es安装-1"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">es安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#解压软件-1"><span class="toc-number">1.3.3.1.1.</span> <span class="toc-text">解压软件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建用户-1"><span class="toc-number">1.3.3.1.2.</span> <span class="toc-text">创建用户</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#修改配置文件-1"><span class="toc-number">1.3.3.1.3.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启动软件-1"><span class="toc-number">1.3.3.1.4.</span> <span class="toc-text">启动软件</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2021 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
