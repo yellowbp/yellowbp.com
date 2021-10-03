@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>java8--Stream API | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="#  Java8 – Stream API概述Stream 是 java8 中处理集合的关键抽象概念，它可以指定你希望对数据源（集合、数组等）进行的操作，可以执行非常复杂的查找、过滤和映射等操作，使用 Stream API 对数据源数据进行操作，类似用 SQL 语句从数据库查询数据的直观方式来提供一种对 Java 集合运算和表达的抽象。也可以使用 Stream API 来并行执行操作。 Strea">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java8--Stream API">
+<meta property="og:url" content="https://yellowbp.github.io/2021/10/02/java8--Stream API/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="#  Java8 – Stream API概述Stream 是 java8 中处理集合的关键抽象概念，它可以指定你希望对数据源（集合、数组等）进行的操作，可以执行非常复杂的查找、过滤和映射等操作，使用 Stream API 对数据源数据进行操作，类似用 SQL 语句从数据库查询数据的直观方式来提供一种对 Java 集合运算和表达的抽象。也可以使用 Stream API 来并行执行操作。 Strea">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-10-02T06:38:12.136Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java8--Stream API">
+<meta name="twitter:description" content="#  Java8 – Stream API概述Stream 是 java8 中处理集合的关键抽象概念，它可以指定你希望对数据源（集合、数组等）进行的操作，可以执行非常复杂的查找、过滤和映射等操作，使用 Stream API 对数据源数据进行操作，类似用 SQL 语句从数据库查询数据的直观方式来提供一种对 Java 集合运算和表达的抽象。也可以使用 Stream API 来并行执行操作。 Strea">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",git">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2021/10/02/java8--Stream API/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Sat Oct 02 2021 08:37:46 GMT+0800">
+    <meta property="article:modified_time" content="Sat Oct 02 2021 14:38:12 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2021/10/02/java8--Stream API/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux搭建/">linux搭建<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/安全框架/">安全框架<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/接发图片/">接发图片<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/数据库/">数据库<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/源码分析/">源码分析<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/虚拟机/">虚拟机<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/负载均衡/">负载均衡<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/通用工具类/">通用工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-14.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">java8--Stream API</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2021-10-02 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <p># </p>
+<h1 id="Java8-–-Stream-API"><a href="#Java8-–-Stream-API" class="headerlink" title="Java8 – Stream API"></a>Java8 – Stream API</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Stream 是 java8 中处理集合的关键抽象概念，它可以指定你希望对数据源（集合、数组等）进行的操作，可以执行非常复杂的查找、过滤和映射等操作，使用 Stream API 对数据源数据进行操作，类似用 SQL 语句从数据库查询数据的直观方式来提供一种对 Java 集合运算和表达的抽象。也可以使用 Stream API 来并行执行操作。</p>
+<p>Stream 是数据渠道，用于操作数据源（集合、数组等）所生成的元素序列。数据源讲的是数据，流讲的是计算</p>
+<p>简而言之：Stream API 提供了一种高效且易于使用的<strong>处理数据</strong>的方式</p>
+<p>简单的流程图：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+-----对数据源转化成流-------+       +--------------一系列的中间操作 -------------+      +-------终止操作------+</span><br><span class="line">|         数据源           +-----&gt;  |filter+-&gt; |sorted+-&gt; |map+-&gt; |collect|   +----&gt; +     产生一个新流    +</span><br><span class="line">+-------------------------+       +------------------------------------------+      +-------------------+</span><br></pre></td></tr></table></figure>
+
+<p>【<strong>注意</strong>】：</p>
+<ul>
+<li>Stream 自己不会存储元素</li>
+<li>Stream 不会改变源对象。相反，他们会返回一个持有处理后结果的新 Stream</li>
+<li>Stream 操作是懒加载，也就是说他们会等到需要结果的时候才会执行</li>
+</ul>
+<h2 id="Stream操作步骤"><a href="#Stream操作步骤" class="headerlink" title="Stream操作步骤"></a>Stream操作步骤</h2><ol>
+<li><p>创建 Stream</p>
+<p>为数据源（如集合、数组等）创建一个流</p>
+</li>
+<li><p>中间操作</p>
+<p>一个中间操作链，对数据源的数据进行处理</p>
+</li>
+<li><p>终止操作</p>
+<p>一个终止操作，执行中间操作链，并产生结果</p>
+</li>
+</ol>
+<h2 id="创建流"><a href="#创建流" class="headerlink" title="创建流"></a>创建流</h2><p>准备工作，定义一个员工对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> Double salary;</span><br><span class="line">    <span class="comment">// 省略getter、setter</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建流的4种方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建流的方式</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test01</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1.可以通过Collection系列集合提供的 Stream() 或 parallelStream()</span></span><br><span class="line">    List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Stream&lt;String&gt; stream01 = list.stream();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2.通过Arrays中的静态方法Stream()获取数组流</span></span><br><span class="line">    Employee[] employees = <span class="keyword">new</span> Employee[<span class="number">10</span>];</span><br><span class="line">    Stream&lt;Employee&gt; stream02 = Arrays.stream(employees);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 通过Stream类中的静态方法of()</span></span><br><span class="line">    Stream&lt;String&gt; stream03 = Stream.of(<span class="string">"aa"</span>, <span class="string">"bb"</span>, <span class="string">"cc"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4.创建无限流</span></span><br><span class="line">    <span class="comment">//  4.1 迭代, 种子从0开始，每次+2</span></span><br><span class="line">    Stream.iterate(<span class="number">0</span>, (x) -&gt; x + <span class="number">2</span>)</span><br><span class="line">        .forEach((x) -&gt; System.out.println(x));</span><br><span class="line"></span><br><span class="line">    <span class="comment">//  4.2 生成</span></span><br><span class="line">    Stream.generate(() -&gt; Math.random())</span><br><span class="line">            .forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="中间操作"><a href="#中间操作" class="headerlink" title="中间操作"></a>中间操作</h2><p>多个中间操作可以连接起来形成一个流程线，链式编程。除非流水线触发终止操作，否则<strong>中间操作是不会执行任何的操作的</strong>，被称之为懒加载</p>
+<h3 id="准备数据"><a href="#准备数据" class="headerlink" title="准备数据"></a>准备数据</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Employee&gt; emps = Arrays.asList(</span><br><span class="line">        <span class="keyword">new</span> Employee(<span class="number">101</span>, <span class="string">"张三"</span>, <span class="number">19</span>, <span class="number">9999.99</span>),</span><br><span class="line">        <span class="keyword">new</span> Employee(<span class="number">102</span>, <span class="string">"李四"</span>, <span class="number">20</span>, <span class="number">7777.77</span>),</span><br><span class="line">        <span class="keyword">new</span> Employee(<span class="number">103</span>, <span class="string">"王五"</span>, <span class="number">35</span>, <span class="number">6666.66</span>),</span><br><span class="line">        <span class="keyword">new</span> Employee(<span class="number">104</span>, <span class="string">"赵六"</span>, <span class="number">44</span>, <span class="number">1111.11</span>),</span><br><span class="line">        <span class="keyword">new</span> Employee(<span class="number">105</span>, <span class="string">"孙七"</span>, <span class="number">60</span>, <span class="number">4444.44</span>),</span><br><span class="line">    	<span class="keyword">new</span> Employee(<span class="number">105</span>, <span class="string">"孙七"</span>, <span class="number">60</span>, <span class="number">4444.44</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="筛选-切片"><a href="#筛选-切片" class="headerlink" title="筛选/切片"></a>筛选/切片</h3><ul>
+<li>filter：接收 Lambda ，从流中排除某些元素</li>
+<li>limit：截断流，取流中前n个元素</li>
+<li>skip(n)：跳过元素，返回一个舍弃了前n个元素的流；若流中元素不足n个，则返回一个空流；与 limit(n) 互补</li>
+<li>distinct：去重，通过流所生成的 hashCode() 与 equals() 取除重复元素</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test01</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 中间操作，不会执行任何操作</span></span><br><span class="line">    Stream&lt;Employee&gt; stream = employeeList.stream()</span><br><span class="line">        .filter((e) -&gt; &#123;</span><br><span class="line">            System.out.println(<span class="string">"通过输出语句来验证中间操作是否会执行"</span>);</span><br><span class="line">            <span class="keyword">return</span> e.getAge() &gt; <span class="number">35</span>;</span><br><span class="line">        &#125;)</span><br><span class="line">        .limit(<span class="number">3</span>) <span class="comment">// 短路，达到数量后，后续数据不再需要处理</span></span><br><span class="line">        .distinct(); <span class="comment">// 去重</span></span><br><span class="line"></span><br><span class="line">    stream.forEach(employee -&gt; System.out.println(employee));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="映射"><a href="#映射" class="headerlink" title="映射"></a>映射</h3><ul>
+<li><p>map：接收 Lambda ，将元素转换为其他形式或提取信息；接受一个函数作为参数，该函数会被应用到每个元素上，并将其映射成一个新的元素</p>
+</li>
+<li><p>flatMap：接收一个函数作为参数，将流中每一个值都换成另一个流，然后把所有流重新连接成一个流</p>
+</li>
+</ul>
+<p>与集合中的all(Object obj) 、addAll(Collection coll, …value) 是类似的道理</p>
+<p>map：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">flatMapTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;String&gt; list = Arrays.asList(<span class="string">"aa"</span>, <span class="string">"bb"</span>, <span class="string">"cc"</span>);</span><br><span class="line"></span><br><span class="line">    list.stream()</span><br><span class="line">        <span class="comment">// 把list中一个个元素都应用到toUpperCase()函数上</span></span><br><span class="line">        .map((str) -&gt; str.toUpperCase())</span><br><span class="line">        .forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>flatMap：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">flatMapTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; list = Arrays.asList(<span class="string">"aa"</span>, <span class="string">"bb"</span>, <span class="string">"cc"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//        Stream&lt;Stream&lt;Character&gt;&gt; stream = list.stream()</span></span><br><span class="line"><span class="comment">//                .map((str) -&gt; filterCharacter(str)); // &#123; &#123;a,a&#125;,&#123;b,b&#125;,&#123;c,c&#125; &#125;</span></span><br><span class="line"><span class="comment">//        stream.forEach((x) -&gt; &#123;</span></span><br><span class="line"><span class="comment">//            x.forEach(System.out::println);</span></span><br><span class="line"><span class="comment">//        &#125;);</span></span><br><span class="line"></span><br><span class="line">        Stream&lt;Character&gt; stream = list.stream()</span><br><span class="line">                .flatMap((str) -&gt; filterCharacter(str));</span><br><span class="line">        stream.forEach(System.out::println);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Stream&lt;Character&gt; <span class="title">filterCharacter</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        List&lt;Character&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (Character ch : str.toCharArray()) &#123;</span><br><span class="line">            list.add(ch);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list.stream();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h3><ul>
+<li>sorted()：自然排序(Comparable)</li>
+<li>sorted(Comparator com)：定制排序(Comparator)</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sortTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;String&gt; list = Arrays.asList(<span class="string">"aaa"</span>, <span class="string">"bbb"</span>, <span class="string">"ccc"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自然排序</span></span><br><span class="line">    list.stream()</span><br><span class="line">            .sorted()</span><br><span class="line">            .forEach(System.out::println);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 定制排序</span></span><br><span class="line">    employeeList.stream()</span><br><span class="line">            .sorted((o1, o2) -&gt; &#123;</span><br><span class="line">                <span class="keyword">if</span> (o1.getAge().equals(o2.getAge())) &#123;</span><br><span class="line">                    <span class="keyword">return</span> o1.getName().compareTo(o2.getName());</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> o1.getAge().compareTo(o2.getAge());</span><br><span class="line">            &#125;)</span><br><span class="line">            .forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="查找-匹配"><a href="#查找-匹配" class="headerlink" title="查找 / 匹配"></a>查找 / 匹配</h3><p>终止操作：</p>
+<ul>
+<li>allMatch：检查是否匹配所有元素</li>
+<li>anyMatch：检查是否至少匹配一个元素</li>
+<li>noneMatch：检查是否没有匹配所有元素</li>
+<li>findFirst：返回第一个元素</li>
+<li>findAny：返回当前流中的任意元素</li>
+<li>count：返回流中元素的总个数</li>
+<li>max：返回流中最大值</li>
+<li>min：返回流中最小值</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Status &#123;</span><br><span class="line">    FREE, BUSY, VOCATION;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test01</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;Status&gt; list = Arrays.asList(Status.FREE, Status.BUSY, Status.VOCATION);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> flag1 = list.stream()</span><br><span class="line">        .allMatch((s) -&gt; s.equals(Status.BUSY));</span><br><span class="line">    System.out.println(flag1);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> flag2 = list.stream()</span><br><span class="line">        .anyMatch((s) -&gt; s.equals(Status.BUSY));</span><br><span class="line">    System.out.println(flag2);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> flag3 = list.stream()</span><br><span class="line">        .noneMatch((s) -&gt; s.equals(Status.BUSY));</span><br><span class="line">    System.out.println(flag3);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 容器类对象，避免空指针异常</span></span><br><span class="line">    Optional&lt;Status&gt; op1 = list.stream()</span><br><span class="line">        .findFirst();</span><br><span class="line">    <span class="comment">// 如果Optional为空 找一个替代的对象</span></span><br><span class="line">    Status s1 = op1.orElse(Status.BUSY);</span><br><span class="line">    System.out.println(s1);</span><br><span class="line"></span><br><span class="line">    Optional&lt;Status&gt; op2 = list.stream()</span><br><span class="line">        .findAny();</span><br><span class="line">    System.out.println(op2);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> count = list.stream()</span><br><span class="line">        .count();</span><br><span class="line">    System.out.println(count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="归约"><a href="#归约" class="headerlink" title="归约"></a>归约</h3><ul>
+<li>归约：reduce(T identity, BinaryOperator) / reduce(BinaryOperator) 可以将流中的数据反复结合起来，得到一个值</li>
+</ul>
+<p>map 和 reduce 的连接通常称为 map-reduce 模式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reduceTest</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>);</span><br><span class="line">    Integer result = list.stream()</span><br><span class="line">        <span class="comment">// 求和操作，0为起始值，先把0赋给x，然后list的第一个元素赋给y，然后累加后的结果赋给x，以此类推</span></span><br><span class="line">        .reduce(<span class="number">0</span>, (x, y) -&gt; x + y);</span><br><span class="line">    System.out.println(result);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 需求：返回员工薪资总和</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 因为这里没有起始值，所以会存在Null的情况</span></span><br><span class="line">    Optional&lt;Double&gt; result01 = employeeList.stream()</span><br><span class="line">        <span class="comment">// map提取</span></span><br><span class="line">        .map((x) -&gt; x.getSalary())</span><br><span class="line">        <span class="comment">// 对提取数据进行操作</span></span><br><span class="line">        .reduce((a, b) -&gt; Double.sum(a, b));</span><br><span class="line">    System.out.println(result01.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="收集"><a href="#收集" class="headerlink" title="收集"></a>收集</h3><p>终止操作：</p>
+<ul>
+<li>collect(Collector c)：将流转换为其他形式。接受一个Collector接口的实现，用于给Stream中元素做汇总的方法</li>
+</ul>
+<p>Collector 接口中方法的实现决定了如何对流执行收集操作（如收集到List、Set、Map）。而Collectors实用类提供了很多静态方法，可以方便地创建常见的收集器实例</p>
+<h4 id="Collectors-常用具体方法"><a href="#Collectors-常用具体方法" class="headerlink" title="Collectors 常用具体方法"></a>Collectors 常用具体方法</h4><ul>
+<li>toList List 把流中元素收集到List</li>
+<li>toSet Set 把流中元素收集到Set</li>
+<li>toCollection Coolection 把流中元素收集到Collection中</li>
+<li>groupingBy Map&lt;K,List&gt; 根据K属性对流进行分组</li>
+<li>partitioningBy Map&lt;boolean, List&gt; 根据boolean值进行分组</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test02</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 放入list</span></span><br><span class="line">    List&lt;String&gt; list = employeeList.stream()</span><br><span class="line">        .map((x) -&gt; x.getName())</span><br><span class="line">        .collect(Collectors.toList());</span><br><span class="line">    list.forEach(System.out::println);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//放入LinkedHashSet</span></span><br><span class="line">    LinkedHashSet&lt;String&gt; linkedHashSet = emps.stream()</span><br><span class="line">        .map(Employee::getName)</span><br><span class="line">        .collect(Collectors.toCollection(LinkedHashSet::<span class="keyword">new</span>));</span><br><span class="line">    linkedHashSet.forEach(System.out::println);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 注意key必须是唯一的 如果不是唯一的会报错而不是像普通map那样覆盖</span></span><br><span class="line">    Map&lt;Object, Object&gt; collect2 = employeeList.stream()</span><br><span class="line">        .collect(Collectors.toMap((x) -&gt; x.getId(), (y) -&gt; y.getName()));</span><br><span class="line">    System.out.println(collect2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test03</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//总数</span></span><br><span class="line">    Long count = emps.stream()</span><br><span class="line">        .collect(Collectors.counting());</span><br><span class="line">    System.out.println(count);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//平均值</span></span><br><span class="line">    Double avg = emps.stream()</span><br><span class="line">        .collect(Collectors.averagingDouble(Employee::getSalary));</span><br><span class="line">    System.out.println(avg);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//总和</span></span><br><span class="line">    Double sum = emps.stream()</span><br><span class="line">        .collect(Collectors.summingDouble(Employee::getSalary));</span><br><span class="line">    System.out.println(sum);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//最大值</span></span><br><span class="line">    Optional&lt;Employee&gt; max = emps.stream()</span><br><span class="line">        .collect(Collectors.maxBy((e1, e2) -&gt; Double.compare(e1.getSalary(), e2.getSalary())));</span><br><span class="line">    System.out.println(max.get());</span><br><span class="line"></span><br><span class="line">    <span class="comment">//最小值</span></span><br><span class="line">    Optional&lt;Double&gt; min = emps.stream()</span><br><span class="line">        .map(Employee::getSalary)</span><br><span class="line">        .collect(Collectors.minBy(Double::compare));</span><br><span class="line">    System.out.println(min.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test04</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 分组，类似于数据库中的group by</span></span><br><span class="line">    Map&lt;Integer, List&lt;Employee&gt;&gt; map = emps.stream()</span><br><span class="line">        .collect(Collectors.groupingBy(Employee::getId));</span><br><span class="line">    System.out.println(map);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//多级分组</span></span><br><span class="line">    Map&lt;Integer, Map&lt;String, List&lt;Employee&gt;&gt;&gt; mapMap = emps.stream()</span><br><span class="line">        .collect(Collectors.groupingBy(Employee::getId, Collectors.groupingBy((e) -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (e.getAge() &gt; <span class="number">35</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"开除"</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"继续加班"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)));</span><br><span class="line">    System.out.println(mapMap);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//分区</span></span><br><span class="line">    Map&lt;Boolean, List&lt;Employee&gt;&gt; listMap = emps.stream()</span><br><span class="line">        .collect(Collectors.partitioningBy((e) -&gt; e.getSalary() &gt; <span class="number">4321</span>));</span><br><span class="line">    System.out.println(listMap);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test05</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//总结</span></span><br><span class="line">    DoubleSummaryStatistics dss = emps.stream()</span><br><span class="line">        .collect(Collectors.summarizingDouble(Employee::getSalary));</span><br><span class="line">    System.out.println(dss.getMax());</span><br><span class="line">    System.out.println(dss.getMin());</span><br><span class="line">    System.out.println(dss.getSum());</span><br><span class="line">    System.out.println(dss.getCount());</span><br><span class="line">    System.out.println(dss.getAverage());</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 连接，字符串拼接</span></span><br><span class="line">    String str = emps.stream()</span><br><span class="line">        .map(Employee::getName)</span><br><span class="line">        .collect(Collectors.joining(<span class="string">"-"</span>)); <span class="comment">//可传入分隔符</span></span><br><span class="line">    System.out.println(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2021/10/02/java8--Stream API/">https://yellowbp.github.io/2021/10/02/java8--Stream API/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/java8/">java8</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/git/">git</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2021/10/01/java8--Lambda表达式/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckuaxjp6m003uigtwgw1xdxh6"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java8-–-Stream-API"><span class="toc-number">1.</span> <span class="toc-text">Java8 – Stream API</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stream操作步骤"><span class="toc-number">1.2.</span> <span class="toc-text">Stream操作步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建流"><span class="toc-number">1.3.</span> <span class="toc-text">创建流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#中间操作"><span class="toc-number">1.4.</span> <span class="toc-text">中间操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#准备数据"><span class="toc-number">1.4.1.</span> <span class="toc-text">准备数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#筛选-切片"><span class="toc-number">1.4.2.</span> <span class="toc-text">筛选/切片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#映射"><span class="toc-number">1.4.3.</span> <span class="toc-text">映射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#排序"><span class="toc-number">1.4.4.</span> <span class="toc-text">排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找-匹配"><span class="toc-number">1.4.5.</span> <span class="toc-text">查找 / 匹配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#归约"><span class="toc-number">1.4.6.</span> <span class="toc-text">归约</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#收集"><span class="toc-number">1.4.7.</span> <span class="toc-text">收集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Collectors-常用具体方法"><span class="toc-number">1.4.7.1.</span> <span class="toc-text">Collectors 常用具体方法</span></a></li></ol></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2021 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
