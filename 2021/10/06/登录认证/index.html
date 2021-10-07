@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>登录认证 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="登录认证前言市面上的安全框架，如Shiro、Spring Security等，主要功能便是 登录认证（Authentication）和 权限授权（Authorization）。要想对框架进行深入理解，首先要理解 登录认证 和 权限授权 他们各自的原理，这对理解安全框架是非常有利的。 我们平时写的登录认证无外乎是以下几点：  登录认证的原理 如何使用 Session 和 token 分别完成登录认证">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="登录认证">
+<meta property="og:url" content="https://yellowbp.github.io/2021/10/06/登录认证/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="登录认证前言市面上的安全框架，如Shiro、Spring Security等，主要功能便是 登录认证（Authentication）和 权限授权（Authorization）。要想对框架进行深入理解，首先要理解 登录认证 和 权限授权 他们各自的原理，这对理解安全框架是非常有利的。 我们平时写的登录认证无外乎是以下几点：  登录认证的原理 如何使用 Session 和 token 分别完成登录认证">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E6%97%A0%E7%99%BB%E5%BD%95%E9%A6%96%E6%AC%A1%E8%AE%BF%E9%97%AE.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E9%A6%96%E6%AC%A1%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E9%A6%96%E6%AC%A1%E7%99%BB%E5%BD%95%E5%90%8E%E8%AE%BF%E9%97%AE%E6%8E%A5%E5%8F%A3.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/setCookie.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E6%90%BA%E5%B8%A6cookie.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E8%BF%87%E6%BB%A4%E5%99%A8%E7%94%9F%E6%95%88.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%AF%B9%E8%B1%A1.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E9%A6%96%E6%AC%A1%E7%99%BB%E5%BD%95%E5%90%8E%E8%BF%94%E5%9B%9Etoken%E5%AD%97%E7%AC%A6%E4%B8%B2.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E8%AE%BF%E9%97%AE%E6%8E%A5%E5%8F%A3%E6%90%BA%E5%B8%A6token.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E4%B8%8D%E6%90%BA%E5%B8%A6token%E8%AE%BF%E9%97%AE%E6%8E%A5%E5%8F%A3.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E7%BA%82%E6%94%B9token.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E6%8B%A6%E6%88%AA%E5%99%A8%E7%94%9F%E6%95%88.png">
+<meta property="og:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%AF%B9%E8%B1%A1.png">
+<meta property="og:updated_time" content="2021-10-07T07:07:52.526Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="登录认证">
+<meta name="twitter:description" content="登录认证前言市面上的安全框架，如Shiro、Spring Security等，主要功能便是 登录认证（Authentication）和 权限授权（Authorization）。要想对框架进行深入理解，首先要理解 登录认证 和 权限授权 他们各自的原理，这对理解安全框架是非常有利的。 我们平时写的登录认证无外乎是以下几点：  登录认证的原理 如何使用 Session 和 token 分别完成登录认证">
+<meta name="twitter:image" content="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E6%97%A0%E7%99%BB%E5%BD%95%E9%A6%96%E6%AC%A1%E8%AE%BF%E9%97%AE.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",Spring">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2021/10/06/登录认证/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Wed Oct 06 2021 19:54:29 GMT+0800">
+    <meta property="article:modified_time" content="Thu Oct 07 2021 15:07:52 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2021/10/06/登录认证/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux搭建/">linux搭建<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/接发图片/">接发图片<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/数据库/">数据库<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/源码分析/">源码分析<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/虚拟机/">虚拟机<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/负载均衡/">负载均衡<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/通用工具类/">通用工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-16.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">登录认证</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2021-10-06 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="登录认证"><a href="#登录认证" class="headerlink" title="登录认证"></a>登录认证</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>市面上的安全框架，如Shiro、Spring Security等，主要功能便是 登录认证（Authentication）和 权限授权（Authorization）。要想对框架进行深入理解，首先要理解 登录认证 和 权限授权 他们各自的原理，这对理解安全框架是非常有利的。</p>
+<p>我们平时写的登录认证无外乎是以下几点：</p>
+<ul>
+<li>登录认证的原理</li>
+<li>如何使用 <code>Session</code> 和 <code>token</code> 分别完成登录认证功能</li>
+<li>如何使用过滤器和拦截器分别完成对登录认证的统一处理</li>
+<li>如何实现上下文对象</li>
+</ul>
+<h2 id="认证基础知识"><a href="#认证基础知识" class="headerlink" title="认证基础知识"></a>认证基础知识</h2><p>登录认证（Authentication）简单来说就是通过一定手段对用户的身份进行确认。</p>
+<p>确认这还不容易？就是判断用户的账号和密码是否正确嘛，if、else搞定。没错，这的确很容易，但是确认过后呢？要知道在web系统中有一个重要的概念就是：<strong>HTTP请求是一个无状态的协议</strong>。就是说http请求是没有记忆的，浏览器每一次发送的请求都是独立的，服务器不会记得你之前做了什么，它只会看到你当前的请求。所以，在Web系统中对于已经登录过的用户，还需要有种机制来记住这个用户已经登录过了，不然用户每一次操作都要输入账号密码，那这系统也没法用了！</p>
+<blockquote>
+<p>那怎样才能让服务器记住你的登录状态呢？</p>
+</blockquote>
+<p>那就是凭证！用户登录之后的每一次请求都携带一个登录凭证来告诉服务器我是谁，这也称之为 会话管理</p>
+<p>现在流行两种会话管理方式：</p>
+<ul>
+<li>Session</li>
+<li>token</li>
+</ul>
+<p>流程：</p>
+<ol>
+<li>前端发起登录认证请求</li>
+<li>后端登录验证通过，返回给前端一个凭证</li>
+<li>前端发起新的请求时携带凭证</li>
+</ol>
+<p>接下来我们就上代码，用这两种方式分别实现登录认证功能</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>我们使用SpringBoot来搭建Web项目，只需导入Web项目依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们再建一个实体类用来模拟用户：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h3><p>Session 是一种有状态的会话管理机制，其目的就是为了解决HTTP无状态请求带来的问题。</p>
+<p>当用户登录认证请求通过后，服务端会将用户的信息存储起来，并生成一个<code>Session Id</code>发送给前端，前端将这个<code>session_id</code>保存起来（一般是保存在Cookie中）。之后前端再发送请求时都携带<code>session_id</code>，服务器端再根据这个<code>session_id</code>来检查该用户有没有登录过。</p>
+<h4 id="基本功能"><a href="#基本功能" class="headerlink" title="基本功能"></a>基本功能</h4><p>接下来我们就用代码来实现具体功能，非常简单，我们只需要在用户登录的时候将用户信息存在 <code>HttpSession</code>对象 中就完成了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SessionController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"login"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">login</span><span class="params">(@RequestBody User user, HttpSession session)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 校验账号密码是否正确，这一步肯定是要读取数据库中的数据来进行校验的，这里为了模拟就省去了</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="string">"admin"</span>.equals(user.getUserName()) &amp;&amp; <span class="string">"adminPwd"</span>.equals(user.getPassword())) &#123;</span><br><span class="line">            <span class="comment">// 检验成功后，将用户信息存到session中</span></span><br><span class="line">            session.setAttribute(<span class="string">"user"</span>, user);</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"登录成功"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"账号或密码错误"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/logout"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">logout</span><span class="params">(HttpSession session)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 退出登录后将用户信息从session删除</span></span><br><span class="line">        session.removeAttribute(<span class="string">"user"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"退出成功"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在后续会话中，用户访问其他接口就可以检查用户是否已经登录认证：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/api"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">api</span><span class="params">(HttpSession session)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 模拟各种api，访问之前都要检查有没有登录，没有登录就提示用户登录</span></span><br><span class="line">    User user = (User) session.getAttribute(<span class="string">"user"</span>);</span><br><span class="line">    <span class="keyword">if</span> (user == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"请先登录"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果有登录就调用业务层执行业务逻辑，然后返回数据</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"成功返回数据"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/api2"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">api2</span><span class="params">(HttpSession session)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 模拟各种api，访问之前都要检查有没有登录，没有登录就提示用户登录</span></span><br><span class="line">    User user = (User) session.getAttribute(<span class="string">"user"</span>);</span><br><span class="line">    <span class="keyword">if</span> (user == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"请先登录"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果有登录就调用业务层执行业务逻辑，然后返回数据</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"成功返回数据"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们现在来测试一下效果，先不登录调用一下其他接口看看：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E6%97%A0%E7%99%BB%E5%BD%95%E9%A6%96%E6%AC%A1%E8%AE%BF%E9%97%AE.png" alt="无登录首次访问" style="zoom:80%;">
+
+<p>可以看到是调用失败的，那我们再进行登录：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E9%A6%96%E6%AC%A1%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F.png" alt="首次登录成功" style="zoom:80%;">
+
+<p>登录成功后我们再调用刚才的接口：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E9%A6%96%E6%AC%A1%E7%99%BB%E5%BD%95%E5%90%8E%E8%AE%BF%E9%97%AE%E6%8E%A5%E5%8F%A3.png" alt="首次登录后访问接口" style="zoom:80%;">
+
+<p>这样就完成了基本的登录功能！</p>
+<p>之前说过保持登录的核心就是凭证，可上面的代码也没看到传递凭证的过程呀，这是因为这些工作Servlet都帮我们做好了！</p>
+<p>如果用户第一次访问某个服务器时，服务器响应数据时会在 response(响应头) 的<code>Set-Cookie</code>标识里将<code>Session Id</code>返回给浏览器，浏览器就将标识中的数据存在<code>Cookie</code>中：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/setCookie.png" alt="setCookie" style="zoom:80%;">
+
+<p>浏览器后续访问服务器就会携带Cookie：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E6%90%BA%E5%B8%A6cookie.png" alt="携带cookie" style="zoom:80%;">
+
+<p>每一个 <code>Session_id</code> 都对应一个<code>HttpSession</code>对象，然后服务器就根据你这个<code>HttpSession</code>对象来检测你这个客户端是否已经登录了，也就是刚才代码里演示的那样。</p>
+<blockquote>
+<p>有人可能会问，前后端分离一般都是用<code>ajax</code>跨域请求后端数据，怎么携带cookie呢。这个很简单，只需要<code>ajax</code>请求时设置 <code>withCredentials=true</code>就可以跨域携带 cookie信息了</p>
+</blockquote>
+<h4 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h4><p>完成了基本的登录认证后我们再加强一下功能！除了登录接口外，我们其他接口都要在Controller层里做登录判断，这太麻烦了。我们完全可以对每个接口过滤拦截一下，判断有没有登录，如果没有登录就直接结束请求，登录了才放行。这里我们通过过滤器来实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 在Spring环境下使用Filter的话，建议继承OncePerRequestFilter，而不是直接实现Filter接口</span></span><br><span class="line"><span class="comment"> * OncePerRequestFilter能够确保在一次请求只通过一次filter，而不需要重复执行。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginFilter</span> <span class="keyword">extends</span> <span class="title">OncePerRequestFilter</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doFilterInternal</span><span class="params">(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">        <span class="comment">// 白名单，登录这个接口可以直接放行</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="string">"/login"</span>.equals(request.getRequestURI())) &#123;</span><br><span class="line">            filterChain.doFilter(request, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 已登录就放行</span></span><br><span class="line">        User user = (User) request.getSession().getAttribute(<span class="string">"user"</span>);</span><br><span class="line">        <span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</span><br><span class="line">            filterChain.doFilter(request, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 走到这里就代表是其他接口，且没有登录</span></span><br><span class="line">        <span class="comment">// 设置响应数据类型为json（前后端分离）</span></span><br><span class="line">        response.setContentType(<span class="string">"application/json;charset=utf-8"</span>);</span><br><span class="line">        PrintWriter writer = response.getWriter();</span><br><span class="line">        <span class="comment">// 设置响应内容，结束请求</span></span><br><span class="line">        writer.write(<span class="string">"请先登录"</span>);</span><br><span class="line">        writer.flush();</span><br><span class="line">        writer.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时我们Controller层就可以去除多余的登录判断逻辑了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/api"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">api</span><span class="params">(HttpSession session)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"成功返回数据"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/api2"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">api2</span><span class="params">(HttpSession session)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"成功返回数据"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启服务后我们再调用一下登录接口看下效果：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E8%BF%87%E6%BB%A4%E5%99%A8%E7%94%9F%E6%95%88.png" alt="过滤器生效" style="zoom:80%;">
+
+<h4 id="上下文对象"><a href="#上下文对象" class="headerlink" title="上下文对象"></a>上下文对象</h4><p>在有些情况下，就算加了过滤器后我们现在还不能在controller层将session代码去掉！因为在实际业务中对用户对象操作是非常常见的，而我们的业务代码一般都写在Service业务层，那么我们Service层想要操作用户对象还得从Controller那传参过来，就像这样 ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"api"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">api</span><span class="params">(HttpSession session)</span> </span>&#123;</span><br><span class="line">    User user = (User) session.getAttribute(<span class="string">"user"</span>);</span><br><span class="line">    <span class="comment">// 将用户对象传递给Service层</span></span><br><span class="line">    userService.doSomething(user);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"成功返回数据"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每个接口都要这么写太麻烦了，有没有什么办法可以让我直接在Service层获取到用户对象呢？当然是可以的，我们可以通过SpringMVC提供的 <code>RequestContextHolder</code>对象在程序任何地方获取到当前请求对象，从而获取我们保存在<code>HttpSession</code>中的用户对象。我们可以写一个上下文对象来实现该功能：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestContext</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> HttpServletRequest <span class="title">getCurrentRequest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 通过 RequestContextHolder 获取当前request请求对象</span></span><br><span class="line">        <span class="keyword">return</span> ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> User <span class="title">getCurrentUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 通过 request 对象获取session对象，再获取当前用户对象</span></span><br><span class="line">        <span class="keyword">return</span> (User) getCurrentRequest().getSession().getAttribute(<span class="string">"user"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们在Service层直接调用我们写的方法就可以获取到用户对象啦：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里就不用接受controller传来的用户对象了</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    User user = RequestContext.getCurrentUser();</span><br><span class="line">    System.out.println(<span class="string">"service层---当前登录用户对象："</span> + user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们再在Controller层直接调用Service：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/api"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">api</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 各种业务操作</span></span><br><span class="line">    userService.doSomething();</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"成功返回数据"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样一套做好之后，看下前端成功调用<code>api</code>接口时的效果：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%AF%B9%E8%B1%A1.png" alt="上下文对象" style="zoom:80%;">
+
+<h3 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h3><p>除了<code>session</code>之外，目前比较流行的做法就是使用<code>JWT</code>（JSON Web Token）</p>
+<p>关于 JWT 大家具体用户可自行上网查阅，在这里只需要知道这两点就行：</p>
+<ol>
+<li>可以将一段数据加密成一段字符串，也可以从这字符串解密回数据</li>
+<li>可以对这个字符串进行校验，比如有没有过期，有没有被篡改</li>
+</ol>
+<p>有上面两个特性之后就可以用来做登录认证了。当用户登录成功的时候，服务器生成一个<code>JWT</code>字符串返回给浏览器，浏览器将<code>JWT</code>保存起来，在之后的请求中都携带上<code>JWT</code>，服务器再对这个<code>JWT</code>进行<strong>校验</strong>，校验通过的话就代表这个用户登录了。</p>
+<p>看到这里，我们可以知道这不就和<code>session</code>一样嘛，就是把<code>Session_id</code>换成了<code>JWT</code>字符串而已。</p>
+<p>没错，整体流程来说是一样的，因为无论哪种方式其核心都是属于会话管理机制。但，<code>Session</code>和<code>JWT</code>有一个重要的区别，就是<strong><code>Session</code>是有状态的，<code>JWT</code>是无状态的</strong>。简单来说就是<code>Session</code>在服务端<strong>保存了用户信息</strong>，而<code>JWT</code>在服务端<strong>没有保存任何信息</strong>。当前端携带<code>Session Id</code>到服务端时，服务端要检查其对应的<code>HttpSession</code>中有没有保存用户信息，保存了就代表登录了。当使用<code>JWT</code>时，服务端只需要对这个字符串进行校验，校验通过就代表登录了。</p>
+<h4 id="基本功能-1"><a href="#基本功能-1" class="headerlink" title="基本功能"></a>基本功能</h4><p>要用到<code>JWT</code>先要导入一个依赖项：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.jsonwebtoken<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jjwt<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.9.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>为了方便使用，我们先写一个<code>JWT</code>的工具类，工具类就提供两个方法一个生成一个解析 ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 类中用final修饰，则该类不可被继承</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">JwtUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 这个秘钥是防止JWT被篡改的关键，随便写什么都好，但决不能泄露</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String secretKey = <span class="string">"whatever"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 过期时间目前设置2个小时，这个配置随业务需求而定</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Duration expriation = Duration.ofHours(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造函数私有化，表示该类不可实例化</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">JwtUtil</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 生成JWT</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> userName 用户名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> JWT</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">generate</span><span class="params">(String userName)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 过期时间</span></span><br><span class="line">        Date expriyDate = <span class="keyword">new</span> Date(System.currentTimeMillis() + expriation.toMillis());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Jwts.builder()</span><br><span class="line">                .setSubject(userName) <span class="comment">// 将userName放进JWT</span></span><br><span class="line">                .setIssuedAt(<span class="keyword">new</span> Date()) <span class="comment">// 设置JWT签发时间</span></span><br><span class="line">                .setExpiration(expriyDate) <span class="comment">// 设置过期时间</span></span><br><span class="line">                .signWith(SignatureAlgorithm.HS512, secretKey) <span class="comment">// 设置加密算法和秘钥</span></span><br><span class="line">                .compact();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解析JWT</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token JWT字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 解析成功返回Claims对象，解析失败返回null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Claims <span class="title">parse</span><span class="params">(String token)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果是空字符串直接返回null</span></span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isEmpty(token)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 这个Claims对象包含了许多属性，比如签发时间、过期时间以及存放的数据等</span></span><br><span class="line">        Claims claims = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 解析失败了会抛出异常，所以我们要捕捉以下。token过期、token非法都会导致解析失败</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            claims = Jwts.parser()</span><br><span class="line">                    .setSigningKey(secretKey) <span class="comment">// 设置秘钥</span></span><br><span class="line">                    .parseClaimsJws(token)</span><br><span class="line">                    .getBody();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JwtException e) &#123;</span><br><span class="line">            <span class="comment">// 这里应该日志输出，为了演示方便就直接打印了</span></span><br><span class="line">            System.err.println(<span class="string">"解析失败"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> claims;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>通过代码看到生成一个<code>JWT</code>字符串很简单，谁都可以生成。然后字符串这东西也谁都可以篡改，我们怎么保证这个字符串就是我们系统签发出去的呢？又怎么保证我们签发出去的字符串有没有被篡改呢？其中关键点就是工具类里写的<code>secretKey</code>属性了，<code>JWT</code>根据这个秘钥会生成一个独特的字符串，别人没有这个秘钥的话是无法伪造或篡改<code>JWT</code>的！<strong>「所以这个秘钥是重中之重，在实际开发中一定要谨防泄露」</strong>：开发环境下设置一个秘钥，生产环境设置一个秘钥，这个生产环境下的秘钥还要严防死守，可以通过配置中心来配置并且要防止开发人员在代码中打印出秘钥！</p>
+<p>我们代码中演示的<code>JWT</code>是只存放了用户名，实际开发中你想存什么就存什么，不过<strong>「一定不要存敏感信息」</strong>（比如密码）！因为<code>JWT</code>只能防止被篡改，不能防止别人解密你这个字符串！</p>
+</blockquote>
+<p>工具类做好之后我们可以开始写登录接口了，和之前大同小异：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JwtController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"login"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">login</span><span class="params">(@RequestBody User user)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 校验账号密码是否正确，这一步肯定是要读取数据库中的数据来进行校验的，这里为了模拟就省去了</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="string">"admin"</span>.equals(user.getUserName()) &amp;&amp; <span class="string">"adminPwd"</span>.equals(user.getPassword())) &#123;</span><br><span class="line">            <span class="comment">// 如果正确的话就返回生成的token，这里要注意：服务器是没有存储任何东西的</span></span><br><span class="line">            <span class="keyword">return</span> JwtUtil.generate(user.getUserName());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"账号或密码错误"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在后续会话中，用户访问其他接口时就可以校验<code>token</code>来判断其是否已经登录。前端将<code>token</code>一般会放在请求头的<code>Authorization</code>项传递过来，其格式一般为<code>类型 + 空格 + token</code>。这个倒也不是一定得这么做，你放在自己自定义的请求头项也可以，只要和前端约定好就行。这里我们方便演示就将token直接放在<code>Authorization</code>项里了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(value = <span class="string">"/api"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">api</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 从请求头中获取token字符串</span></span><br><span class="line">    String token = request.getHeader(<span class="string">"Authorization"</span>);</span><br><span class="line">    <span class="comment">// 解析失败就提示用户登录</span></span><br><span class="line">    <span class="keyword">if</span> (JwtUtil.parse(token) == <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"请先登录"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 解析成功就执行业务逻辑返回数据</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"api成功返回数据"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来我们测试一下效果，先进行登录：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E9%A6%96%E6%AC%A1%E7%99%BB%E5%BD%95%E5%90%8E%E8%BF%94%E5%9B%9Etoken%E5%AD%97%E7%AC%A6%E4%B8%B2.png" alt="首次登录后返回token字符串" style="zoom:80%;">
+
+<p>可以看到登录成功后服务器返回了<code>token</code>过来，然后我们将这个token设置到请求头中再调用其他接口看看效果：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E8%AE%BF%E9%97%AE%E6%8E%A5%E5%8F%A3%E6%90%BA%E5%B8%A6token.png" alt="访问接口携带token" style="zoom:80%;">
+
+<p>可以看到成功返回数据了！我们再试一下不携带<code>token</code>和篡改<code>token</code>后调用其他接口会怎样：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E4%B8%8D%E6%90%BA%E5%B8%A6token%E8%AE%BF%E9%97%AE%E6%8E%A5%E5%8F%A3.png" alt="不携带token访问接口" style="zoom:80%;">
+
+<br>
+
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E7%BA%82%E6%94%B9token.png" alt="纂改token" style="zoom:80%;">
+
+<p>可以看到，没有携带<code>token</code>或者私自篡改了<code>token</code>都会验证失败！</p>
+<h4 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h4><p>和之前一样，如果每个接口都要手动判断一下用户有没有登录太麻烦了，所以我们做一个统一处理，这里我们换个花样用拦截器来做 ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginInterceptor</span> <span class="keyword">extends</span> <span class="title">HandlerInterceptorAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 白名单，登录这个接口可以直接放行</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="string">"/login"</span>.equals(request.getRequestURI())) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 从请求头中获取token字符串并解析</span></span><br><span class="line">        Claims claims = JwtUtil.parse(request.getHeader(<span class="string">"Authorization"</span>));</span><br><span class="line">        <span class="comment">// 已登录就直接放行</span></span><br><span class="line">        <span class="keyword">if</span> (claims != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 走到这里就代表是其他接口，且没有登录</span></span><br><span class="line">        <span class="comment">// 设置响应数据类型为json(前后端分离)</span></span><br><span class="line">        response.setContentType(<span class="string">"application/json;charset=utf-8"</span>);</span><br><span class="line">        PrintWriter writer = response.getWriter();</span><br><span class="line">        writer.write(<span class="string">"请先登录"</span>);</span><br><span class="line">        writer.flush();</span><br><span class="line">        writer.close();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>拦截器类写好之后，别忘了要使其生效，这里我们可以直接让<code>SpringBoot</code>启动类实现<code>WevMvcConfigurer</code>接口来做，也可以写一个拦截器配置类然后实现 <code>WevMvcConfigurer</code>接口来做 ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebConfigurer</span> <span class="keyword">implements</span> <span class="title">WebMvcConfigurer</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 使拦截器生效</span></span><br><span class="line">        registry.addInterceptor(<span class="keyword">new</span> LoginInterceptor());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样就能省去接口中校验用户登录的逻辑了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(value = <span class="string">"/api"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">api</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"api成功返回数据"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E6%8B%A6%E6%88%AA%E5%99%A8%E7%94%9F%E6%95%88.png" alt="拦截器生效" style="zoom:80%;">
+
+<p>可以看到，拦截器已经生效了！</p>
+<h4 id="上下文对象-1"><a href="#上下文对象-1" class="headerlink" title="上下文对象"></a>上下文对象</h4><p>统一拦截做好之后接下来就是我们的上下文对象，<code>JWT</code>不像<code>Session</code>把用户信息直接存储起来，所以<code>JWT</code>的上下文对象要靠我们自己来实现。</p>
+<p>首先我们定义一个上下文类，这个类专门存储<code>JWT</code>解析出来的用户信息。我们要用到<code>ThreadLocal</code>，以防止线程冲突：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">UserContext</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;String&gt; user = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(String userName)</span> </span>&#123;</span><br><span class="line">        user.set(userName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        user.remove();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当前登录用户的用户名</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getCurrentUserName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> user.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个类创建好之后我们还需要在拦截器里做下处理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginInterceptor</span> <span class="keyword">extends</span> <span class="title">HandlerInterceptorAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">// ...省略之前写的代码</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 从请求头中获取token字符串并解析</span></span><br><span class="line">        Claims claims = JwtUtil.parse(request.getHeader(<span class="string">"Authorization"</span>));</span><br><span class="line">        <span class="comment">// 已登录就直接放行</span></span><br><span class="line">        <span class="keyword">if</span> (claims != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 将我们之前放在token中的userName存到上下文对象中</span></span><br><span class="line">            UserContext.add(claims.getSubject());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ...省略之前写的代码</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterCompletion</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 请求结束后要从上下文对象删除数据，如果不删除则可能会导致内存泄露</span></span><br><span class="line">        UserContext.remove();</span><br><span class="line">        <span class="keyword">super</span>.afterCompletion(request, response, handler, ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样一个上下文对象就做好了，用法和之前一样，可以在程序的其他地方直接获取到数据，我们在Service层中来使用它：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String currentUserName  = UserContext.getCurrentUserName();</span><br><span class="line">        System.out.println(<span class="string">"Service层---当前用户登录名："</span> + currentUserName);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后Controller层调用Service层：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(value = <span class="string">"/api"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">api</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">    userService.doSomething();</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"api成功返回数据"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样一套做好之后，看下前端成功调用<code>api</code>接口时的效果：</p>
+<img src="https://loginimages.oss-cn-guangzhou.aliyuncs.com/loginimages/%E4%B8%8A%E4%B8%8B%E6%96%87%E5%AF%B9%E8%B1%A1.png" alt="上下文对象" style="zoom:80%;">
+
+<p>控制台成功打印了！</p>
+<h2 id="Session和JWT的优劣"><a href="#Session和JWT的优劣" class="headerlink" title="Session和JWT的优劣"></a><strong>Session和JWT的优劣</strong></h2><p>两种方式都可以实现登录认证，那么在实际开发中到底用哪一种估计是大家比较关心的问题！在这里我就简单说明一下两者各自的优劣，至于具体选型就根据自己实际业务需求来了。</p>
+<p>首先说一下两者的优点吧：</p>
+<p>Session：</p>
+<ul>
+<li>开箱即用，简单方便</li>
+<li>能够有效管理用户登录的状态：续期、销毁等（续期就是延长用户登录状态的时间，销毁就是清楚用户登录状态，比如退出登录）</li>
+</ul>
+<p>JWT：</p>
+<ul>
+<li>可直接解析出数据，服务端无需存储数据</li>
+<li>天然地易于水平扩展（ABC三个系统，我同一个Token都可以登录认证，非常简单就完成了单点登录）</li>
+</ul>
+<p>再说一下缺点：</p>
+<p>Session：</p>
+<ul>
+<li>较<code>JWT</code>而言，需要额外存储数据</li>
+</ul>
+<p>JWT：</p>
+<ul>
+<li><code>JWT</code>签名的长度远比一个 <code>Session Id</code>长很多，增加额外网络开销</li>
+<li>无法销毁、续期登录状态</li>
+<li>秘钥或<code>Token</code>一旦泄露，攻击者便可以肆无忌惮操作我们的系统</li>
+</ul>
+<p>其实上面说的这些优缺点都可以通过一些手段来解决，就看自己取舍了！比如<code>Session</code>就不易于水平扩展吗？当然不是，无论是<code>Session</code>同步机制还是集中管理都可以非常好的解决。再比如<code>JWT</code>就真的无法销毁吗？当然也不是，其实可以将<code>Token</code>也在后端存储起来让其变成有状态的，就可以做到状态管理了！</p>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2021/10/06/登录认证/">https://yellowbp.github.io/2021/10/06/登录认证/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/认证授权/">认证授权</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Spring/">Spring</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2021/10/03/优雅后端API接口/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckugllmdn0061rctwgdo6ugq7"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#登录认证"><span class="toc-number">1.</span> <span class="toc-text">登录认证</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#认证基础知识"><span class="toc-number">1.2.</span> <span class="toc-text">认证基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">1.3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Session"><span class="toc-number">1.3.1.</span> <span class="toc-text">Session</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基本功能"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">基本功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#过滤器"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">过滤器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#上下文对象"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">上下文对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JWT"><span class="toc-number">1.3.2.</span> <span class="toc-text">JWT</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基本功能-1"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">基本功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拦截器"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">拦截器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#上下文对象-1"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">上下文对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Session和JWT的优劣"><span class="toc-number">1.4.</span> <span class="toc-text">Session和JWT的优劣</span></a></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2021 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
