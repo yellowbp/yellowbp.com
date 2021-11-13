@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://springsecurityimages.oss-cn-guangzhou.aliyuncs.com/springsecurityimages/%E6%B2%A1%E6%9C%89%E6%9D%83%E9%99%90%E6%B5%8B%E8%AF%95.png">
 <meta property="og:image" content="https://springsecurityimages.oss-cn-guangzhou.aliyuncs.com/springsecurityimages/%E6%9C%89%E6%9D%83%E9%99%90%E6%B5%8B%E8%AF%95.png">
 <meta property="og:image" content="https://springsecurityimages.oss-cn-guangzhou.aliyuncs.com/springsecurityimages/springsecurity%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE.png">
-<meta property="og:updated_time" content="2021-11-11T07:39:30.949Z">
+<meta property="og:updated_time" content="2021-11-13T02:26:00.915Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="springsecurity">
 <meta name="twitter:description" content="SpringSecurity只要掌握了认证和授权功能的核心原理，无论什么安全框架使用起来都会非常容易！那么本文就讲解如何使用主流的安全框架Spring Security来实现认证和授权功能，并且顺带剖析Spring Security的源码。 提纲挈领Web系统中登录认证（Authentication）的核心就是凭证机制，无论是session还是token，都是在用户成功登录时返回给用户一个凭证，后">
@@ -60,7 +60,7 @@
 
   
     <meta property="article:published_time" content="Tue Oct 12 2021 23:35:39 GMT+0800">
-    <meta property="article:modified_time" content="Thu Nov 11 2021 15:39:30 GMT+0800">
+    <meta property="article:modified_time" content="Sat Nov 13 2021 10:26:00 GMT+0800">
   
 
   
@@ -197,7 +197,7 @@
   <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
   <article class="mdui-card mdui-m-b-5">
     <header class="mdui-card-media">
-      <img src="/images/random/material-2.png" style="max-height: 240px;">
+      <img src="/images/random/material-5.png" style="max-height: 240px;">
       <div class="mdui-card-media-covered">
         <div class="mdui-card-primary">
           <div class="mdui-card-primary-title">springsecurity</div>
@@ -270,7 +270,7 @@
 
 <p>现在我们已经知道了Spring Security中三个核心组件：</p>
 <ul>
-<li><code>Authentication</code>：存储了认证信息，代表当前登录用户</li>
+<li>Authentication：存储了认证信息，代表当前登录用户</li>
 <li>SeucirtyContext：上下文对象，用来获取<code>Authentication</code></li>
 <li>SecurityContextHolder：上下文管理对象，用来在程序任何地方获取<code>SecurityContext</code></li>
 </ul>
@@ -278,7 +278,7 @@
 <img src="https://springsecurityimages.oss-cn-guangzhou.aliyuncs.com/springsecurityimages/%E4%B8%89%E4%B8%AA%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E7%9A%84%E5%85%B3%E7%B3%BB.png" alt="三个核心组件的关系" style="zoom:80%;">
 
 <p><code>Authentication</code>中那三个玩意就是认证信息：</p>
-<p><code>Principal</code>：用户信息，没有认证时一般是用户名，认证后一般是用户对象</p>
+<p><code>Principal</code>：用户信息，没有认证时一般是用户名，认证后一般是用户对象，即 UserDetails</p>
 <p><code>Credentials</code>：用户凭证，一般是密码</p>
 <p><code>Authorities</code>：用户权限</p>
 <p>现在我们知道如何获取并使用当前登录用户了，那这个用户是怎么进行认证的呢？总不能我随便new一个就代表用户认证完毕了吧。所以我们还缺一个生成<code>Authentication</code>对象的认证过程！</p>
@@ -299,7 +299,7 @@
 
 <p>这样才算是一个完整的认证过程，和不使用安全框架时的流程是一样的哦，只是一些组件之前是我们自己实现的。</p>
 <p>这里查询用户信息并校验账号密码是完全由我们自己在业务层编写所有逻辑，其实这一块Spring Security也有组件供我们使用：</p>
-<h4 id="AuthenticationManager认证方式"><a href="#AuthenticationManager认证方式" class="headerlink" title="AuthenticationManager认证方式"></a>AuthenticationManager认证方式</h4><p><strong><code>AuthenticationManager</code></strong> 就是Spring Security用于执行身份验证的组件，只需要调用它的<code>authenticate</code>方法即可完成认证。Spring Security默认的认证方式就是在<code>UsernamePasswordAuthenticationFilter</code>这个过滤器中调用这个认证管理器，该管理器负责认证逻辑。</p>
+<h4 id="AuthenticationManager认证方式"><a href="#AuthenticationManager认证方式" class="headerlink" title="AuthenticationManager认证方式"></a>AuthenticationManager认证方式</h4><p><strong><code>AuthenticationManager</code></strong> 就是Spring Security用于执行身份验证的认证管理器组件，只需要调用它的<code>authenticate</code>方法即可完成认证，它将一个未认证的<code>Authentication</code>传入，返回一个已认证的<code>Authentication</code>，默认使用的实现类为：ProviderManager。Spring Security默认的认证方式就是在<code>UsernamePasswordAuthenticationFilter</code>这个过滤器中调用这个认证管理器组件，该管理器负责认证逻辑。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Authentication <span class="title">attemptAuthentication</span><span class="params">(HttpServletRequest request,</span></span></span><br><span class="line"><span class="function"><span class="params">      HttpServletResponse response)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</span><br><span class="line">    </span><br><span class="line">   ...省略其他代码</span><br><span class="line">    </span><br><span class="line">   String username = obtainUsername(request);</span><br><span class="line">   String password = obtainPassword(request);</span><br><span class="line"></span><br><span class="line">   UsernamePasswordAuthenticationToken authRequest = <span class="keyword">new</span> UsernamePasswordAuthenticationToken(</span><br><span class="line">         username, password);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> <span class="keyword">this</span>.getAuthenticationManager().authenticate(authRequest);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">protected</span> AuthenticationManager <span class="title">getAuthenticationManager</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> authenticationManager;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们要按照自己的方式使用这个组件，先在之前配置类配置一下：</p>
@@ -533,7 +533,7 @@
 
   <div id="comment" class="mdui-m-t-5">
     <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
-<div id="SOHUCS" sid="ckvun66fn00725otwhgcn2cj6"></div>
+<div id="SOHUCS" sid="ckvxfv14u00731ctw6a206ec6"></div>
 <script type="text/javascript">
 (function(){
 var appid = 'cyubhC2Dq';
