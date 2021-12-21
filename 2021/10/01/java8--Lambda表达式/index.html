@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="bp的Blog">
 <meta property="og:description" content="Java8 – Lambda表达式概述Lambda 表达式是 JDK8 的一个新特性，可以取代大部分的匿名内部类，写出更优雅简洁的 Java 代码，尤其在集合的遍历和其他集合操作中，可以极大地优化代码结构。 JDK 也提供了大量的内置函数式接口供我们使用，使得 Lambda 表达式的运用更加方便、高效。 语法格式12345// 基础语法拆分// 中间箭头：lambda运算符// 左侧：Lambda">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-10-03T10:20:13.964Z">
+<meta property="og:updated_time" content="2021-12-21T04:17:12.274Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java8 -- Lambda表达式">
 <meta name="twitter:description" content="Java8 – Lambda表达式概述Lambda 表达式是 JDK8 的一个新特性，可以取代大部分的匿名内部类，写出更优雅简洁的 Java 代码，尤其在集合的遍历和其他集合操作中，可以极大地优化代码结构。 JDK 也提供了大量的内置函数式接口供我们使用，使得 Lambda 表达式的运用更加方便、高效。 语法格式12345// 基础语法拆分// 中间箭头：lambda运算符// 左侧：Lambda">
@@ -41,7 +41,7 @@
 
   
     <meta property="article:published_time" content="Fri Oct 01 2021 18:08:20 GMT+0800">
-    <meta property="article:modified_time" content="Sun Oct 03 2021 18:20:13 GMT+0800">
+    <meta property="article:modified_time" content="Tue Dec 21 2021 12:17:12 GMT+0800">
   
 
   
@@ -178,7 +178,7 @@
   <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
   <article class="mdui-card mdui-m-b-5">
     <header class="mdui-card-media">
-      <img src="/images/random/material-17.png" style="max-height: 240px;">
+      <img src="/images/random/material-16.png" style="max-height: 240px;">
       <div class="mdui-card-media-covered">
         <div class="mdui-card-primary">
           <div class="mdui-card-primary-title">java8 -- Lambda表达式</div>
@@ -200,7 +200,8 @@
 <p>JDK 也提供了大量的内置函数式接口供我们使用，使得 Lambda 表达式的运用更加方便、高效。</p>
 <h2 id="语法格式"><a href="#语法格式" class="headerlink" title="语法格式"></a>语法格式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基础语法拆分</span></span><br><span class="line"><span class="comment">// 中间箭头：lambda运算符</span></span><br><span class="line"><span class="comment">// 左侧：Lambda表达式的参数列表。参数类型可省略；当参数多个时，逗号隔开，当参数只有一个时，小括号可省略(建议加上)</span></span><br><span class="line"><span class="comment">// 右侧：Lambda表达式中所需执行的语句。语句只有一条并且有返回值时，大括号和return可省略</span></span><br><span class="line">(...parameters) -&gt; &#123;statements;&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="对接口的要求"><a href="#对接口的要求" class="headerlink" title="对接口的要求"></a>对接口的要求</h2><p>虽然使用 Lambda 表达式可以对某些接口进行简单的实现，但并不是所有的接口都可以使用 Lambda 表达式来实现。<strong>Lambda 规定需要”函数式接口“的支持(接口中只有一个抽象方法的接口，称为函数式接口，可以使用注解@FunctionalInterface 修饰，这个注解往往会和 lambda 表达式一起出现)，不是规定接口中只能有一个方法</strong></p>
+<h2 id="对接口的要求"><a href="#对接口的要求" class="headerlink" title="对接口的要求"></a>对接口的要求</h2><p>虽然使用 Lambda 表达式可以对某些接口进行简单的实现，但并不是所有的接口都可以使用 Lambda 表达式来实现。<strong>Lambda 规定需要”函数式接口“的支持（是指带有 @FunctionalInterface 注解的interface。它的特点是其中只有一个子类必须要实现的abstract方法。如果abstract方法前面带有default关键字，则不做计算）</strong></p>
+<p>其实这个也很好理解，因为 函数式接口 改写成为lambda表达式之后，并没有指定实现的哪个方法，如果有多个方法需要实现的话，就会有歧义的问题</p>
 <blockquote>
 <p>jdk 8 中有另一个新特性：default， 被 default 修饰的方法会有默认实现，不是必须被实现的方法，所以不影响 Lambda 表达式的使用</p>
 </blockquote>
@@ -271,7 +272,7 @@
 
   <div id="comment" class="mdui-m-t-5">
     <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
-<div id="SOHUCS" sid="ckxdd3l0j000ffgtwuyfizlz0"></div>
+<div id="SOHUCS" sid="ckxfm0bqr000hagtwglm6xuhv"></div>
 <script type="text/javascript">
 (function(){
 var appid = 'cyubhC2Dq';
