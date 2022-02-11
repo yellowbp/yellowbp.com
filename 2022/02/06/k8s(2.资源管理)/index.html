@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>k8s(2.资源管理) | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="资源管理资源管理介绍在kubernetes中，所有的内容都抽象为资源，用户需要通过操作资源来管理kubernetes。  kubernetes的本质上就是一个集群系统，用户可以在集群中部署各种服务，所谓的部署服务，其实就是在kubernetes集群中运行一个个的容器，并将指定的程序跑在容器中。 kubernetes的最小管理单元是pod而不是容器，所以只能将容器放在Pod中，而kubernetes">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s(2.资源管理)">
+<meta property="og:url" content="https://yellowbp.github.io/2022/02/06/k8s(2.资源管理)/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="资源管理资源管理介绍在kubernetes中，所有的内容都抽象为资源，用户需要通过操作资源来管理kubernetes。  kubernetes的本质上就是一个集群系统，用户可以在集群中部署各种服务，所谓的部署服务，其实就是在kubernetes集群中运行一个个的容器，并将指定的程序跑在容器中。 kubernetes的最小管理单元是pod而不是容器，所以只能将容器放在Pod中，而kubernetes">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://k8simagess.oss-cn-guangzhou.aliyuncs.com/k8s/Pod%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+<meta property="og:updated_time" content="2022-02-11T06:58:46.025Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s(2.资源管理)">
+<meta name="twitter:description" content="资源管理资源管理介绍在kubernetes中，所有的内容都抽象为资源，用户需要通过操作资源来管理kubernetes。  kubernetes的本质上就是一个集群系统，用户可以在集群中部署各种服务，所谓的部署服务，其实就是在kubernetes集群中运行一个个的容器，并将指定的程序跑在容器中。 kubernetes的最小管理单元是pod而不是容器，所以只能将容器放在Pod中，而kubernetes">
+<meta name="twitter:image" content="https://k8simagess.oss-cn-guangzhou.aliyuncs.com/k8s/Pod%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",Spring">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2022/02/06/k8s(2.资源管理)/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Sun Feb 06 2022 23:32:34 GMT+0800">
+    <meta property="article:modified_time" content="Fri Feb 11 2022 14:58:46 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2022/02/06/k8s(2.资源管理)/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/02/">二月 2022<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/k8s/">k8s<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux搭建/">linux搭建<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/yaml/">yaml<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/上传下载文件/">上传下载文件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/参数校验/">参数校验<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/源码分析/">源码分析<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/虚拟机/">虚拟机<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/负载均衡/">负载均衡<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/通用工具类/">通用工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-17.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">k8s(2.资源管理)</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-02-06 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="资源管理"><a href="#资源管理" class="headerlink" title="资源管理"></a>资源管理</h1><h2 id="资源管理介绍"><a href="#资源管理介绍" class="headerlink" title="资源管理介绍"></a>资源管理介绍</h2><p>在kubernetes中，所有的内容都抽象为资源，用户需要通过操作资源来管理kubernetes。</p>
+<blockquote>
+<p>kubernetes的本质上就是一个集群系统，用户可以在集群中部署各种服务，所谓的部署服务，其实就是在kubernetes集群中运行一个个的容器，并将指定的程序跑在容器中。</p>
+<p>kubernetes的最小管理单元是pod而不是容器，所以只能将容器放在<code>Pod</code>中，而kubernetes一般也不会直接管理Pod，而是通过<code>Pod控制器</code>来管理Pod的。</p>
+<p>Pod可以提供服务之后，就要考虑如何访问Pod中服务，kubernetes提供了<code>Service</code>资源实现这个功能。</p>
+<p>当然，如果Pod中程序的数据需要持久化，kubernetes还提供了各种<code>存储</code>系统。</p>
+</blockquote>
+<img src="https://k8simagess.oss-cn-guangzhou.aliyuncs.com/k8s/Pod%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="Pod流程图" style="zoom:70%;">
+
+<p><strong>学习kubernetes的核心，就是学习如何对集群上的<code>Pod、Pod控制器、Service、存储</code>等各种资源进行操作</strong></p>
+<h2 id="资源管理方式"><a href="#资源管理方式" class="headerlink" title="资源管理方式"></a>资源管理方式</h2><ul>
+<li><p>命令式对象管理：直接使用命令去操作k8s资源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run nginx-pod --image=nginx:1.17.1 --port=80</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>命令式对象配置：通过 命令 + 配置文件 去操作k8s资源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create/patch/delete -f nginx-pod.yaml</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>声明式对象配置：通过 命令 + 配置文件 去操作k8s资源（与第二种的区别在于 apply只有创建与更新，有则更新，无则创建）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kebectl apply -f nginx-pod.yaml</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">操作对象</th>
+<th align="left">适用环境</th>
+<th align="left">优点</th>
+<th align="left">缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">命令式对象管理</td>
+<td align="left">对象</td>
+<td align="left">测试</td>
+<td align="left">简单</td>
+<td align="left">只能操作活动对象，无法审计、跟踪</td>
+</tr>
+<tr>
+<td align="left">命令式对象配置</td>
+<td align="left">文件</td>
+<td align="left">开发</td>
+<td align="left">可以审计、跟踪</td>
+<td align="left">项目大时，配置文件多，操作麻烦</td>
+</tr>
+<tr>
+<td align="left">声明式对象配置</td>
+<td align="left">目录</td>
+<td align="left">开发</td>
+<td align="left">支持目录操作(同时操作多个yaml)</td>
+<td align="left">意外情况下难以调试</td>
+</tr>
+</tbody></table>
+<h3 id="命令式对象管理"><a href="#命令式对象管理" class="headerlink" title="命令式对象管理"></a>命令式对象管理</h3><p><strong>kubectl命令</strong></p>
+<p>kubectl是kubernetes集群的命令行工具，通过它能够对集群本身进行管理，并能够在集群上进行容器化应用的安装部署。kubectl命令的语法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl [command] [type] [name] [flags]</span><br></pre></td></tr></table></figure>
+
+<p><strong>comand</strong>：指定要对资源执行的操作，例如create、get、delete..</p>
+<p><strong>type</strong>：指定资源类型，比如deployment、pod、service..</p>
+<p><strong>name</strong>：指定资源的名称，名称大小写敏感</p>
+<p><strong>flags</strong>：指定额外的可选参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看所有pod</span></span><br><span class="line">kebectl get pod</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看某个pod</span></span><br><span class="line">kubectl get pod pod_name</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看某个pod,以yaml格式展示结果</span></span><br><span class="line">kubectl get pod pod_name -o yaml</span><br></pre></td></tr></table></figure>
+
+<p><strong>type资源类型</strong></p>
+<p>kubernetes中所有的内容都抽象为资源，可以通过下面的命令进行查看:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl api-resources</span><br></pre></td></tr></table></figure>
+
+<p>经常使用的资源有下面这些：</p>
+<table>
+<thead>
+<tr>
+<th align="left">资源分类</th>
+<th align="left">资源名称</th>
+<th align="left">缩写</th>
+<th align="left">资源作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">集群级别资源</td>
+<td align="left">nodes</td>
+<td align="left">no</td>
+<td align="left">集群组成部分</td>
+</tr>
+<tr>
+<td align="left">namespaces</td>
+<td align="left">ns</td>
+<td align="left">隔离Pod</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">pod资源</td>
+<td align="left">pods / pod</td>
+<td align="left">po</td>
+<td align="left">装载容器</td>
+</tr>
+<tr>
+<td align="left">pod资源控制器</td>
+<td align="left">replicationcontrollers</td>
+<td align="left">rc</td>
+<td align="left">控制pod资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">replicasets</td>
+<td align="left">rs</td>
+<td align="left">控制pod资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">deployments</td>
+<td align="left">deploy</td>
+<td align="left">控制pod资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">daemonsets</td>
+<td align="left">ds</td>
+<td align="left">控制pod资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">jobs</td>
+<td align="left"></td>
+<td align="left">控制pod资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">cronjobs</td>
+<td align="left">cj</td>
+<td align="left">控制pod资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">horizontalpodautoscalers</td>
+<td align="left">hpa</td>
+<td align="left">控制pod资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">statefulsets</td>
+<td align="left">sts</td>
+<td align="left">控制pod资源</td>
+</tr>
+<tr>
+<td align="left">服务发现资源</td>
+<td align="left">services</td>
+<td align="left">svc</td>
+<td align="left">统一pod对外接口</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">ingress</td>
+<td align="left">ing</td>
+<td align="left">统一pod对外接口</td>
+</tr>
+<tr>
+<td align="left">存储资源</td>
+<td align="left">volumeattachments</td>
+<td align="left"></td>
+<td align="left">存储</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">persistentvolumes</td>
+<td align="left">pv</td>
+<td align="left">存储</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">persistentvolumeclaims</td>
+<td align="left">pvc</td>
+<td align="left">存储</td>
+</tr>
+<tr>
+<td align="left">配置资源</td>
+<td align="left">configmaps</td>
+<td align="left">cm</td>
+<td align="left">配置</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">secrets</td>
+<td align="left"></td>
+<td align="left">配置</td>
+</tr>
+</tbody></table>
+<p><strong>操作</strong></p>
+<p>kubernetes允许对资源进行多种操作，可以通过–help查看详细的操作命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl --help</span><br></pre></td></tr></table></figure>
+
+<p>经常使用的操作有下面这些：</p>
+<table>
+<thead>
+<tr>
+<th align="left">命令分类</th>
+<th align="left">命令</th>
+<th align="left">翻译</th>
+<th align="left">命令作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">基本命令</td>
+<td align="left">create</td>
+<td align="left">创建</td>
+<td align="left">创建一个资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">edit</td>
+<td align="left">编辑</td>
+<td align="left">编辑一个资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">get</td>
+<td align="left">获取</td>
+<td align="left">获取一个资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">patch</td>
+<td align="left">更新</td>
+<td align="left">更新一个资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">delete</td>
+<td align="left">删除</td>
+<td align="left">删除一个资源</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">explain</td>
+<td align="left">解释</td>
+<td align="left">展示资源文档</td>
+</tr>
+<tr>
+<td align="left">运行和调试</td>
+<td align="left">run</td>
+<td align="left">运行</td>
+<td align="left">在集群中运行一个指定的镜像</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">expose</td>
+<td align="left">暴露</td>
+<td align="left">暴露资源为Service</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">describe</td>
+<td align="left">描述</td>
+<td align="left">显示资源内部信息</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">logs</td>
+<td align="left">日志输出容器在 pod 中的日志</td>
+<td align="left">输出容器在 pod 中的日志</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">attach</td>
+<td align="left">缠绕进入运行中的容器</td>
+<td align="left">进入运行中的容器</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">exec</td>
+<td align="left">执行容器中的一个命令</td>
+<td align="left">执行容器中的一个命令</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">cp</td>
+<td align="left">复制</td>
+<td align="left">在Pod内外复制文件</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">rollout</td>
+<td align="left">首次展示</td>
+<td align="left">管理资源的发布</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">scale</td>
+<td align="left">规模</td>
+<td align="left">扩(缩)容Pod的数量</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">autoscale</td>
+<td align="left">自动调整</td>
+<td align="left">自动调整Pod的数量</td>
+</tr>
+<tr>
+<td align="left">高级命令</td>
+<td align="left">apply</td>
+<td align="left">rc</td>
+<td align="left">通过文件对资源进行配置</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">label</td>
+<td align="left">标签</td>
+<td align="left">更新资源上的标签</td>
+</tr>
+<tr>
+<td align="left">其他命令</td>
+<td align="left">cluster-info</td>
+<td align="left">集群信息</td>
+<td align="left">显示集群信息</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left">version</td>
+<td align="left">版本</td>
+<td align="left">显示当前Server和Client的版本</td>
+</tr>
+</tbody></table>
+<p>下面以一个namespace / pod的创建和删除简单演示下命令的使用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建一个namespace</span></span><br><span class="line">[root@master ~]# kebectl create ns dev</span><br><span class="line">namespace/dev created</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 获取namespace</span></span><br><span class="line">[root@master ~]# kubectl get ns</span><br><span class="line">NAME              STATUS   AGE</span><br><span class="line">default           Active   21h</span><br><span class="line">dev               Active   21s</span><br><span class="line">kube-node-lease   Active   21h</span><br><span class="line">kube-public       Active   21h</span><br><span class="line">kube-system       Active   21h</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 在此namespace下创建并运行一个nginx的Pod</span></span><br><span class="line">[root@master ~]# kubectl run pod --image=nginx:latest -n dev</span><br><span class="line">kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed in a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.</span><br><span class="line">deployment.apps/pod created</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看新创建的pod</span></span><br><span class="line">[root@master ~]# kubectl get pod -n dev</span><br><span class="line">NAME  READY   STATUS    RESTARTS   AGE</span><br><span class="line">pod   1/1     Running   0          21s</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除指定的pod</span></span><br><span class="line">[root@master ~]# kubectl delete pod pod-864f9875b9-pcw7x</span><br><span class="line">pod "pod" deleted</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除指定的namespace</span></span><br><span class="line">[root@master ~]# kubectl delete ns dev</span><br><span class="line">namespace "dev" deleted</span><br></pre></td></tr></table></figure>
+
+<h3 id="命令式对象配置"><a href="#命令式对象配置" class="headerlink" title="命令式对象配置"></a>命令式对象配置</h3><p>命令式对象配置就是使用命令配合配置文件一起来操作kubernetes资源。</p>
+<p>1） 创建一个nginxpod.yaml，内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Namespace</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">dev</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nginxpod</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">dev</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx-containers</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:latest</span></span><br></pre></td></tr></table></figure>
+
+<p>2）执行create命令，创建资源：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[root@master</span> <span class="string">~]#</span> <span class="string">kubectl</span> <span class="string">create</span> <span class="string">-f</span> <span class="string">nginxpod.yaml</span></span><br><span class="line"><span class="string">namespace/dev</span> <span class="string">created</span></span><br><span class="line"><span class="string">pod/nginxpod</span> <span class="string">created</span></span><br></pre></td></tr></table></figure>
+
+<p>此时发现创建了两个资源对象，分别是namespace和pod</p>
+<p>3）执行get命令，查看资源：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]#  kubectl get -f nginxpod.yaml</span><br><span class="line">NAME            STATUS   AGE</span><br><span class="line">namespace/dev   Active   18s</span><br><span class="line"></span><br><span class="line">NAME            READY   STATUS    RESTARTS   AGE</span><br><span class="line">pod/nginxpod    1/1     Running   0          17s</span><br></pre></td></tr></table></figure>
+
+<p>这样就显示了两个资源对象的信息</p>
+<p>4）<strong>执行delete命令，删除资源</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# kubectl delete -f nginxpod.yaml</span><br><span class="line">namespace "dev" deleted</span><br><span class="line">pod "nginxpod" deleted</span><br></pre></td></tr></table></figure>
+
+<p>此时发现两个资源对象被删除了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">总结:</span><br><span class="line">    命令式对象配置的方式操作资源，可以简单的认为：命令  +  yaml配置文件（里面是命令需要的各种参数）</span><br></pre></td></tr></table></figure>
+
+<h3 id="声明式对象配置"><a href="#声明式对象配置" class="headerlink" title="声明式对象配置"></a>声明式对象配置</h3><p>声明式对象配置跟命令式对象配置很相似，但是它只有一个命令apply。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 首先执行一次kubectl apply -f yaml文件，发现创建了资源</span></span><br><span class="line">[root@master ~]#  kubectl apply -f nginxpod.yaml</span><br><span class="line">namespace/dev created</span><br><span class="line">pod/nginxpod created</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 再次执行一次kubectl apply -f yaml文件，发现说资源没有变动</span></span><br><span class="line">[root@master ~]#  kubectl apply -f nginxpod.yaml</span><br><span class="line">namespace/dev unchanged</span><br><span class="line">pod/nginxpod unchanged</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">总结:</span><br><span class="line">    其实声明式对象配置就是使用apply描述一个资源最终的状态（在yaml中定义状态）</span><br><span class="line">    使用apply操作资源：</span><br><span class="line">        如果资源不存在，就创建，相当于 kubectl create</span><br><span class="line">        如果资源已存在，就更新，相当于 kubectl patch</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>扩展：kubectl可以在node节点上运行吗 ?</p>
+</blockquote>
+<p>kubectl的运行是需要进行配置的，它的配置文件是$HOME/.kube，如果想要在node节点运行此命令，需要将master上的.kube文件复制到node节点上，即在master节点上执行下面操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp  -r  HOME/.kube   node1: HOME/</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用推荐: 三种方式应该怎么用 ?</p>
+</blockquote>
+<p>创建/更新资源 使用声明式对象配置 kubectl apply -f XXX.yaml</p>
+<p>删除资源 使用命令式对象配置 kubectl delete -f XXX.yaml</p>
+<p>查询资源 使用命令式对象管理 kubectl get(describe) 资源名称</p>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2022/02/06/k8s(2.资源管理)/">https://yellowbp.github.io/2022/02/06/k8s(2.资源管理)/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/k8s/">k8s</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Spring/">Spring</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2022/02/06/yaml/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/02/06/k8s(9.安全认证)/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckzi2i7py004cgwtw1ykqvxqw"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#资源管理"><span class="toc-number">1.</span> <span class="toc-text">资源管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#资源管理介绍"><span class="toc-number">1.1.</span> <span class="toc-text">资源管理介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资源管理方式"><span class="toc-number">1.2.</span> <span class="toc-text">资源管理方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令式对象管理"><span class="toc-number">1.2.1.</span> <span class="toc-text">命令式对象管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令式对象配置"><span class="toc-number">1.2.2.</span> <span class="toc-text">命令式对象配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#声明式对象配置"><span class="toc-number">1.2.3.</span> <span class="toc-text">声明式对象配置</span></a></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2022 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

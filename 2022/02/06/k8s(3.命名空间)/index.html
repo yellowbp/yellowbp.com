@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>k8s(3.命名空间) | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="NamespaceNamespace是kubernetes系统中的一种非常重要资源，它的主要作用是用来实现多套环境的资源隔离或者多租户的资源隔离。 默认情况下，kubernetes 集群中的所有的 Pod 都是可以相互访问的。但是在实际中，可能不想让两个Pod之间进行互相的访问，那此时就可以将两个Pod划分到不同的namespace下。kubernetes通过将集群内部的资源分配到不同的Names">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s(3.命名空间)">
+<meta property="og:url" content="https://yellowbp.github.io/2022/02/06/k8s(3.命名空间)/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="NamespaceNamespace是kubernetes系统中的一种非常重要资源，它的主要作用是用来实现多套环境的资源隔离或者多租户的资源隔离。 默认情况下，kubernetes 集群中的所有的 Pod 都是可以相互访问的。但是在实际中，可能不想让两个Pod之间进行互相的访问，那此时就可以将两个Pod划分到不同的namespace下。kubernetes通过将集群内部的资源分配到不同的Names">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2022-02-11T04:54:15.102Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s(3.命名空间)">
+<meta name="twitter:description" content="NamespaceNamespace是kubernetes系统中的一种非常重要资源，它的主要作用是用来实现多套环境的资源隔离或者多租户的资源隔离。 默认情况下，kubernetes 集群中的所有的 Pod 都是可以相互访问的。但是在实际中，可能不想让两个Pod之间进行互相的访问，那此时就可以将两个Pod划分到不同的namespace下。kubernetes通过将集群内部的资源分配到不同的Names">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",Spring">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2022/02/06/k8s(3.命名空间)/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Sun Feb 06 2022 23:32:34 GMT+0800">
+    <meta property="article:modified_time" content="Fri Feb 11 2022 12:54:15 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2022/02/06/k8s(3.命名空间)/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/02/">二月 2022<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/k8s/">k8s<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux搭建/">linux搭建<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/yaml/">yaml<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/上传下载文件/">上传下载文件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/参数校验/">参数校验<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/源码分析/">源码分析<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/虚拟机/">虚拟机<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/负载均衡/">负载均衡<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/通用工具类/">通用工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">20</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-18.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">k8s(3.命名空间)</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-02-06 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h2 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h2><p>Namespace是kubernetes系统中的一种非常重要资源，它的主要作用是用来实现<strong>多套环境的资源隔离</strong>或者<strong>多租户的资源隔离</strong>。</p>
+<p>默认情况下，kubernetes 集群中的所有的 Pod 都是可以相互访问的。但是在实际中，可能不想让两个Pod之间进行互相的访问，那此时就可以将两个Pod划分到不同的namespace下。kubernetes通过将集群内部的资源分配到不同的Namespace中，可以形成逻辑上的”组”，以方便不同的组的资源进行隔离使用和管理。</p>
+<p>可以通过kubernetes的授权机制，将不同的namespace交给不同租户进行管理，这样就实现了多租户的资源隔离。此时还能结合kubernetes的资源配额机制，限定不同租户能占用的资源，例如CPU使用量、内存使用量等等，来实现租户可用资源的管理。</p>
+<p>kubernetes在集群启动之后，会默认创建几个namespace</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# kubectl  get namespace</span><br><span class="line">NAME              STATUS   AGE</span><br><span class="line">default           Active   45h     #  所有未指定Namespace的对象都会被分配在default命名空间</span><br><span class="line">kube-node-lease   Active   45h     #  集群节点之间的心跳维护，v1.13开始引入</span><br><span class="line">kube-public       Active   45h     #  此命名空间下的资源可以被所有人访问（包括未认证用户）</span><br><span class="line">kube-system       Active   45h     #  所有由Kubernetes系统自己创建的资源都处于这个命名空间</span><br></pre></td></tr></table></figure>
+
+<p>下面来看namespace资源的具体操作：</p>
+<p><strong>查看</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 1 查看所有的ns  命令：kubectl get ns</span><br><span class="line">[root@master ~]# kubectl get ns</span><br><span class="line">NAME              STATUS   AGE</span><br><span class="line">default           Active   45h</span><br><span class="line">kube-node-lease   Active   45h</span><br><span class="line">kube-public       Active   45h     </span><br><span class="line">kube-system       Active   45h     </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 2 查看指定的ns   命令：kubectl get ns ns名称</span><br><span class="line">[root@master ~]# kubectl get ns default</span><br><span class="line">NAME      STATUS   AGE</span><br><span class="line">default   Active   45h</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 3 指定输出格式  命令：kubectl get ns ns名称  -o 格式参数</span><br><span class="line"><span class="meta">#</span> kubernetes支持的格式有很多，比较常见的是wide、json、yaml</span><br><span class="line">[root@master ~]# kubectl get ns default -o yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  creationTimestamp: "2021-05-08T04:44:16Z"</span><br><span class="line">  name: default</span><br><span class="line">  resourceVersion: "151"</span><br><span class="line">  selfLink: /api/v1/namespaces/default</span><br><span class="line">  uid: 7405f73a-e486-43d4-9db6-145f1409f090</span><br><span class="line">spec:</span><br><span class="line">  finalizers:</span><br><span class="line">  - kubernetes</span><br><span class="line">status:</span><br><span class="line">  phase: Active</span><br><span class="line">  </span><br><span class="line"><span class="meta">#</span> 4 查看ns详情  命令：kubectl describe ns ns名称</span><br><span class="line">[root@master ~]# kubectl describe ns default</span><br><span class="line">Name:         default</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  &lt;none&gt;</span><br><span class="line">Status:       Active  # Active 命名空间正在使用中  Terminating 正在删除命名空间</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> ResourceQuota 针对namespace做的资源限制</span><br><span class="line"><span class="meta">#</span> LimitRange针对namespace中的每个组件做的资源限制</span><br><span class="line">No resource quota.</span><br><span class="line">No LimitRange resource.</span><br></pre></td></tr></table></figure>
+
+<p><strong>创建</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 创建namespace</span><br><span class="line">[root@master ~]# kubectl create ns dev</span><br><span class="line">namespace/dev created</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 删除namespace</span><br><span class="line">[root@master ~]# kubectl delete ns dev</span><br><span class="line">namespace "dev" deleted</span><br></pre></td></tr></table></figure>
+
+<p><strong>配置方式</strong></p>
+<p>首先准备一个yaml文件：ns-dev.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Namespace</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure>
+
+<p>然后就可以执行对应的创建和删除命令了：</p>
+<p>创建：kubectl create -f ns-dev.yaml</p>
+<p>删除：kubectl delete -f ns-dev.yaml</p>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2022/02/06/k8s(3.命名空间)/">https://yellowbp.github.io/2022/02/06/k8s(3.命名空间)/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/k8s/">k8s</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Spring/">Spring</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2022/02/06/k8s(10.dashboard)/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/02/06/k8s(5. label)/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckzi2i7og000ugwtwwqdk9fgc"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Namespace"><span class="toc-number">1.</span> <span class="toc-text">Namespace</span></a></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2022 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
