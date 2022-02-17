@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Springboot缓存 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="Spring Cache缓存在使用缓存之前先介绍一下Spring的缓存抽象和 JSR107 JSR107JSR107 是缓存规范 JSR107核心接口Java Caching（JSR-107）定义了5个核心接口，分别是CachingProvider, CacheManager, Cache, Entry和 Expiry。  CachingProvider：创建、配置、获取、管理和控制多个Cache">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Springboot缓存">
+<meta property="og:url" content="https://yellowbp.github.io/2021/08/28/springboot缓存/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="Spring Cache缓存在使用缓存之前先介绍一下Spring的缓存抽象和 JSR107 JSR107JSR107 是缓存规范 JSR107核心接口Java Caching（JSR-107）定义了5个核心接口，分别是CachingProvider, CacheManager, Cache, Entry和 Expiry。  CachingProvider：创建、配置、获取、管理和控制多个Cache">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="h:/images/cacheimages/jsr107接口关系图.png">
+<meta property="og:updated_time" content="2022-02-17T14:27:30.340Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Springboot缓存">
+<meta name="twitter:description" content="Spring Cache缓存在使用缓存之前先介绍一下Spring的缓存抽象和 JSR107 JSR107JSR107 是缓存规范 JSR107核心接口Java Caching（JSR-107）定义了5个核心接口，分别是CachingProvider, CacheManager, Cache, Entry和 Expiry。  CachingProvider：创建、配置、获取、管理和控制多个Cache">
+<meta name="twitter:image" content="h:/images/cacheimages/jsr107接口关系图.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",Spring">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2021/08/28/springboot缓存/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Sat Aug 28 2021 12:11:26 GMT+0800">
+    <meta property="article:modified_time" content="Thu Feb 17 2022 22:27:30 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2021/08/28/springboot缓存/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/02/">二月 2022<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/k8s/">k8s<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux搭建/">linux搭建<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/yaml/">yaml<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/上传下载文件/">上传下载文件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/参数校验/">参数校验<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/源码分析/">源码分析<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/缓存/">缓存<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/虚拟机/">虚拟机<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/负载均衡/">负载均衡<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/通用工具类/">通用工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">21</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-13.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Springboot缓存</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2021-08-28 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="Spring-Cache缓存"><a href="#Spring-Cache缓存" class="headerlink" title="Spring Cache缓存"></a>Spring Cache缓存</h1><p>在使用缓存之前先介绍一下Spring的缓存抽象和 JSR107</p>
+<h2 id="JSR107"><a href="#JSR107" class="headerlink" title="JSR107"></a>JSR107</h2><p>JSR107 是缓存规范</p>
+<h3 id="JSR107核心接口"><a href="#JSR107核心接口" class="headerlink" title="JSR107核心接口"></a>JSR107核心接口</h3><p>Java Caching（JSR-107）定义了5个核心接口，分别是CachingProvider, CacheManager, Cache, Entry和 Expiry。</p>
+<ul>
+<li>CachingProvider：创建、配置、获取、管理和控制多个CacheManager，一个应用可以在运行期间访问多个CachingProvider</li>
+<li>CacheManager：创建、配置、获取、管理和控制多个唯一命名的Cache，这些Cache存在于CacheManager的上下文中。一个CacheManager仅对应一个CachingProvider</li>
+<li>Cache：是由CacheManager管理的，CacheManager管理Cache的生命周期，Cache存在于CacheManager的上下文中，是一个类似map的数据结构，并临时存储以key为索引的值。一个Cache仅被一个CacheManager所拥有</li>
+<li>Entry：是一个存储在Cache中的key-value对</li>
+<li>Expiry：每一个存储在Cache中的条目都有一个定义的有效期。一旦超过这个时间，条目就自动过期，过期后，条目将不可以访问、更新和删除操作。缓存有效期可以通过ExpiryPolicy设置</li>
+</ul>
+<p>交互过程：一个应用要使用缓存可以通过不同的缓存提供者CachingProvider来得到缓存管理器CacheManager，缓存管理器管理着不同的缓存Cache，则如果我们要使用缓存组件Cache，我们得从CacheManager中获取，获取到缓存组件Cache后，我们可以通过kv键值对缓存到Cache中</p>
+<p>在程序中整合JSR107和使用难度比较大，我们更多的是使用Spring缓存抽象，当然Spring缓存抽象跟JSR107的概念是通用的</p>
+<h3 id="接口关系图解"><a href="#接口关系图解" class="headerlink" title="接口关系图解"></a>接口关系图解</h3><img src="H:\images\cacheimages\jsr107接口关系图.png" alt="jsr107接口关系图" style="zoom:67%;">
+
+<h2 id="Spring缓存抽象"><a href="#Spring缓存抽象" class="headerlink" title="Spring缓存抽象"></a>Spring缓存抽象</h2><p>Spring从3.1开始定义了org.springframework.cache.Cache和org.springframework.cache.CacheManger接口来统一不同的缓存技术；并支持使用JCache(JSR-107)注解简化我们开发；</p>
+<ul>
+<li>Cache接口为缓存的组件规范定义，包含缓存的各种操作集合；</li>
+<li>Cache接口下Spring提供了各种xxxCache的实现；如RedisCache，EhCacheCache，ConcurrentMapCache等；</li>
+<li>每次调用需要缓存功能的方法时，Spring会检查检查指定参数的指定的目标方法是否已经被调用过；如果有就直接从缓存中获取方法调用后的结巢，如集没有就调用方法并缓存结果后返回给用户。下次调用直接从缓存中获取。·使用Spring缓存抽象时我们需要关注以下两点；<ol>
+<li>确定方法需要被缓存以及他们的缓存策略</li>
+<li>从缓存中读取之前缓存存储的数据</li>
+</ol>
+</li>
+</ul>
+<h3 id="几个重要概念和缓存注解"><a href="#几个重要概念和缓存注解" class="headerlink" title="几个重要概念和缓存注解"></a>几个重要概念和缓存注解</h3><table>
+<thead>
+<tr>
+<th>概念与注解</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CacheManager</td>
+<td>缓存管理器，管理各种缓存(Cache)组件</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>缓存接口，定义缓存操作。实现有：RedisCache、EhCacheCache、ConcurrentMapCache等</td>
+</tr>
+<tr>
+<td>@Cacheable</td>
+<td>针对方法配置，能够根据方法得请求参数对其返回结果进行缓存</td>
+</tr>
+<tr>
+<td>@CacheEvict</td>
+<td>清空缓存</td>
+</tr>
+<tr>
+<td>@CachePut</td>
+<td>保证方法被调用，又希望结果被缓存</td>
+</tr>
+<tr>
+<td>@EnableCaching</td>
+<td>开启基于注解的缓存</td>
+</tr>
+<tr>
+<td>keyGenerator</td>
+<td>缓存数据时key生成策略</td>
+</tr>
+<tr>
+<td>serialize</td>
+<td>缓存数据时value序列化策略</td>
+</tr>
+</tbody></table>
+<h2 id="Java代码编写"><a href="#Java代码编写" class="headerlink" title="Java代码编写"></a>Java代码编写</h2><h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><ol>
+<li><p>数据库新建两张表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="string">`employee`</span>;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`employee`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">`lastName`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line"> <span class="string">`email`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导入依赖</p>
+</li>
+<li><p>创建与数据库对应的domain实体</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String lastName;</span><br><span class="line">    <span class="keyword">private</span> Integer departmentId;</span><br><span class="line">    <span class="comment">// 省略getter setter</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>整合mybatis操作数据库</p>
+<ol>
+<li><p>配置数据源</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line"><span class="comment"># 数据库连接</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql:///cache_test?useSSL=false</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="number">6666</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建mapper层，并简单的书写接口与实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">EmployeeMapper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Select</span>(<span class="string">"SELECT * FROM employee WHERE id = #&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Employee <span class="title">getEmployeeById</span><span class="params">(Integer id)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Select</span>(<span class="string">"UPDATE employee SET lastName=#&#123;lastName&#125;,email=#&#123;email&#125; WHERE id = #&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateEmployee</span><span class="params">(Employee employee)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Delete</span>(<span class="string">"DELETE FROM employee WHERE id = #&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteEmployeeById</span><span class="params">(Integer id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动类上指定使用注解@MapperScan指定需要扫描的mapper接口所在的包</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@MapperScan</span>(<span class="string">"com.hbp.cache.mapper.EmployeeMapper"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(CacheApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建测试类，进行简单的测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(SpringRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">SpringBootTest</span></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">CacheApplicationTests</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    EmployeeMapper employeeMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">contextLoads</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Employee employee = employeeMapper.getEmployeeById(<span class="number">1</span>);</span><br><span class="line">        System.out.println(employee);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试好后补全service层与controller层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EmployeeService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    EmployeeMapper employeeMapper;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Employee <span class="title">getEmployeeById</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"查询"</span> + id + <span class="string">"号员工"</span>);</span><br><span class="line">        Employee employee = employeeMapper.getEmployeeById(id);</span><br><span class="line">        <span class="keyword">return</span> employee;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EmployeeController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    EmployeeService employeeService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/emp/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Employee <span class="title">getEmployee</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> Integer id) </span>&#123;</span><br><span class="line">        Employee employee = employeeService.getEmployeeById(id);</span><br><span class="line">        <span class="keyword">return</span> employee;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="Spring自带的缓存例子实现"><a href="#Spring自带的缓存例子实现" class="headerlink" title="Spring自带的缓存例子实现"></a>Spring自带的缓存例子实现</h3><p>默认使用ConcurrentMapCacheManager</p>
+<ol>
+<li><p>开启基于注解的缓存 @EnableCaching</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableCaching</span></span><br><span class="line"><span class="meta">@MapperScan</span>(<span class="string">"com.hbp.cache.mapper.EmployeeMapper"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(CacheApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>相应方法标注注解即可，下面进行一 一介绍</p>
+</li>
+</ol>
+<h4 id="Cacheable注解"><a href="#Cacheable注解" class="headerlink" title="@Cacheable注解"></a>@Cacheable注解</h4><blockquote>
+<p>@Cacheable注解的作用，前面也简介了，是针对方法配置，能够根据方法的请求参数对其结果进行缓存，将方法的运行结果进行缓存，以后再要相同的数据，直接从缓存中获取，不用调用方法</p>
+</blockquote>
+<p>介绍一下注解的主要属性：</p>
+<ul>
+<li>cacheNames/value：指定缓存组件的名字，数组形式。CacheManager管理多个Cache组件，对缓存的真正CRUD操作是在Cache组件中，每一个缓存组件都有自己唯一的一个名字</li>
+<li>key：缓存数据使用的key，确定缓存可以用唯一key进行指定；默认是使用方法的参数。eg：编写SpEL； #id，参数id的值 ,，#a0(第一个参数)， #p0(和a0的一样的意义) ，#root.args[0]</li>
+<li>keyGenerator：key的生成器；key默认是使用方法的参数是由keyGenerator生成的，当然可以自己指定key的生成器的组件id，（注意： key/keyGenerator：二选一使用;不能同时使用）</li>
+<li>cacheManager：指定缓存管理器；或者cacheResolver指定获取解析器（cacheManager和cacheResolver二选一）</li>
+<li>condition：指定符合条件的情况下才缓存；使用SpEl表达式，有多个条件则在双引号里用and。eg：condition = “#a0&gt;1”：第一个参数的值&gt;1的时候才进行缓存</li>
+<li>unless：否定缓存；当unless指定的条件为true，方法的返回值就不会被缓存；可以获取到方法的返回结果进行判断。eg：unless = “#a0！=2”:如果第一个参数的值不是2，结果不缓存；</li>
+<li>sync：是否使用异步模式，默认是同步</li>
+</ul>
+<p><strong>Cache SpEL available metadata</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">名字</th>
+<th align="left">位置</th>
+<th align="left">描述</th>
+<th align="left">例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">methodName</td>
+<td align="left">root object</td>
+<td align="left">当前被调用的方法名</td>
+<td align="left">#root.methodName</td>
+</tr>
+<tr>
+<td align="left">method</td>
+<td align="left">root object</td>
+<td align="left">当前被调用的方法</td>
+<td align="left">#root.method.name</td>
+</tr>
+<tr>
+<td align="left">target</td>
+<td align="left">root object</td>
+<td align="left">当前被调用的目标对象</td>
+<td align="left">#root.target</td>
+</tr>
+<tr>
+<td align="left">targetClass</td>
+<td align="left">root object</td>
+<td align="left">当前被调用的目标对象类</td>
+<td align="left">#root.targetClass</td>
+</tr>
+<tr>
+<td align="left">args</td>
+<td align="left">root object</td>
+<td align="left">当前被调用的方法的参数列表</td>
+<td align="left">#root.args[0]</td>
+</tr>
+<tr>
+<td align="left">caches</td>
+<td align="left">root object</td>
+<td align="left">当前方法调用使用的缓存列表（如@Cacheable(value={“cache1”,”cache2})），则有2个cache</td>
+<td align="left">#root.caches[0].name</td>
+</tr>
+<tr>
+<td align="left">argument</td>
+<td align="left">evaluation context</td>
+<td align="left">方法参数的名字，可以直接 #参数名，也可以使用#p0或#a0的形式，0代表参数的索引</td>
+<td align="left">#ban、#a0、#p0</td>
+</tr>
+<tr>
+<td align="left">result</td>
+<td align="left">evaluation context</td>
+<td align="left">方法执行后的返回值（仅当方法执行之后的判断有效，如‘unless’，cache put的表达式 ‘cache evict’的表达式 beforeInvocation=false）</td>
+<td align="left">#result</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EmployeeService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    EmployeeMapper employeeMapper;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// key的值是通过SpEL编写的，注意:key不能用#result.id因为查询缓存在方法执行之前执行，这时还没有结果呢</span></span><br><span class="line">    <span class="meta">@Cacheable</span>(cacheNames = &#123;<span class="string">"emp"</span>&#125;<span class="comment">/*,keyGenerator = "myKeyGenerator",condition = "#a0&gt;1",unless = "#a0==2"*/</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Employee <span class="title">getEmployeeById</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"查询"</span> + id + <span class="string">"号员工"</span>);</span><br><span class="line">        Employee employee = employeeMapper.getEmployeeById(id);</span><br><span class="line">        <span class="keyword">return</span> employee;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【测试】：直接访问接口，第一次会打印输出语句，后面便使用缓存，不会输出语句</p>
+<p>这里也可以使用自定义的keyGenerator，使用属性keyGenerator = “myKeyGenerator” 定义一个@Bean类，将KeyGenerator添加到Spring容器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span>(<span class="string">"myKeyGenerator"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> KeyGenerator <span class="title">keyGenerator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> KeyGenerator() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> Object <span class="title">generate</span><span class="params">(Object o, Method method, Object... parmas)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> method.getName() + <span class="string">"["</span> + Arrays.asList(parmas).toString() + <span class="string">"]"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行流程总结：</strong></p>
+<p>@Cacheable标注的方法执行之前先来检查缓存中有没有这个数据，默认按照参数的值作为key去查询缓存，如果没有就运行方法并将结果放入缓存；以后再来调用就可以直接使用缓存中的数据；（底层是使用AOP动态代理）</p>
+<h4 id="CachePut注解"><a href="#CachePut注解" class="headerlink" title="@CachePut注解"></a>@CachePut注解</h4><blockquote>
+<p>@CachePut注解也是一个用来缓存的注解，不过缓存和@Cacheable有明显的区别是即会调用方法，又更新缓存数据，也就是执行方法操作之后再来同步更新缓存，所以这个主键常用于更新操作，也可以用于查询，主键属性和@Cacheable有很多类似的，详情参看@link @CachePut源码</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里的key使用#result.id也是可以的</span></span><br><span class="line"><span class="meta">@CachePut</span>(value = &#123;<span class="string">"emp"</span>&#125;,key = <span class="string">"#employee.id"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> Employee <span class="title">updateEmployee</span><span class="params">(Employee employee)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"updateEmployee:"</span> + employee);</span><br><span class="line">    employeeMapper.updateEmployee(employee);</span><br><span class="line">    <span class="keyword">return</span> employee;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【注意】：这里的key的值要跟@Cacheable标注方法的key的值要一致，这样才能更新缓存</p>
+<p>【运行流程】：先调用目标方法，再将目标方法的结果缓存起来</p>
+<h4 id="CacheEvic注解"><a href="#CacheEvic注解" class="headerlink" title="@CacheEvic注解"></a>@CacheEvic注解</h4><p>主要属性：</p>
+<ul>
+<li>key：指定要清除的数据</li>
+<li>allEntries = true：指定清除这个缓存中所有的数据，使用了这个属性，就不用指定key了</li>
+<li>beforeInvocation = false：<strong>默认</strong>代表缓存清除操作是在方法执行之后执行，如果出现异常缓存就不会清除</li>
+<li>beforeInvocation = true：代表清除缓存操作是在方法运行之前执行，无论是否出现异常，缓存都会清除</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CacheEvict</span>(value = <span class="string">"emp"</span>,key = <span class="string">"#id"</span>,beforeInvocation = <span class="keyword">true</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteEmployee</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"删除"</span> + id +<span class="string">"号员工"</span>);</span><br><span class="line">    <span class="comment">//int i = 10/0;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Caching注解"><a href="#Caching注解" class="headerlink" title="@Caching注解"></a>@Caching注解</h4><p>@Caching 用于定义复杂的缓存规则，可以集成@Cacheable和 @CachePut</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// @Caching 定义复杂的缓存规则</span></span><br><span class="line"><span class="meta">@Caching</span>(</span><br><span class="line">    cacheable = &#123;</span><br><span class="line">        <span class="meta">@Cacheable</span>(<span class="comment">/*value=&#123;"emp"&#125;,*/</span>key = <span class="string">"#lastName"</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    put = &#123;</span><br><span class="line">        <span class="meta">@CachePut</span>(<span class="comment">/*value=&#123;"emp"&#125;,*/</span>key = <span class="string">"#result.id"</span>),</span><br><span class="line">        <span class="meta">@CachePut</span>(<span class="comment">/*value=&#123;"emp"&#125;,*/</span>key = <span class="string">"#result.email"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">public</span> Employee <span class="title">getEmpByLastName</span><span class="params">(String lastName)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> employeeMapper.getEmpByLastName(lastName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【注意】：只要有@CachePut注解，则此方法一定会执行</p>
+<p>【测试】：当用请求此方法时，查名字的同时，会顺便把 id 跟email给缓存进去，则如果其他方法是通过id或者email查询的话，则查缓存即可，当然如果要用名字查询，还是会执行方法体的内容，因为有 @CachePut 注解</p>
+<h4 id="CacheConfig注解"><a href="#CacheConfig注解" class="headerlink" title="@CacheConfig注解"></a>@CacheConfig注解</h4><p>@CacheConfig注解可以用于抽取缓存的公共配置，然后在类加上就可以</p>
+<p>eg：<code>@CacheConfig(cacheNames = {&quot;emp&quot;})</code>，则该类下的所有方法都不需要执行value了</p>
+<h2 id="集成Redis缓存"><a href="#集成Redis缓存" class="headerlink" title="集成Redis缓存"></a>集成Redis缓存</h2><p>开发中使用缓存中间件：redis、memcached、ehcache</p>
+<h3 id="环境准备-1"><a href="#环境准备-1" class="headerlink" title="环境准备"></a>环境准备</h3><p>基于前面的Spring缓存环境，集成redis要引入相关配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.3.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当引入了<code>spring-boot-starter-data-redis</code> 依赖之后，RedisAutoConfiguration就起效果了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span>(</span><br><span class="line">    proxyBeanMethods = <span class="keyword">false</span></span><br><span class="line">)</span><br><span class="line"><span class="meta">@ConditionalOnClass</span>(&#123;RedisOperations<span class="class">.<span class="keyword">class</span>&#125;)</span></span><br><span class="line"><span class="class">@<span class="title">EnableConfigurationProperties</span>(</span>&#123;RedisProperties<span class="class">.<span class="keyword">class</span>&#125;)</span></span><br><span class="line"><span class="class">@<span class="title">Import</span>(</span>&#123;LettuceConnectionConfiguration<span class="class">.<span class="keyword">class</span>, <span class="title">JedisConnectionConfiguration</span>.<span class="title">class</span>&#125;)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">RedisAutoConfiguration</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>引入了redis之后，相当于就引入了Jedis相关的类</p>
+<p>这个自动配置做了什么呢？它给我们配了2个组件，分别是redisTemplate(k-v 都是对象) 跟 stringRedisTemplate(k-v都是字符串)这两个都是用来操作redis的，相当于jdbcTemplate。</p>
+<p>redisTemplate存储对象是需要对象序列化的(实体类实现Serializable)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">redisTemplateTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Employee employee = employeeMapper.getEmployeeById(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 给redis保存数据,默认如果保存对象，使用的是jdk序列化机制，序列化后的数据保存到redis中</span></span><br><span class="line">    redisTemplate.opsForValue().set(<span class="string">"emp-01"</span>,employee);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然我们习惯上把数据以json格式保存到redis中，因为我们修改一下序列化规则</p>
+<p>redis序列化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisConfig</span> <span class="keyword">extends</span> <span class="title">CachingConfigurerSupport</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RedisTemplate&lt;Object, Object&gt; <span class="title">redisTemplate</span><span class="params">(RedisConnectionFactory factory)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        RedisTemplate&lt;Object, Object&gt; template = <span class="keyword">new</span> RedisTemplate&lt;&gt;();</span><br><span class="line">        <span class="comment">// 创建序列化类</span></span><br><span class="line">        RedisSerializer&lt;String&gt; redisSerializer = <span class="keyword">new</span> StringRedisSerializer();</span><br><span class="line">        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = <span class="keyword">new</span> Jackson2JsonRedisSerializer(Object<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        ObjectMapper om = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">        <span class="comment">// 设置可见度</span></span><br><span class="line">        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">        <span class="comment">// 启动默认的类型</span></span><br><span class="line">        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">        <span class="comment">// 序列化类，对象映射设置</span></span><br><span class="line">        jackson2JsonRedisSerializer.setObjectMapper(om);</span><br><span class="line">        template.setConnectionFactory(factory);</span><br><span class="line">        <span class="comment">// 设置 value 的转化格式和 key 的转化格式</span></span><br><span class="line">        template.setKeySerializer(redisSerializer);</span><br><span class="line">        template.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        <span class="keyword">return</span> template;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">redisTemplateTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Employee employee = employeeMapper.getEmployeeById(<span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 给redis保存数据,默认如果保存对象，使用的是jdk序列化机制，序列化后的数据保存到redis中</span></span><br><span class="line"><span class="comment">//        redisTemplate.opsForValue().set("emp-01",employee);</span></span><br><span class="line">        <span class="comment">// 此时我们可以看到redis中key跟value都正常序列化为json了</span></span><br><span class="line">        redisTemplate.opsForValue().set(<span class="string">"emp-02"</span>,employee);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>缓存原理： CacheManager ==》 Cache 缓存组件来实际给缓存中存取数据</p>
+<ol>
+<li>引入redis的starter后，容器保存的是 RedisCacheManager</li>
+<li>RedisCacheManager 帮我们创建 RedisCache 来作为缓存组件；RedisCache 通过操作redis缓存数据的（所以相当于这些当东西已经帮我们自动配置好了，我们直接发送请求即可缓存到redis中）</li>
+<li>但是默认的缓存是使用jdk序列化的，如何保存为json（跟上面引入的redisTemplate序列化是没有关系的，因为这里用到的是CacheManager）<ol>
+<li>引入redis的starter，cacheManager变为RedisCacheManager</li>
+<li>自己重写CacheManager组件，因为在RedisCacheConfiguration源码中我们可以看到<code>@ConditionalOnMissingBean({CacheManager.class})</code> 没有CacheManager才会去加载默认的</li>
+</ol>
+</li>
+</ol>
+<h3 id="redis配置类"><a href="#redis配置类" class="headerlink" title="redis配置类"></a>redis配置类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisConfig</span> <span class="keyword">extends</span> <span class="title">CachingConfigurerSupport</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RedisTemplate&lt;Object, Object&gt; <span class="title">redisTemplate</span><span class="params">(RedisConnectionFactory factory)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        RedisTemplate&lt;Object, Object&gt; template = <span class="keyword">new</span> RedisTemplate&lt;&gt;();</span><br><span class="line">        RedisSerializer&lt;String&gt; redisSerializer = <span class="keyword">new</span> StringRedisSerializer();</span><br><span class="line">        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = <span class="keyword">new</span> Jackson2JsonRedisSerializer(Object<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        ObjectMapper om = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">        jackson2JsonRedisSerializer.setObjectMapper(om);</span><br><span class="line">        template.setConnectionFactory(factory);</span><br><span class="line">        <span class="comment">//key序列化方式</span></span><br><span class="line">        template.setKeySerializer(redisSerializer);</span><br><span class="line">        <span class="comment">//value序列化</span></span><br><span class="line">        template.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        <span class="keyword">return</span> template;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="yml配置"><a href="#yml配置" class="headerlink" title="yml配置"></a>yml配置</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">redis:</span></span><br><span class="line">  <span class="attr">host:</span> <span class="number">192.168</span><span class="number">.31</span><span class="number">.71</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">  <span class="attr">database:</span> <span class="number">0</span></span><br><span class="line">  <span class="attr">timeout:</span> <span class="number">1800000</span></span><br><span class="line">  <span class="attr">lettuce:</span></span><br><span class="line">    <span class="attr">pool:</span></span><br><span class="line">      <span class="attr">max-active:</span> <span class="number">20</span></span><br><span class="line">      <span class="attr">max-wait:</span> <span class="number">-1</span></span><br><span class="line">      <span class="attr">max-idle:</span> <span class="number">10</span></span><br><span class="line">      <span class="attr">min-idle:</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>此时正常发起请求即可，它会自动走redis那个方法的</p>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2021/08/28/springboot缓存/">https://yellowbp.github.io/2021/08/28/springboot缓存/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/缓存/">缓存</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Spring/">Spring</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2021/09/21/ElasticSearch--集群部署/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2021/08/26/SpringBoot定时任务/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="ckzr2vanl006boktwihedyeqz"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Cache缓存"><span class="toc-number">1.</span> <span class="toc-text">Spring Cache缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JSR107"><span class="toc-number">1.1.</span> <span class="toc-text">JSR107</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JSR107核心接口"><span class="toc-number">1.1.1.</span> <span class="toc-text">JSR107核心接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#接口关系图解"><span class="toc-number">1.1.2.</span> <span class="toc-text">接口关系图解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring缓存抽象"><span class="toc-number">1.2.</span> <span class="toc-text">Spring缓存抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#几个重要概念和缓存注解"><span class="toc-number">1.2.1.</span> <span class="toc-text">几个重要概念和缓存注解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java代码编写"><span class="toc-number">1.3.</span> <span class="toc-text">Java代码编写</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境准备"><span class="toc-number">1.3.1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring自带的缓存例子实现"><span class="toc-number">1.3.2.</span> <span class="toc-text">Spring自带的缓存例子实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cacheable注解"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">@Cacheable注解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CachePut注解"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">@CachePut注解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CacheEvic注解"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">@CacheEvic注解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Caching注解"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">@Caching注解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CacheConfig注解"><span class="toc-number">1.3.2.5.</span> <span class="toc-text">@CacheConfig注解</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成Redis缓存"><span class="toc-number">1.4.</span> <span class="toc-text">集成Redis缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境准备-1"><span class="toc-number">1.4.1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis配置类"><span class="toc-number">1.4.2.</span> <span class="toc-text">redis配置类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#yml配置"><span class="toc-number">1.4.3.</span> <span class="toc-text">yml配置</span></a></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2022 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
