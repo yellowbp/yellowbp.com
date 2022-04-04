@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>mq | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="mq前言 我们为什么要用mq？ 引入mq会多哪些问题？ 如何解决这些问题？  传统模式有哪些痛点接口耗时长有些复杂的业务系统，一次用户请求可能会同步调用多个服务的接口，此时需要等待所有接口都返回了，才能真正的获取执行接口   这种同步接口调用方式总耗时比较长，非常影响用户的体验，特别是在网络不稳定的情况下，极容易出现接口超时问题 耦合性高很多复杂的业务系统，一般都会拆分成多个微服务。我们在这里以用">
+<meta name="keywords" content="mq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mq">
+<meta property="og:url" content="https://yellowbp.github.io/2022/04/04/mq/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="mq前言 我们为什么要用mq？ 引入mq会多哪些问题？ 如何解决这些问题？  传统模式有哪些痛点接口耗时长有些复杂的业务系统，一次用户请求可能会同步调用多个服务的接口，此时需要等待所有接口都返回了，才能真正的获取执行接口   这种同步接口调用方式总耗时比较长，非常影响用户的体验，特别是在网络不稳定的情况下，极容易出现接口超时问题 耦合性高很多复杂的业务系统，一般都会拆分成多个微服务。我们在这里以用">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%8E%A5%E5%8F%A3%E8%80%97%E6%97%B6%E9%95%BF.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E8%80%A6%E5%90%88%E6%80%A7%E9%AB%98.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E5%BC%82%E6%AD%A5.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E8%A7%A3%E8%80%A6.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E9%87%8D%E5%A4%8D%E6%B6%88%E6%81%AF.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF%E5%A4%B1%E8%B4%A5.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF%E5%A4%B1%E8%B4%A5.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E6%81%AF%E5%A0%86%E7%A7%AF.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%8E%A5%E5%8F%A3%E5%B9%82%E7%AD%89%E6%80%A7.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/job%E5%A4%84%E7%90%86%E9%87%8D%E8%AF%95%E8%A1%A8.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E8%A1%A8.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E6%81%AF%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98%E6%B5%81%E7%A8%8B%E4%BC%98%E5%8C%96.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%982.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%84%E7%90%86%E6%B6%88%E6%81%AF.png">
+<meta property="og:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%983.png">
+<meta property="og:updated_time" content="2022-04-04T11:01:28.190Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mq">
+<meta name="twitter:description" content="mq前言 我们为什么要用mq？ 引入mq会多哪些问题？ 如何解决这些问题？  传统模式有哪些痛点接口耗时长有些复杂的业务系统，一次用户请求可能会同步调用多个服务的接口，此时需要等待所有接口都返回了，才能真正的获取执行接口   这种同步接口调用方式总耗时比较长，非常影响用户的体验，特别是在网络不稳定的情况下，极容易出现接口超时问题 耦合性高很多复杂的业务系统，一般都会拆分成多个微服务。我们在这里以用">
+<meta name="twitter:image" content="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%8E%A5%E5%8F%A3%E8%80%97%E6%97%B6%E9%95%BF.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",mq">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2022/04/04/mq/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Mon Apr 04 2022 10:52:52 GMT+0800">
+    <meta property="article:modified_time" content="Mon Apr 04 2022 19:01:28 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2022/04/04/mq/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/04/">四月 2022<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/03/">三月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/02/">二月 2022<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/k8s/">k8s<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux搭建/">linux搭建<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/yaml/">yaml<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/上传下载文件/">上传下载文件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/参数校验/">参数校验<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/工具类/">工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/缓存/">缓存<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/虚拟机/">虚拟机<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">22</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-9.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">mq</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-04-04 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="mq"><a href="#mq" class="headerlink" title="mq"></a>mq</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ol>
+<li>我们为什么要用mq？</li>
+<li>引入mq会多哪些问题？</li>
+<li>如何解决这些问题？</li>
+</ol>
+<h2 id="传统模式有哪些痛点"><a href="#传统模式有哪些痛点" class="headerlink" title="传统模式有哪些痛点"></a>传统模式有哪些痛点</h2><h3 id="接口耗时长"><a href="#接口耗时长" class="headerlink" title="接口耗时长"></a>接口耗时长</h3><p>有些复杂的业务系统，一次用户请求可能会同步调用多个服务的接口，此时需要等待所有接口都返回了，才能真正的获取执行接口</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%8E%A5%E5%8F%A3%E8%80%97%E6%97%B6%E9%95%BF.png" alt="接口耗时长" style="zoom:80%;">
+
+<p>这种同步接口调用方式总耗时比较长，非常影响用户的体验，特别是在网络不稳定的情况下，极容易出现接口超时问题</p>
+<h3 id="耦合性高"><a href="#耦合性高" class="headerlink" title="耦合性高"></a>耦合性高</h3><p>很多复杂的业务系统，一般都会拆分成多个微服务。我们在这里以用户下单为例，请求会先通过订单服务的接口，然后分别调用：支付服务、库存服务、积分服务、物流服务</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E8%80%A6%E5%90%88%E6%80%A7%E9%AB%98.png" alt="耦合性高" style="zoom:80%;">
+
+<p>服务之间<code>耦合性太高</code>，如果调用的任何一个子服务出现异常，整个请求都会异常，对系统的稳定性非常不利。</p>
+<h3 id="请求峰值"><a href="#请求峰值" class="headerlink" title="请求峰值"></a>请求峰值</h3><p>这里暂考虑缓存的情况下</p>
+<p>有时候为了吸引用户，我们会搞一些活动，比如秒杀等。</p>
+<p>如果用户少还好，不会影响系统的稳定性。但如果用户突增，一时间所有的请求都到数据库，可能会导致数据库无法承受这么大的压力，响应变慢或者直接挂掉。对于这种突然出现的<code>请求峰值</code>，无法保证系统的稳定性。</p>
+<h2 id="为什么要用mq"><a href="#为什么要用mq" class="headerlink" title="为什么要用mq"></a>为什么要用mq</h2><p>对于上面传统模式的三类问题，我们使用mq就能轻松解决。</p>
+<h3 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h3><p>同步接口调用导致响应时间长的问题，使用mq之后，将同步调用改成异步，能够显著减少系统响应时间。</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E5%BC%82%E6%AD%A5.png" alt="异步" style="zoom:80%;">
+
+<p>系统A作为消息的生产者，在完成本职工作后，就能直接返回结果了。而无需等待消息消费者的返回，它们最终会独立完成所有的业务功能。</p>
+<p>这样能避免<code>总耗时比较长</code>，从而影响用户的体验的问题。</p>
+<h3 id="解耦"><a href="#解耦" class="headerlink" title="解耦"></a>解耦</h3><p>服务间耦合性太大的问题，使用mq之后，我们只需要依赖于mq，避免了各个服务间的强依赖问题。</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E8%A7%A3%E8%80%A6.png" alt="解耦" style="zoom:80%;">
+
+<p>订单服务作为消息生产者，保证它自己没有异常即可，不会收到支付服务等子服务的异常的影响，并且各个消费者业务服务之间，也互不影响。</p>
+<p>这样就把之前复杂的业务系统的依赖关系，转换为只依赖于mq的简单依赖，从而显著地降低了服务间的耦合度</p>
+<h3 id="消峰"><a href="#消峰" class="headerlink" title="消峰"></a>消峰</h3><p>由于突然出现的<code>请求峰值</code>，导致系统不稳定的问题。使用mq后，能够起到消峰的作用。</p>
+<p>订单服务接收到用户请求后，将请求直接发送到mq，然后订单消费者从mq中消费消息，做入库操作。如果出现请求峰值的情况，由于消费者的消费能力有限，会按照自己的节奏来消费消息，多的请求不处理，保留在mq队列中，不会对系统的稳定性造成影响</p>
+<h2 id="引入mq会产生的问题"><a href="#引入mq会产生的问题" class="headerlink" title="引入mq会产生的问题"></a>引入mq会产生的问题</h2><p>引入mq之后让我们服务间耦合性降低了，异步处理机制减少了系统的响应时间，同时能够有效的应对请求峰值的问题，提升了系统的稳定性。但是，引入mq同时也会带来一些问题。</p>
+<h3 id="重复消息问题"><a href="#重复消息问题" class="headerlink" title="重复消息问题"></a>重复消息问题</h3><p>重复消费问题可以说是mq中普遍存在的问题，不管你用哪种mq都无法避免</p>
+<p>有哪些场景会出现重复的消息呢？</p>
+<ol>
+<li>消息生产者产生了重复的消息</li>
+<li>kafka和rocketmq的offset被回调了</li>
+<li>消息消费者确认失败</li>
+<li>消息消费者确实时超时了</li>
+<li>业务系统主动发起重试</li>
+</ol>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E9%87%8D%E5%A4%8D%E6%B6%88%E6%81%AF.png" alt="重复消息" style="zoom:80%;">
+
+<p>如果重复消息不做正确的处理，会对业务造成很大的影响，产生重复的数据，或者导致数据异常，比如会员系统多开通了一个月的会员</p>
+<h3 id="数据一致性问题"><a href="#数据一致性问题" class="headerlink" title="数据一致性问题"></a>数据一致性问题</h3><p>很多时候，如果mq的消费者业务处理异常的话，就会出现数据一致性问题。比如：一个完整的业务流程是，下单成功之后，送100个积分。下单入库了，但是消息消费者在入库积分的时候失败了，就会造成数据不一致的情况，即该业务流程的部分数据入库了，另外一部分没入库。</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF%E5%A4%B1%E8%B4%A5.png" alt="消费消息失败" style="zoom:80%;">
+
+<p>如果下单和送积分在同一个事务中，要么同时成功，要么同时失败，是不会出现数据一致性问题的。</p>
+<p>但由于跨服务的调用，为了性能考虑，一般不会使用强一致性的方案，而改成达成最终一致性即可。</p>
+<h3 id="消息丢失问题"><a href="#消息丢失问题" class="headerlink" title="消息丢失问题"></a>消息丢失问题</h3><p>同样消息丢失问题，也是mq中普遍存在的问题，不管是那种mq都无法避免</p>
+<p>有哪些场景会出现消息丢失问题呢？</p>
+<ul>
+<li>消息生产者发送消息时，由于网络原因，发送到mq失败了</li>
+<li>mq服务器持久化时，磁盘出现异常</li>
+<li>kafka和rocketmq的offset被回调时，略过了很多消息</li>
+<li>消息消费者刚读取到消息，已经ack确认了，但业务还没处理完，处理业务的服务就被重启了</li>
+</ul>
+<p>导致消息丢失的问题原因挺多的。生产者、mq服务器、消费者 都有可能产生问题，我在这里就不一 一 举例了。最终的结果会导致消费者无法正确的处理消息，而导致数据不一致的情况</p>
+<h3 id="消息顺序问题"><a href="#消息顺序问题" class="headerlink" title="消息顺序问题"></a>消息顺序问题</h3><p>有些业务数据是有状态的，比如订单有：下单、支付、完成、退货 等状态，如果订单数据作为消息体，就会涉及顺序问题了。如果消费者收到同一个订单的两条信息，第一条信息的状体是下单，第二条消息的状态是支付，这是没问题的。但如果第一条消息的状态是支付，第二条消息的状态是下单救护有问题了，没有下单就先支付？</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF%E5%A4%B1%E8%B4%A5.png" alt="消息队列" style="zoom:80%;">
+
+<p>消息顺序问题是一个非常棘手的问题，比如：</p>
+<ul>
+<li>kafka 同一个 partition 中能保证顺序，但是不同的 partition 无法保证顺序</li>
+<li>rabbitmq 的同一个 queue 能够保证顺序，但是如果多个消费者同一个 queue 也会有顺序问题</li>
+</ul>
+<p>如果消费者使用多线程消费消息，也无法保证顺序。</p>
+<p>如果消费消息时同一个订单的多条消息中，中间的一条消息出现异常情况，顺序将会被打乱。</p>
+<p>如果生产者发送到mq中的路由规则，跟消费者不一样，也无法保证顺序问题</p>
+<h3 id="消息堆积"><a href="#消息堆积" class="headerlink" title="消息堆积"></a>消息堆积</h3><p>如果消息消费者读取消息的速度，能够跟上消息生产者的节奏，那么整套mq机制就能发挥最大作用。但是很多时候，由于某些批处理，或者其他原因，导致消息消费的速度 &lt;&lt; 生产者速度。这样会直接导致消息堆积问题，从而影响业务功能。</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E6%81%AF%E5%A0%86%E7%A7%AF.png" alt="消息堆积" style="zoom:80%;">
+
+<p>这里以下单开通会员为例，如果消息出现堆积，会导致用户下单之后，很久之后才能变成会员，这种情况肯定会引起大量用户投诉</p>
+<h3 id="系统复杂度提升"><a href="#系统复杂度提升" class="headerlink" title="系统复杂度提升"></a>系统复杂度提升</h3><p>这里说的系统复杂度和系统耦合性是不一样的，比如以前只有：服务A、服务B、服务C 这三个服务，现在引入mq之后，你除了需要关注这三个服务之外，还需要关注mq服务，需要关注的点越多，系统的复杂度越高</p>
+<p>mq的机制需要：生产者、mq服务、消费者</p>
+<h2 id="如何解决mq产生的问题"><a href="#如何解决mq产生的问题" class="headerlink" title="如何解决mq产生的问题"></a>如何解决mq产生的问题</h2><p>mq是一种趋势，总体来说对我们的系统是利大于弊的，难道因为它会出现一些问题，我们就不用它了？</p>
+<p>那么我们要如何解决这些问题呢？</p>
+<h3 id="重复消息问题-1"><a href="#重复消息问题-1" class="headerlink" title="重复消息问题"></a>重复消息问题</h3><p>不管是由于生产者产生的重复消息，还是由于消费者导致的重复消息，我们都可以在消费者中解决这个问题</p>
+<p>这就要求消费者在做业务处理的时候，要做<strong>幂等设计</strong>（用户对于同一操作发起的一次或多次请求的结果是一致的，不会因为多次点击而产生副作用）</p>
+<p>在这里通过使用 <code>messageId</code> 做唯一索引，在处理业务逻辑执勤，先根据 messageId 查询一下该消息有没有处理过，如果已经处理过了则直接返回成功，如果没有处理过，则继续做业务处理</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%8E%A5%E5%8F%A3%E5%B9%82%E7%AD%89%E6%80%A7.png" alt="接口幂等性" style="zoom:70%;">
+
+<h3 id="接口一致性问题"><a href="#接口一致性问题" class="headerlink" title="接口一致性问题"></a>接口一致性问题</h3><p>数据一致性分为：</p>
+<ul>
+<li>强一致性</li>
+<li>弱一致性</li>
+<li>最终一致性</li>
+</ul>
+<p>而mq为了性能考虑使用的是<strong>最终一致性</strong>，那么必定会出现数据不一致的问题。这类问题大概率是因为消费者读取消息后，业务逻辑处理失败导致的，这时候可以增加<strong>重试机制</strong>。</p>
+<p>重试可分为：同步重试 和 异步重试</p>
+<p>有些消息量比较小的业务场景，可以采用同步重试，在消费消息时如果处理失败，立刻重试 3~5 次，如果还是失败，则写入到 <strong>记录表</strong>中。但如果消息量比较大，则不建议使用这种方式，因为如果出现出现网络异常，可能会导致大量的消息不断重试，影响消息读取速度， 造成消息堆积。</p>
+<p>而消息量比较大的业务场景，建议采用异步重试，在消费者处理失败之后，立刻写入<strong>重试表</strong>，然后有个 job 专门定时重试；或者还有一种做法就是，如果消费失败了，自己给同一个topic发一条消息，在后面的某个时间点，自己又会消费到那条消息，起到了重试的效果。如果对消息顺序要求不高的场景，可以使用这种方式。</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/job%E5%A4%84%E7%90%86%E9%87%8D%E8%AF%95%E8%A1%A8.png" alt="job处理重试表" style="zoom:67%;">
+
+<h3 id="消息丢失问题-1"><a href="#消息丢失问题-1" class="headerlink" title="消息丢失问题"></a>消息丢失问题</h3><p>不管你是否承认有时候消息真的会丢，即使这种概率非常小，但也会对业务有影响。生产者、mq服务、消费者都有可能造成消息丢失的问题</p>
+<p>为了解决这个问题，我们可以增加一张<strong>消息发送表</strong>，当生产者发完消息后，会往该表中写入一条数据，状态 status 标记为待确认。如果消费者读取消息之后，调用生产者api更新该消息的 status 为已确认。有个 job，每隔一段时间检查一次消息发送表，如果5min（这个时间可以根据实际情况来定）后还有状态是待确认的消息，则认为该消息已经丢失了，就重发该消息。</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E8%A1%A8.png" alt="消息发送表" style="zoom:67%;">
+
+<p>这样不管是由于生产者、mq服务器、还是消费者导致的消息丢失问题，job都会重新发消息。</p>
+<h3 id="消息顺序问题-1"><a href="#消息顺序问题-1" class="headerlink" title="消息顺序问题"></a>消息顺序问题</h3><p>消息顺序问题是我们非常常见的问题，我们以 kafka 消费订单消息为例。订单有：下单、支付、完成、退货等状态，这些状态是有先后顺序的，如果顺序错了会导致业务异常。</p>
+<p>解决这类问题之前，我们先确认一下，消费者是否真的需要知道中间状态，只知道最终状态行不行？</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E6%B6%88%E6%81%AF%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98.png" alt="消息顺序问题" style="zoom:70%;">
+
+<p>其实很多时候，我真的需要知道的是最终状态，这时可以把流程优化一下：</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98%E6%B5%81%E7%A8%8B%E4%BC%98%E5%8C%96.png" alt="顺序问题流程优化" style="zoom:80%;">
+
+<p>这种方式可以解决大部分的消息顺序问题。</p>
+<p>但如果真的有需要保证消息顺序的需求。订单号路由到不同的<code>partition</code>，同一个订单号的消息，每次到发到同一个<code>partition</code>。</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%982.png" alt="顺序问题2" style="zoom:80%;">
+
+<h3 id="消息堆积-1"><a href="#消息堆积-1" class="headerlink" title="消息堆积"></a>消息堆积</h3><p>如果消费者消费消息的速度小于生产者生产消息的速度，将会出现消息堆积问题。其实这类问题产生的原因很多</p>
+<blockquote>
+<p>那么消息堆积问题该如何解决呢？</p>
+</blockquote>
+<p>这个要看消息是否需要保证顺序。</p>
+<p>如果不需要保证顺序，可以读取消息之后用多线程处理业务逻辑。</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%A4%84%E7%90%86%E6%B6%88%E6%81%AF.png" alt="线程池处理消息" style="zoom:80%;">
+
+<p>这样就能增加业务逻辑处理速度，解决消息堆积问题。但是线程池的核心线程数和最大线程数需要合理配置，不然可能会浪费系统资源。</p>
+<p>如果需要保证顺序，可以读取消息之后，将消息按照一定的规则分发到多个队列中，然后在队列中用单线程处理。</p>
+<img src="https://mqimages.oss-cn-guangzhou.aliyuncs.com/mq/%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%983.png" alt="顺序问题3" style="zoom:80%;">
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2022/04/04/mq/">https://yellowbp.github.io/2022/04/04/mq/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/mq/">mq</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/mq/">mq</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/04/04/接口幂等性/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="cl1klv0m80058x0tw8s2xt6sy"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#mq"><span class="toc-number">1.</span> <span class="toc-text">mq</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传统模式有哪些痛点"><span class="toc-number">1.2.</span> <span class="toc-text">传统模式有哪些痛点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#接口耗时长"><span class="toc-number">1.2.1.</span> <span class="toc-text">接口耗时长</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#耦合性高"><span class="toc-number">1.2.2.</span> <span class="toc-text">耦合性高</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请求峰值"><span class="toc-number">1.2.3.</span> <span class="toc-text">请求峰值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要用mq"><span class="toc-number">1.3.</span> <span class="toc-text">为什么要用mq</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#异步"><span class="toc-number">1.3.1.</span> <span class="toc-text">异步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解耦"><span class="toc-number">1.3.2.</span> <span class="toc-text">解耦</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消峰"><span class="toc-number">1.3.3.</span> <span class="toc-text">消峰</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引入mq会产生的问题"><span class="toc-number">1.4.</span> <span class="toc-text">引入mq会产生的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#重复消息问题"><span class="toc-number">1.4.1.</span> <span class="toc-text">重复消息问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据一致性问题"><span class="toc-number">1.4.2.</span> <span class="toc-text">数据一致性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息丢失问题"><span class="toc-number">1.4.3.</span> <span class="toc-text">消息丢失问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息顺序问题"><span class="toc-number">1.4.4.</span> <span class="toc-text">消息顺序问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息堆积"><span class="toc-number">1.4.5.</span> <span class="toc-text">消息堆积</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统复杂度提升"><span class="toc-number">1.4.6.</span> <span class="toc-text">系统复杂度提升</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何解决mq产生的问题"><span class="toc-number">1.5.</span> <span class="toc-text">如何解决mq产生的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#重复消息问题-1"><span class="toc-number">1.5.1.</span> <span class="toc-text">重复消息问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#接口一致性问题"><span class="toc-number">1.5.2.</span> <span class="toc-text">接口一致性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息丢失问题-1"><span class="toc-number">1.5.3.</span> <span class="toc-text">消息丢失问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息顺序问题-1"><span class="toc-number">1.5.4.</span> <span class="toc-text">消息顺序问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消息堆积-1"><span class="toc-number">1.5.5.</span> <span class="toc-text">消息堆积</span></a></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2022 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>接口幂等性 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="如何保证接口的幂等性接口幂等性问题，对于开发人员来说，是一个跟语言无关的公共问题。本文分享了一些解决这类问题非常实用的办法 在讲之前，先了解 幂等设计 和 防重设计 的区别  幂等设计：用户对于同一操作的一次或多次请求的返回结果是一致的，不会因为多次点击而产生重复数据 防重设计：避免产生重复数据，对接口返回没有太多要求  幂等性问题 有时我们在填写某些form表单时，保存按钮不小心快速点了两次，表">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="接口幂等性">
+<meta property="og:url" content="https://yellowbp.github.io/2022/04/04/接口幂等性/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="如何保证接口的幂等性接口幂等性问题，对于开发人员来说，是一个跟语言无关的公共问题。本文分享了一些解决这类问题非常实用的办法 在讲之前，先了解 幂等设计 和 防重设计 的区别  幂等设计：用户对于同一操作的一次或多次请求的返回结果是一致的，不会因为多次点击而产生重复数据 防重设计：避免产生重复数据，对接口返回没有太多要求  幂等性问题 有时我们在填写某些form表单时，保存按钮不小心快速点了两次，表">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://equalimages.oss-cn-guangzhou.aliyuncs.com/%E5%B9%82%E7%AD%89%E6%80%A7/%E6%82%B2%E8%A7%82%E9%94%81.png">
+<meta property="og:image" content="https://equalimages.oss-cn-guangzhou.aliyuncs.com/%E5%B9%82%E7%AD%89%E6%80%A7/%E4%B9%90%E8%A7%82%E9%94%81.png">
+<meta property="og:image" content="https://equalimages.oss-cn-guangzhou.aliyuncs.com/%E5%B9%82%E7%AD%89%E6%80%A7/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95.png">
+<meta property="og:image" content="https://equalimages.oss-cn-guangzhou.aliyuncs.com/%E5%B9%82%E7%AD%89%E6%80%A7/redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81.png">
+<meta property="og:updated_time" content="2022-04-04T10:48:29.880Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="接口幂等性">
+<meta name="twitter:description" content="如何保证接口的幂等性接口幂等性问题，对于开发人员来说，是一个跟语言无关的公共问题。本文分享了一些解决这类问题非常实用的办法 在讲之前，先了解 幂等设计 和 防重设计 的区别  幂等设计：用户对于同一操作的一次或多次请求的返回结果是一致的，不会因为多次点击而产生重复数据 防重设计：避免产生重复数据，对接口返回没有太多要求  幂等性问题 有时我们在填写某些form表单时，保存按钮不小心快速点了两次，表">
+<meta name="twitter:image" content="https://equalimages.oss-cn-guangzhou.aliyuncs.com/%E5%B9%82%E7%AD%89%E6%80%A7/%E6%82%B2%E8%A7%82%E9%94%81.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",mysql">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2022/04/04/接口幂等性/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Mon Apr 04 2022 10:52:52 GMT+0800">
+    <meta property="article:modified_time" content="Mon Apr 04 2022 18:48:29 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2022/04/04/接口幂等性/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/04/">四月 2022<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/03/">三月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/02/">二月 2022<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">11</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/k8s/">k8s<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux搭建/">linux搭建<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/yaml/">yaml<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/上传下载文件/">上传下载文件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/参数校验/">参数校验<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/工具类/">工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/缓存/">缓存<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/虚拟机/">虚拟机<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">22</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-8.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">接口幂等性</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-04-04 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="如何保证接口的幂等性"><a href="#如何保证接口的幂等性" class="headerlink" title="如何保证接口的幂等性"></a>如何保证接口的幂等性</h1><p><code>接口幂等性</code>问题，对于开发人员来说，是一个跟语言无关的公共问题。本文分享了一些解决这类问题非常实用的办法</p>
+<p>在讲之前，先了解 幂等设计 和 防重设计 的区别</p>
+<ul>
+<li>幂等设计：用户对于同一操作的一次或多次请求的返回结果是一致的，不会因为多次点击而产生重复数据</li>
+<li>防重设计：避免产生重复数据，对接口返回没有太多要求</li>
+</ul>
+<h2 id="幂等性问题"><a href="#幂等性问题" class="headerlink" title="幂等性问题"></a>幂等性问题</h2><ol>
+<li>有时我们在填写某些<code>form表单</code>时，保存按钮不小心快速点了两次，表中竟然产生了两条重复的数据，只是id不一样。</li>
+<li>我们在项目中为了解决<strong>接口超时</strong>问题，通常会引入<strong>重试机制</strong>。当第一次请求接口差事了，请求方没能及时获取返回结果（此时有可能已经成功了），为了避免返回错误的结果（这种情况不可能直接返回失败吧？），于是会对该请求重试几次，这样也会产生重复的数据</li>
+<li>mq消费者在读取消息时，很难避免不会读取到重复消息，如果处理不好，也会产生重复的数据</li>
+</ol>
+<h2 id="幂等性问题多发场景"><a href="#幂等性问题多发场景" class="headerlink" title="幂等性问题多发场景"></a>幂等性问题多发场景</h2><ul>
+<li>insert操作，这种情况下多次请求，可能会产生重复数据</li>
+<li>update操作<ul>
+<li>如果只是单纯的更新数据，比如：<code>update user set status = 1 where id = 1</code>；是没有问题的。</li>
+<li>如果还有计算，比如：<code>update user set status = status + 1 where id = 1</code>；这种情况多次请求，可能会导致数据不一致</li>
+</ul>
+</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="insert前先select"><a href="#insert前先select" class="headerlink" title="insert前先select"></a>insert前先select</h3><p>通常情况下，在保存数据的接口中，为了防止产生重复数据，一般会在 insert 前，先根据 id 或 code 字段 select 一下数据。如果该数据已存在，则执行 update 操作，如果不存在，才执行 insert 操作</p>
+<p>该方案可能是我们平时在防止产生重复数据时，使用最多的方案。但是该方案不适用于并发场景，在并发场景中，要配合其他方案一起使用，否则同样会产生重复数据</p>
+<h3 id="加悲观锁"><a href="#加悲观锁" class="headerlink" title="加悲观锁"></a>加悲观锁</h3><p>在支付场景中，用户A的账号余额有150远，想转出100元，正常情况下转出100元后，用户A的余额只剩50元，sql 是这样的：</p>
+<p><code>update user amount = amount - 100 where id = 1;</code></p>
+<p>但是如果出现多次相同的情况，可能会导致用户A的余额变成负数。为了解决这种情况，可以加悲观锁，将用户A的那行数据锁住，在同一时刻只允许一个请求获取锁，更新数据，其他的请求则等待。</p>
+<p>通常情况下，通过如下sql 锁住单行数据：</p>
+<p><code>select * from user where id = 1 for update</code></p>
+<blockquote>
+<p>需要特别注意的是：如果使用的是mysql数据库，存储引擎必须用innodb，因为它才支持事务。此外，这里id字段一定要是主键或者唯一索引，不然会锁住整张表。（InnoDB预设是Row-Level Lock，所以只有当通过索引条件检索数据时，才会锁行，否则会直接锁表）</p>
+</blockquote>
+<p>悲观锁做法具体流程如下：</p>
+<img src="https://equalimages.oss-cn-guangzhou.aliyuncs.com/%E5%B9%82%E7%AD%89%E6%80%A7/%E6%82%B2%E8%A7%82%E9%94%81.png" alt="悲观锁" style="zoom:80%;">
+
+<p>具体步骤：</p>
+<ol>
+<li>多个请求同时根据id查询用户信息</li>
+<li>判断余额是否不足100，如果余额不足，则直接返回 余额不足 的提示</li>
+<li>如果余额充足，则通过 for  update 再次查询用户信息，并尝试获取锁</li>
+<li>假设请求1获取了行锁，其余请求没有获取到锁，则等待下一次获取锁的机会</li>
+<li>第一个请求获取到锁之后，判断余额是否不足100，如果余额充足，则进行update操作。</li>
+<li>如果余额不足，说明是重复请求，则直接返回成功</li>
+</ol>
+<p>悲观锁需要在同一个事务操作过程中锁住一行数据，如果事务耗时比较长，会造成大量请求等待，影响接口性能。</p>
+<p>此外，每次请求接口很难保证都有相同的返回值，所以不适合幂等性设计场景，但是在防重场景中是可以的使用的。</p>
+<h3 id="加乐观锁"><a href="#加乐观锁" class="headerlink" title="加乐观锁"></a>加乐观锁</h3><p>既然悲观锁有性能问题，为了提升接口性能，我们可以使用乐观锁。需要在表中增加一个<code>timestamp</code>或者<code>version</code>字段，这里以<code>version</code>字段为例</p>
+<p>在更新数据之前先查询一下数据：</p>
+<blockquote>
+<p>select id, amount, version from user id = 1;</p>
+</blockquote>
+<p>如果数据存在，假设查到的<code>version</code>等于<code>1</code>，再使用<code>id</code>和<code>version</code>字段作为查询条件更新数据：</p>
+<blockquote>
+<p>update user set amount=amount+100,version=version+1 where id = 1 and version = 1;</p>
+</blockquote>
+<p>更新数据的同时<code>version+1</code>，然后判断本次<code>update</code>操作的影响行数，如果大于0，则说明本次更新成功，如果等于0，则说明本次更新没有让数据变更。</p>
+<p>由于第一次请求<code>version</code>等于<code>1</code>是可以成功的，操作成功后<code>version</code>变成<code>2</code>了。这时如果并发的请求过来，再执行上述相同的sql，则该<code>update</code>操作不会真正更新数据，最终sql的执行结果影响行数是<code>0</code>，因为<code>version</code>已经变成<code>2</code>了，<code>where</code>中的<code>version=1</code>肯定无法满足条件。但为了保证接口幂等性，接口可以直接返回成功，因为<code>version</code>值已经修改了，那么前面必定已经成功过一次，后面都是重复的请求。</p>
+<img src="https://equalimages.oss-cn-guangzhou.aliyuncs.com/%E5%B9%82%E7%AD%89%E6%80%A7/%E4%B9%90%E8%A7%82%E9%94%81.png" alt="乐观锁" style="zoom:80%;">
+
+<p>具体步骤：</p>
+<ol>
+<li>先根据id查询用户信息，包含version字段</li>
+<li>根据id和version字段值作为where条件的参数，更新用户信息，同时version+1</li>
+<li>判断操作影响行数，如果影响1行，则说明是一次请求，可以做其他数据操作。</li>
+<li>如果影响0行，说明是重复请求，则直接返回成功。</li>
+</ol>
+<h2 id="加唯一索引"><a href="#加唯一索引" class="headerlink" title="加唯一索引"></a>加唯一索引</h2><p>绝大数情况下，为了防止重复数据的产生，我们都会在表中加唯一索引，这是一个非常简单，并且有效的方案。</p>
+<blockquote>
+<p>alter table <code>order</code> add UNIQUE KEY un_code (<code>code</code>);</p>
+</blockquote>
+<p>加了唯一索引之后，第一次请求数据可以插入成功。但后面的相同请求，插入数据时会报<code>Duplicate entry &#39;002&#39; for key &#39;order.un_code</code>异常，表示唯一索引有冲突。</p>
+<p>虽说抛异常对数据来说没有影响，不会造成错误数据。但是为了保证接口幂等性，我们需要对该异常进行捕获，然后返回成功。</p>
+<p>如果是<code>java</code>程序需要捕获：<code>DuplicateKeyException</code>异常，如果使用了<code>spring</code>框架还需要捕获：<code>MySQLIntegrityConstraintViolationException</code>异常。</p>
+<img src="https://equalimages.oss-cn-guangzhou.aliyuncs.com/%E5%B9%82%E7%AD%89%E6%80%A7/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95.png" alt="唯一索引" style="zoom:80%;">
+
+<p>具体步骤：</p>
+<ol>
+<li>用户通过浏览器发起请求，服务端收集数据。</li>
+<li>将该数据插入mysql</li>
+<li>判断是否执行成功，如果成功，则操作其他数据（可能还有其他的业务逻辑）。</li>
+<li>如果执行失败，捕获唯一索引冲突异常，直接返回成功。</li>
+</ol>
+<h2 id="根据状态机"><a href="#根据状态机" class="headerlink" title="根据状态机"></a>根据状态机</h2><p>很多时候业务表是有状态的，比如订单表中有：1-下单、2-已支付、3-完成、4-撤销等状态。如果这些状态的值是有规律的，按照业务节点正好是从小到大，我们就能通过它来保证接口的幂等性。</p>
+<p>假如 id = 1 的订单状态是<code>已支付</code>，现在要变成<code>完成</code>状态。</p>
+<p><code>update order set status=3 where id = 1 and status = 2;</code></p>
+<p>第一次请求时，该订单的状态是<code>已支付</code>，值是<code>2</code>，所以该<code>update</code>语句可以正常更新数据，sql执行结果的影响行数是<code>1</code>，订单状态变成了<code>3</code>。</p>
+<p>后面有相同的请求过来，再执行相同的sql时，由于订单状态变成了<code>3</code>，再用<code>status=2</code>作为条件，无法查询出需要更新的数据，所以最终sql执行结果的影响行数是<code>0</code>，即不会真正的更新数据。但为了保证接口幂等性，影响行数是<code>0</code>时，接口也可以直接返回成功。</p>
+<blockquote>
+<p>主要特别注意的是，该方案仅限于要更新的<code>表有状态字段</code>，并且刚好要更新<code>状态字段</code>的这种特殊情况，并非所有场景都适用。</p>
+</blockquote>
+<h2 id="加分布式锁"><a href="#加分布式锁" class="headerlink" title="加分布式锁"></a>加分布式锁</h2><p>其实前面介绍过的<code>加唯一索引</code>本质是使用了<code>数据库</code>的<code>分布式锁</code>，也属于分布式锁的一种。但由于<code>数据库分布式锁</code>的性能不太好，我们可以改用：<code>redis</code>或<code>zookeeper</code>。</p>
+<p>鉴于现在很多公司分布式配置中心改用<code>apollo</code>或<code>nacos</code>，已经很少用<code>zookeeper</code>了，我们以<code>redis</code>为例介绍分布式锁。</p>
+<p>目前主要有三种方式实现redis的分布式锁：</p>
+<ol>
+<li>setNx命令</li>
+<li>set命令</li>
+<li>Redission框架</li>
+</ol>
+<p>每种方案各有利弊，具体实现细节我就不说了</p>
+<p>具体流程图如下：</p>
+<img src="https://equalimages.oss-cn-guangzhou.aliyuncs.com/%E5%B9%82%E7%AD%89%E6%80%A7/redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81.png" alt="redis分布式锁" style="zoom:80%;">
+
+<p>具体步骤：</p>
+<ol>
+<li>用户通过浏览器发起请求，服务器并且生成订单号code作为唯一业务字段。</li>
+<li>使用redis的set命令，将该订单code设置到redis中，同时设置超时时间。</li>
+<li>判断是否设置成功，如果设置成功，说明是第一次请求，则进行数据操作。</li>
+<li>如果设置失败，说明是重复请求，则直接返回成功。</li>
+</ol>
+<blockquote>
+<p>需要特别注意的是：分布式锁一定要设置一个合理的过期时间，如果设置过短，无法有效的防止重复请求。如果设置过长，可能会浪费 redis 的存储空间，需要根据实际业务情况而定。</p>
+</blockquote>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2022/04/04/接口幂等性/">https://yellowbp.github.io/2022/04/04/接口幂等性/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/web开发基础/">web开发基础</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/mysql/">mysql</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2022/04/04/mq/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/03/06/缓存必知知识/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="cl1klv0mp0060x0twhn66xzhk"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#如何保证接口的幂等性"><span class="toc-number">1.</span> <span class="toc-text">如何保证接口的幂等性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#幂等性问题"><span class="toc-number">1.1.</span> <span class="toc-text">幂等性问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#幂等性问题多发场景"><span class="toc-number">1.2.</span> <span class="toc-text">幂等性问题多发场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-number">1.3.</span> <span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#insert前先select"><span class="toc-number">1.3.1.</span> <span class="toc-text">insert前先select</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#加悲观锁"><span class="toc-number">1.3.2.</span> <span class="toc-text">加悲观锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#加乐观锁"><span class="toc-number">1.3.3.</span> <span class="toc-text">加乐观锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加唯一索引"><span class="toc-number">1.4.</span> <span class="toc-text">加唯一索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#根据状态机"><span class="toc-number">1.5.</span> <span class="toc-text">根据状态机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加分布式锁"><span class="toc-number">1.6.</span> <span class="toc-text">加分布式锁</span></a></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2022 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
