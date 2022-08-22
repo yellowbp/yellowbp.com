@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>SpringSecurity OAuth2 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="Spring Security OAuth2为什么需要OAuth2编码永远都是为了解决生产中的问题，想要理解为什么需要OAuth2，当然要从实际生活出发。 举个例子：小区的业主点了一份外卖，但是小区的门禁系统不给外卖人员进入，此时想要外卖员进入只能业主下来开门或者告知门禁的密码。 密码告知外卖员岂不是每次都能凭密码进入小区了，这明显造成了安全隐患。 那么有没有一种方案：既能不泄露密码，也能让外卖小">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringSecurity OAuth2">
+<meta property="og:url" content="https://yellowbp.github.io/2022/07/05/OAuth2/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="Spring Security OAuth2为什么需要OAuth2编码永远都是为了解决生产中的问题，想要理解为什么需要OAuth2，当然要从实际生活出发。 举个例子：小区的业主点了一份外卖，但是小区的门禁系统不给外卖人员进入，此时想要外卖员进入只能业主下来开门或者告知门禁的密码。 密码告知外卖员岂不是每次都能凭密码进入小区了，这明显造成了安全隐患。 那么有没有一种方案：既能不泄露密码，也能让外卖小">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E6%8E%88%E6%9D%83%E7%A0%81%E6%A8%A1%E5%BC%8F.png">
+<meta property="og:image" content="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E7%AE%80%E5%8C%96%E6%A8%A1%E5%BC%8F.png">
+<meta property="og:image" content="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E7%AE%80%E5%8C%96%E6%A8%A1%E5%BC%8F.png">
+<meta property="og:image" content="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E6%8E%88%E6%9D%83%E7%A0%81%E6%A8%A1%E5%BC%8F.png">
+<meta property="og:updated_time" content="2022-08-22T12:13:23.708Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringSecurity OAuth2">
+<meta name="twitter:description" content="Spring Security OAuth2为什么需要OAuth2编码永远都是为了解决生产中的问题，想要理解为什么需要OAuth2，当然要从实际生活出发。 举个例子：小区的业主点了一份外卖，但是小区的门禁系统不给外卖人员进入，此时想要外卖员进入只能业主下来开门或者告知门禁的密码。 密码告知外卖员岂不是每次都能凭密码进入小区了，这明显造成了安全隐患。 那么有没有一种方案：既能不泄露密码，也能让外卖小">
+<meta name="twitter:image" content="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E6%8E%88%E6%9D%83%E7%A0%81%E6%A8%A1%E5%BC%8F.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",redis">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2022/07/05/OAuth2/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Tue Jul 05 2022 11:15:17 GMT+0800">
+    <meta property="article:modified_time" content="Mon Aug 22 2022 20:13:23 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2022/07/05/OAuth2/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/07/">七月 2022<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/05/">五月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/04/">四月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/03/">三月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/02/">二月 2022<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/OAuth2/">OAuth2<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Redis/">Redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/k8s/">k8s<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/yaml/">yaml<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/上传下载文件/">上传下载文件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/参数校验/">参数校验<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/工具类/">工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/缓存/">缓存<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">22</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-1.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">SpringSecurity OAuth2</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-07-05 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="Spring-Security-OAuth2"><a href="#Spring-Security-OAuth2" class="headerlink" title="Spring Security OAuth2"></a>Spring Security OAuth2</h1><h2 id="为什么需要OAuth2"><a href="#为什么需要OAuth2" class="headerlink" title="为什么需要OAuth2"></a>为什么需要OAuth2</h2><p>编码永远都是为了解决生产中的问题，想要理解为什么需要OAuth2，当然要从实际生活出发。</p>
+<p>举个例子：小区的业主点了一份外卖，但是小区的门禁系统不给外卖人员进入，此时想要外卖员进入只能业主下来开门或者告知门禁的密码。</p>
+<p>密码告知外卖员岂不是每次都能凭密码进入小区了，这明显造成了<strong>安全隐患</strong>。</p>
+<p><strong>那么有没有一种方案：既能不泄露密码，也能让外卖小哥进入呢？</strong></p>
+<p>于是此时就想到了一个授权机制，分为以下几个步骤：</p>
+<ol>
+<li>门禁系统中新增一个<strong>授权按钮</strong>，外卖小哥只需要点击授权按钮呼叫对应业主</li>
+<li>业主收到小哥的呼叫，知道小哥正在要求授权，于是做出了<strong>应答授权</strong></li>
+<li>此时门禁系统弹出一个<strong>密码</strong>（类比于<strong>access_token</strong>），<strong>有效期30分钟</strong>，在有效期内，小哥可以凭借这个密码进入小区。</li>
+<li>小哥输入密码进入小区</li>
+</ol>
+<p>另外这个授权的密码不仅可以通过门禁，还可以通过楼下的门禁，这就非常类似于<strong>网关</strong>和<strong>微服务</strong>了。</p>
+<h2 id="什么是OAuth2"><a href="#什么是OAuth2" class="headerlink" title="什么是OAuth2"></a>什么是OAuth2</h2><p>OAuth 是一个开放授权协议标准，该标准允许用户让第三方应用访问该用户在某一网站上存储的私密<strong>资源</strong>（如头像、照片、视频等），如在某个网站（属于第三方应用）上获取微信的个人信息等；而在这个过程中无需将<strong>用户名</strong>和<strong>密码</strong>提供给<strong>第三方应用</strong>。实现这一功能是通过提供一个令牌（<strong>token</strong>），而不是用户名和密码来访问他们存放在特定<strong>服务提供者</strong>的数据。</p>
+<p>采用令牌（token）的方式可以让用户灵活的对第三方应用授权或者收回权限。</p>
+<p>传统的 Web 开发登录认证一般都是基于 <strong>session</strong> 的，但是在<strong>前后端分离</strong>的架构中继续使用 session 就会有许多不便，因为移动端（Android、iOS、微信小程序等）要么不支持 <strong>cookie</strong>（微信小程序），要么使用非常不便，对于这些问题，使用 <strong>OAuth2</strong> 认证都能解决。</p>
+<p>对于大家而言，我们在互联网应用中最常见的 OAuth2 应该就是各种第三方登录了，例如 <strong>QQ 授权登录</strong>、<strong>微信授权登录</strong>、<strong>微博授权登录</strong>、<strong>GitHub 授权登录</strong>等等。</p>
+<h2 id="OAuth2角色"><a href="#OAuth2角色" class="headerlink" title="OAuth2角色"></a>OAuth2角色</h2><ul>
+<li>资源拥有者（Resource Owner）：用户</li>
+<li>第三方应用程序（Client）：也称为客户端，客户端需要资源服务器的资源（用户信息）</li>
+<li>认证授权服务器（Authorization Server）：提供登录认证的接口，认证通过后返回 token</li>
+<li>资源服务器（Resource Server）：客户端携带token获取资源的目标服务器，需能校验token；一般和认证服务器是同一台服务器，也可以是不同服务器</li>
+</ul>
+<p>【<strong>注意</strong>】：OAuth2 中的资源是指 用户信息（ID、用户名、性别、头像等信息），而非微服务资源（商品服务、订单服务等）</p>
+<p><strong>以上总结</strong>：OAuth2这套协议其实就两个核心角色：认证授权服务器和资源服务器，一般来说我们会把 认证授权服务器 设计成单独的模块，模块简称：认证中心；资源服务器 设计到网关模块中，网关是作为各个微服务的统一入口，由网关统一对 JWT验签、JWT有效判断、JWT角色权限判断</p>
+<h2 id="OAuth2的四种模式"><a href="#OAuth2的四种模式" class="headerlink" title="OAuth2的四种模式"></a>OAuth2的四种模式</h2><p>OAuth2.0协议默认一共支持 4 种不同的授权模式：</p>
+<ol>
+<li><strong>授权码模式</strong>：常见的第三方平台登录功能基本都是使用这种模式的</li>
+<li><strong>简化模式</strong>：不需要客户端服务器参与，直接在浏览器中向授权服务器申请令牌（token），一般如果网站是纯静态页面则可以采用这种方式</li>
+<li><strong>密码模式</strong>：用户把用户名和密码直接告诉客户端，客户端使用这些信息向授权服务器申请令牌（token）。这需要用户对客户端的高度信任，例如客户端应用和服务提供商就是同一家公司，自己做前后端分离登录就可以采用这种模式</li>
+<li><strong>客户端模式</strong>：客户端使用自己的名义而不是用户的名义向服务器提供者申请授权，严格来说，客户端模式并不能算作OAuth协议要解决的问题的一种解决方案，但是，对于开发者而言，在一些前后端分离应用或者为移动端提供的认证授权服务器使用这种模式还是非常方便的</li>
+</ol>
+<h3 id="授权码模式"><a href="#授权码模式" class="headerlink" title="授权码模式"></a>授权码模式</h3><p>这种方式是最常见的流程，安全性也是<strong>最高</strong>的，它适用于那些有后端的 Web 应用。授权码通过前端传送，令牌则是储存在后端，而且所有与资源服务器的通信都在后端完成。这样的前后端分离，可以避免令牌泄露</p>
+<p>流程如下：</p>
+<img src="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E6%8E%88%E6%9D%83%E7%A0%81%E6%A8%A1%E5%BC%8F.png" alt="授权码模式" style="zoom:67%;">
+
+
+
+<p>客户端负责拿令牌，认证中心负责发放令牌</p>
+<blockquote>
+<p>但是不是所有客户端都有权限请求令牌的，需要事先在认证中心申请，比如微信并不是所有网站都能直接接入，而是要去微信后台开通这个权限。</p>
+</blockquote>
+<p>至少要提前向认证中心申请的几个参数如下：</p>
+<ul>
+<li><strong>client_id</strong>：客户端的唯一id，这个由认证中心分配的唯一标识，分配后的客户端才能接入认证中心</li>
+<li><strong>client_secret</strong>：客户端的秘钥，相当于密码</li>
+<li><strong>scope</strong>：客户端的权限</li>
+<li><strong>redirect_uri</strong>：授权码模式使用的跳转 uri，需要事先告知认证中心</li>
+</ul>
+<p>图中的流程说明：</p>
+<ol>
+<li><p><strong>请求授权码</strong></p>
+<p>客户端需要向认证中心拿到授权码，比如第三方登录使用微信，扫一扫登录那一步就是向微信的认证中心获取授权码。</p>
+<p>请求的url如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/oauth/auth?</span><br><span class="line">    client_id=&amp;</span><br><span class="line">    response_type=code&amp;</span><br><span class="line">    scope=&amp;</span><br><span class="line">    redirect_uri=</span><br></pre></td></tr></table></figure>
+
+<p>上述这个url中携带的几个参数说明如下：</p>
+<ul>
+<li><strong>client_id</strong>：客户端的唯一id，这个由认证中心分配的唯一标识，分配后的客户端才能接入认证中心</li>
+<li><strong>response_type</strong>：固定值为<strong>code</strong>，表示要求返回授权码。</li>
+<li><strong>scope</strong>：表示要求的授权范围，客户端的权限</li>
+<li><strong>redirect_uri</strong>：跳转的uri，认证中心同意或者拒绝授权跳转的地址，如果同意会在uri后面携带一个<code>code=xxx</code>，这就是授权码</li>
+</ul>
+</li>
+<li><p><strong>返回授权码</strong></p>
+<p>第1步请求之后，认证中心会要求登录、是否同意授权，用户同意授权之后直接跳转到<code>redirect_uri</code>（这个需要事先在认证中心申请配置），授权码会携带在这个地址后面，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//xxxx?code=NMoj5</span></span><br></pre></td></tr></table></figure>
+
+<p>上述链接中的<code>NMoj5y</code>就是授权码了。</p>
+</li>
+<li><p><strong>请求令牌</strong></p>
+<p>客户端拿到授权码之后，直接携带授权码发送请求给认证中心获取令牌，请求的url如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/oauth/token?</span><br><span class="line"> client_id=&amp;</span><br><span class="line"> client_secret=&amp;</span><br><span class="line"> grant_type=authorization_code&amp;</span><br><span class="line"> code=NMoj5y&amp;</span><br><span class="line"> redirect_uri=</span><br></pre></td></tr></table></figure>
+
+<p>相同的参数同上说明，不同参数解析如下：</p>
+<ul>
+<li><strong>grant_type</strong>：授权类型，授权码固定的值为<strong>authorization_code</strong></li>
+<li><strong>code</strong>：这个就是上一步获取的授权码</li>
+</ul>
+</li>
+<li><p><strong>返回令牌</strong></p>
+<p>认证中心收到令牌请求并认证通过之后，会返回一段JSON数据，其中包含了令牌<strong>access_token</strong>，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"access_token"</span>:<span class="string">"ACCESS_TOKEN"</span>,</span><br><span class="line">  <span class="string">"token_type"</span>:<span class="string">"bearer"</span>,</span><br><span class="line">  <span class="string">"expires_in"</span>:<span class="number">2592000</span>,</span><br><span class="line">  <span class="string">"refresh_token"</span>:<span class="string">"REFRESH_TOKEN"</span>,</span><br><span class="line">  <span class="string">"scope"</span>:<span class="string">"read"</span>,</span><br><span class="line">  <span class="string">"uid"</span>:<span class="number">100101</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>access_token</strong>则是颁发的令牌，refresh_token是刷新令牌，一旦令牌失效则携带这个令牌进行刷新</p>
+</li>
+</ol>
+<h3 id="简化模式"><a href="#简化模式" class="headerlink" title="简化模式"></a>简化模式</h3><p>这种模式不常用，主要针对那些无后台的系统，直接通过web跳转授权，流程如下图：</p>
+<img src="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E7%AE%80%E5%8C%96%E6%A8%A1%E5%BC%8F.png" alt="简化模式" style="zoom:67%;">
+
+<p>这种方式把令牌直接传给前端，是很不安全的。因此，只能用于一些安全要求不高的场景，并且令牌的有效期必须非常短，通常就是会话期间（<strong>session</strong>）有效，浏览器关掉，令牌就失效了。</p>
+<p>图中的流程说明：</p>
+<ol>
+<li><p><strong>请求令牌</strong></p>
+<p>客户端直接请求令牌，请求的url如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/oauth/auth?</span><br><span class="line">  response_type=token&amp;</span><br><span class="line">  client_id=&amp;</span><br><span class="line">  redirect_uri=&amp;</span><br><span class="line">  scope=</span><br></pre></td></tr></table></figure>
+
+<p>上述这个url中携带的几个参数说明如下：</p>
+<ul>
+<li>client_id：客户端的唯一id，这个由认证中心分配的唯一标识，分配后的客户端才能接入认证中心</li>
+<li>response_type：简化模式的固定值为<strong>token</strong></li>
+<li>scope：客户端的权限</li>
+<li>redirect_uri：跳转的uri，这里后面携带的直接是<strong>令牌</strong>，不是授权码了。</li>
+</ul>
+</li>
+<li><p><strong>返回令牌</strong></p>
+<p>认证中心认证通过后，会跳转到<strong>redirect_uri</strong>，并且后面携带着令牌，链接如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//xxxx#token=NPmdj5</span></span><br></pre></td></tr></table></figure>
+
+<p><code>#token=NPmdj5</code> 这一段后面携带的就是认证中心携带的，令牌为<strong>NPmdj5</strong>。</p>
+</li>
+</ol>
+<h3 id="密码模式"><a href="#密码模式" class="headerlink" title="密码模式"></a>密码模式</h3><p>密码模式也很简单，直接通过<strong>用户名</strong>、<strong>密码</strong>获取令牌，流程如下：</p>
+<img src="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E7%AE%80%E5%8C%96%E6%A8%A1%E5%BC%8F.png" alt="简化模式" style="zoom:67%;">
+
+<p>图中的流程说明：</p>
+<ol>
+<li><p><strong>请求令牌</strong></p>
+<p>认证中心要求客户端输入用户名、密码，认证成功则颁发令牌，请求的url如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/oauth/token?</span><br><span class="line">  grant_type=password&amp;</span><br><span class="line">  username=&amp;</span><br><span class="line">  password=&amp;</span><br><span class="line">  client_id=&amp;</span><br><span class="line">  client_secret=</span><br></pre></td></tr></table></figure>
+
+<p>参数解析如下：</p>
+<ul>
+<li><strong>grant_type</strong>：授权类型，密码模式固定值为password</li>
+<li><strong>username</strong>：用户名</li>
+<li><strong>password</strong>：密码</li>
+<li><strong>client_id</strong>：客户端的唯一id，这个由认证中心分配的唯一标识，分配后的客户端才能接入认证中心</li>
+<li><strong>client_secret</strong>：客户端的秘钥，相当于密码</li>
+</ul>
+</li>
+<li><p><strong>返回令牌</strong></p>
+<p>上述认证通过，直接返回JSON数据，不需要跳转，如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"access_token"</span>:<span class="string">"ACCESS_TOKEN"</span>,</span><br><span class="line">  <span class="attr">"token_type"</span>:<span class="string">"bearer"</span>,</span><br><span class="line">  <span class="attr">"expires_in"</span>:<span class="number">2592000</span>,</span><br><span class="line">  <span class="attr">"refresh_token"</span>:<span class="string">"REFRESH_TOKEN"</span>,</span><br><span class="line">  <span class="attr">"scope"</span>:<span class="string">"read"</span>,</span><br><span class="line">  <span class="attr">"uid"</span>:<span class="number">100101</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>access_token</strong>则是颁发的令牌，refresh_token是刷新令牌，一旦令牌失效则携带这个令牌进行刷新。</p>
+</li>
+</ol>
+<h3 id="客户端模式"><a href="#客户端模式" class="headerlink" title="客户端模式"></a>客户端模式</h3><p>适用于没有前端的命令行应用，即在命令行下请求令牌。</p>
+<p><strong>这种方式给出的令牌，是针对第三方应用的，而不是针对用户的，即有可能多个用户共享同一个令牌。</strong></p>
+<p>流程如下：</p>
+<img src="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E6%8E%88%E6%9D%83%E7%A0%81%E6%A8%A1%E5%BC%8F.png" alt="授权码模式" style="zoom:67%;">
+
+<p>图中的流程说明：</p>
+<ol>
+<li><p><strong>请求令牌</strong></p>
+<p>请求的url为如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/oauth/token?</span><br><span class="line">grant_type=client_credentials&amp;</span><br><span class="line">client_id=&amp;</span><br><span class="line">client_secret=</span><br></pre></td></tr></table></figure>
+
+<p>参数解析如下：</p>
+<ul>
+<li><strong>grant_type</strong>：授权类型，客户端模式固定值为<strong>client_credentials</strong></li>
+<li><strong>client_id</strong>：客户端的唯一id，这个由认证中心分配的唯一标识，分配后的客户端才能接入认证中心</li>
+<li><strong>client_secret</strong>：客户端秘钥，相当于密码</li>
+</ul>
+</li>
+<li><p><strong>返回令牌</strong></p>
+<p>认证成功后直接返回令牌，格式为JSON数据，如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"access_token"</span>: <span class="string">"ACCESS_TOKEN"</span>,</span><br><span class="line">    <span class="attr">"token_type"</span>: <span class="string">"bearer"</span>,</span><br><span class="line">    <span class="attr">"expires_in"</span>: <span class="number">7200</span>,</span><br><span class="line">    <span class="attr">"scope"</span>: <span class="string">"all"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2022/07/05/OAuth2/">https://yellowbp.github.io/2022/07/05/OAuth2/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/OAuth2/">OAuth2</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/redis/">redis</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2022/07/06/OAuth2认证和资源服务搭建-内存存储/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/05/24/java之IO流/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="cl74qc0e10040jctwyk4es4ka"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Security-OAuth2"><span class="toc-number">1.</span> <span class="toc-text">Spring Security OAuth2</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么需要OAuth2"><span class="toc-number">1.1.</span> <span class="toc-text">为什么需要OAuth2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是OAuth2"><span class="toc-number">1.2.</span> <span class="toc-text">什么是OAuth2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OAuth2角色"><span class="toc-number">1.3.</span> <span class="toc-text">OAuth2角色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OAuth2的四种模式"><span class="toc-number">1.4.</span> <span class="toc-text">OAuth2的四种模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#授权码模式"><span class="toc-number">1.4.1.</span> <span class="toc-text">授权码模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简化模式"><span class="toc-number">1.4.2.</span> <span class="toc-text">简化模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#密码模式"><span class="toc-number">1.4.3.</span> <span class="toc-text">密码模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端模式"><span class="toc-number">1.4.4.</span> <span class="toc-text">客户端模式</span></a></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2022 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

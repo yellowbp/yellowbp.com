@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>享元模式 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="享元模式定义享元模式把一个对象的状态分成内部状态和外部状态，内部状态即是不变的，外部状态是变化的，然后通过共享不变的部分，达到减少对象数量并节约内存的目的。 享元模式的本质是缓存共享对象，降低内存消耗。 类图设计涉及到的角色：  抽象享元角色（Flyweight）：享元对象抽象基类或接口，同时定义出对象的外部状态和内部状态的接口或实现 具体享元角色（ConcreteFlyweight）：实现抽象角">
+<meta name="keywords" content="设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="享元模式">
+<meta property="og:url" content="https://yellowbp.github.io/2021/03/08/享元模式/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="享元模式定义享元模式把一个对象的状态分成内部状态和外部状态，内部状态即是不变的，外部状态是变化的，然后通过共享不变的部分，达到减少对象数量并节约内存的目的。 享元模式的本质是缓存共享对象，降低内存消耗。 类图设计涉及到的角色：  抽象享元角色（Flyweight）：享元对象抽象基类或接口，同时定义出对象的外部状态和内部状态的接口或实现 具体享元角色（ConcreteFlyweight）：实现抽象角">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2022-06-04T15:02:37.733Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="享元模式">
+<meta name="twitter:description" content="享元模式定义享元模式把一个对象的状态分成内部状态和外部状态，内部状态即是不变的，外部状态是变化的，然后通过共享不变的部分，达到减少对象数量并节约内存的目的。 享元模式的本质是缓存共享对象，降低内存消耗。 类图设计涉及到的角色：  抽象享元角色（Flyweight）：享元对象抽象基类或接口，同时定义出对象的外部状态和内部状态的接口或实现 具体享元角色（ConcreteFlyweight）：实现抽象角">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",设计模式">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2021/03/08/享元模式/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Mon Mar 08 2021 10:34:39 GMT+0800">
+    <meta property="article:modified_time" content="Sat Jun 04 2022 23:02:37 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2021/03/08/享元模式/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/07/">七月 2022<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/05/">五月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/04/">四月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/03/">三月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/02/">二月 2022<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/OAuth2/">OAuth2<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Redis/">Redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/k8s/">k8s<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/yaml/">yaml<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/上传下载文件/">上传下载文件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/参数校验/">参数校验<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/工具类/">工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/缓存/">缓存<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">22</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-7.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">享元模式</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2021-03-08 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>享元模式把一个对象的状态分成内部状态和外部状态，内部状态即是不变的，外部状态是变化的，然后通过共享不变的部分，达到减少对象数量并节约内存的目的。</p>
+<p>享元模式的本质是缓存共享对象，降低内存消耗。</p>
+<h2 id="类图设计"><a href="#类图设计" class="headerlink" title="类图设计"></a>类图设计</h2><p>涉及到的角色：</p>
+<ul>
+<li>抽象享元角色（Flyweight）：享元对象抽象基类或接口，同时定义出对象的外部状态和内部状态的接口或实现<ul>
+<li>具体享元角色（ConcreteFlyweight）：实现抽象角色定义的业务。该角色的内部状态处理应该与环境有关，不能出现有一个操作改变内部状态，同时修改了外部状态</li>
+</ul>
+</li>
+<li>享元工厂（FlyweightFactory）：负责管理享元对象池和创建享元对象，可以结合工厂模式进行设计；当用户请求一个具体享元对象时，享元工厂提供一个存储在享元池中已创建的实例或者创建一个新的实例（如果不存在的话），返回新创建的实例并将其存储在享元池中</li>
+</ul>
+<h2 id="享元模式的内部状态和外部状态"><a href="#享元模式的内部状态和外部状态" class="headerlink" title="享元模式的内部状态和外部状态"></a>享元模式的内部状态和外部状态</h2><p>享元模式的定义为我们提出了两个要求：细粒度和共享对象。因为要求<strong>细粒度对象</strong>，所以不可避免的会使对象数量多且性质相近，此时我们将这些对象的信息分为两个部分：内部状态和外部状态。</p>
+<p>内部状态指对象共享出来的信息，存储在享元对象内部并且不会随环境的改变而改变，外部状态指对象得以依赖的一个标记，是随环境改变而改变的，不可共享的状态。</p>
+<p>比如，连接池中的连接对象，保存在连接对象中的用户名、密码、连接url等信息，在创建对象的时候就设置好了，不会随环境的改变而改变，这些为内部状态。而每个连接要回收利用时，我们需要给它标记为可用状态，这些为外部状态。</p>
+<h2 id="理解与应用场景"><a href="#理解与应用场景" class="headerlink" title="理解与应用场景"></a>理解与应用场景</h2><p>当系统中多处需要同一组信息时，可以把这些信息封装到一个对象中，然后对该对象进行缓存，这样，一个对象就可以提供给多处需要使用的地方，避免大量同一对象的多次创建，消耗大量内存空间</p>
+<blockquote>
+<p>享元模式其实就是工厂模式的一个改进机制，享元模式同样要求创建一个或一组对象，并且就是通过工厂方法生成对象的，只不过享元模式中为工厂方法增加了缓存这一功能</p>
+</blockquote>
+<p>应用场景：</p>
+<ol>
+<li>常常用于系统底层的开发，以便解决系统的性能问题</li>
+<li>系统有大量相似的对象，需要缓冲池的场景</li>
+</ol>
+<h2 id="通用代码"><a href="#通用代码" class="headerlink" title="通用代码"></a>通用代码</h2><h3 id="顶层享元接口定义"><a href="#顶层享元接口定义" class="headerlink" title="顶层享元接口定义"></a>顶层享元接口定义</h3><p>一般需要传入<strong>外部状态</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 享元角色，顶层接口</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IFlyweight</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">operation</span><span class="params">(String outsideStatus)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="具体的享元实现"><a href="#具体的享元实现" class="headerlink" title="具体的享元实现"></a>具体的享元实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 享元实现,因为该类实例需要反复使用，所以，使用工厂类来创建该实例</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFlyweight</span> <span class="keyword">implements</span> <span class="title">IFlyweight</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String insideStatus;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteFlyweight</span><span class="params">(String insideStatus)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.insideStatus = insideStatus;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operation</span><span class="params">(String outsideStatus)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"insideStatus:"</span> + <span class="keyword">this</span>.insideStatus);</span><br><span class="line">        System.out.println(<span class="string">"outsideStatus:"</span> + outsideStatus);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="享元工厂"><a href="#享元工厂" class="headerlink" title="享元工厂"></a>享元工厂</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 享元工厂，因为需要把实例添加到缓存，会创建容器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlyweightFactory</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, IFlyweight&gt; pool = <span class="keyword">new</span> ConcurrentHapMap&lt;String, IFlyweight&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 因为内部状态具备不变性，因为作为缓存key</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IFlyweight <span class="title">getFlyweight</span><span class="params">(String insideStatus)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!pool.containKey(insideStatus)) &#123;</span><br><span class="line">            IFlyweight flyweight = <span class="keyword">new</span> ConcreteFlyweight(insideStatus);</span><br><span class="line">            pool.put(insideStatus, flyweight);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pool.get(insideStatus);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="应用之抢票"><a href="#应用之抢票" class="headerlink" title="应用之抢票"></a>应用之抢票</h2><p>每年春节为了抢到一张回家的火车票都要大费周折，进而出现了很多刷票软件，刷票软件会将我们填写的信息缓存起来，然后定时检查余票信息。抢票的时候，我们肯定要查询下有没有我们需要的票信息，这里我们假设一张火车的信息包含：出发站、目的站、价格、座位类别。现在要求模拟一个查询火车票伪代码，可以通过出发站，目的站查到相关票的信息。那么我们只需构建出火车票类对象，然后提供一个查询出发站，目的站的接口给到客户进行查询即可：</p>
+<h4 id="享元接口："><a href="#享元接口：" class="headerlink" title="享元接口："></a>享元接口：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 火车票，享元接口</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ITicket</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 根据席位区分车票</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">showInfo</span><span class="params">(String bunk)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="享元具体实现"><a href="#享元具体实现" class="headerlink" title="享元具体实现"></a>享元具体实现</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TrainTicket</span> <span class="keyword">implements</span> <span class="title">ITicket</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String from;</span><br><span class="line">    <span class="keyword">private</span> String to;</span><br><span class="line">    <span class="comment">// 价格由后台设置，用户无需填写</span></span><br><span class="line">    <span class="keyword">private</span> Integer price;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TrainTicket</span><span class="params">(String from, String to)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.from = from;</span><br><span class="line">        <span class="keyword">this</span>.to = to;</span><br><span class="line">        <span class="keyword">this</span>.price = <span class="keyword">new</span> Random().nextInt(<span class="number">500</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showInfo</span><span class="params">(String bunk)</span> </span>&#123;</span><br><span class="line">        System.out.println(String.format(<span class="string">"%s-&gt;%s：%s价格：%s元"</span>, <span class="keyword">this</span>.from, <span class="keyword">this</span>.to, bunk, <span class="keyword">this</span>.price));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="享元类创建工厂"><a href="#享元类创建工厂" class="headerlink" title="享元类创建工厂"></a>享元类创建工厂</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TicketFactory</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String,ITicket&gt; pool = <span class="keyword">new</span> ConcurrentHashMap&lt;String,ITicket&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ITicket <span class="title">queryTicket</span><span class="params">(String from, String to)</span></span>&#123;</span><br><span class="line">        String key = from +<span class="string">"-&gt;"</span>+ to;</span><br><span class="line">        <span class="keyword">if</span>(!pool.containsKey(key))&#123;</span><br><span class="line">            ITicket ticket = <span class="keyword">new</span> TrainTicket(from, to);</span><br><span class="line">            System.out.println(<span class="string">"首次查询，创建对象："</span> + key);</span><br><span class="line">            pool.put(key, ticket);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pool.get(key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ITicket ticket = TicketFactory.queryTicket(<span class="string">"临汾西"</span>, <span class="string">"北京西"</span>);</span><br><span class="line">        ticket.showInfo(<span class="string">"动车"</span>);</span><br><span class="line">        ticket = TicketFactory.queryTicket(<span class="string">"临汾西"</span>, <span class="string">"北京西"</span>);</span><br><span class="line">        ticket.showInfo(<span class="string">"动车"</span>);</span><br><span class="line">        ticket = TicketFactory.queryTicket(<span class="string">"临汾西"</span>, <span class="string">"北京西"</span>);</span><br><span class="line">        ticket.showInfo(<span class="string">"动车"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【分析】：</p>
+<p>很明显，”临汾西” –&gt; “北京西” 是很多相同车次信息公用的内部状态信息，系统通过 TicketFactory 直接缓存一个火车票对象，然后复用提供给其他查询请求，这样一个对象就满足以支撑数以千计的查询请求，对内存完全无压力</p>
+<h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><p>优点：</p>
+<ol>
+<li>减少对象的创建、降低内存中对象的数量，降低系统的内存，提高效率。</li>
+<li>减少内存之外的其他资源占用。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>关注内外部状态，关注线程安全问题。</li>
+<li>使系统程序的逻辑复杂化。</li>
+</ol>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2021/03/08/享元模式/">https://yellowbp.github.io/2021/03/08/享元模式/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/设计模式/">设计模式</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/设计模式/">设计模式</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2021/03/10/redis/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2021/03/08/模板方法模式/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="cl74qc0cp001hjctwka7kcvuy"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#享元模式"><span class="toc-number">1.</span> <span class="toc-text">享元模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#定义"><span class="toc-number">1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类图设计"><span class="toc-number">1.2.</span> <span class="toc-text">类图设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#享元模式的内部状态和外部状态"><span class="toc-number">1.3.</span> <span class="toc-text">享元模式的内部状态和外部状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#理解与应用场景"><span class="toc-number">1.4.</span> <span class="toc-text">理解与应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通用代码"><span class="toc-number">1.5.</span> <span class="toc-text">通用代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#顶层享元接口定义"><span class="toc-number">1.5.1.</span> <span class="toc-text">顶层享元接口定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#具体的享元实现"><span class="toc-number">1.5.2.</span> <span class="toc-text">具体的享元实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#享元工厂"><span class="toc-number">1.5.3.</span> <span class="toc-text">享元工厂</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用之抢票"><span class="toc-number">1.6.</span> <span class="toc-text">应用之抢票</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#享元接口："><span class="toc-number">1.6.0.1.</span> <span class="toc-text">享元接口：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#享元具体实现"><span class="toc-number">1.6.0.2.</span> <span class="toc-text">享元具体实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#享元类创建工厂"><span class="toc-number">1.6.0.3.</span> <span class="toc-text">享元类创建工厂</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#测试"><span class="toc-number">1.6.0.4.</span> <span class="toc-text">测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优缺点"><span class="toc-number">1.7.</span> <span class="toc-text">优缺点</span></a></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2022 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

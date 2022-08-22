@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>OAuth2自定义异常 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="OAuth2自定义异常项目代码沿用之前写的 jwt的认证、资源服务 案例结构 认证服务默认的认证服务异常以密码模式为例： 密码模式需要传递5个参数，分别是用户名、密码、客户端id，客户端秘钥、授权类型。 用户名/密码错误1234&amp;#123;    &quot;error&quot;: &quot;invalid_grant&quot;,    &quot;error_description&quot;: &quot;Bad credentials&quot;&amp;#125;  授">
+<meta name="keywords" content="其他">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OAuth2自定义异常">
+<meta property="og:url" content="https://yellowbp.github.io/2022/07/06/OAuth2自定义异常/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="OAuth2自定义异常项目代码沿用之前写的 jwt的认证、资源服务 案例结构 认证服务默认的认证服务异常以密码模式为例： 密码模式需要传递5个参数，分别是用户名、密码、客户端id，客户端秘钥、授权类型。 用户名/密码错误1234&amp;#123;    &quot;error&quot;: &quot;invalid_grant&quot;,    &quot;error_description&quot;: &quot;Bad credentials&quot;&amp;#125;  授">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/OAuth2%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8.png">
+<meta property="og:image" content="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B81.png">
+<meta property="og:updated_time" content="2022-08-22T12:15:44.337Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OAuth2自定义异常">
+<meta name="twitter:description" content="OAuth2自定义异常项目代码沿用之前写的 jwt的认证、资源服务 案例结构 认证服务默认的认证服务异常以密码模式为例： 密码模式需要传递5个参数，分别是用户名、密码、客户端id，客户端秘钥、授权类型。 用户名/密码错误1234&amp;#123;    &quot;error&quot;: &quot;invalid_grant&quot;,    &quot;error_description&quot;: &quot;Bad credentials&quot;&amp;#125;  授">
+<meta name="twitter:image" content="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/OAuth2%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8.png">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",其他">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2022/07/06/OAuth2自定义异常/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Wed Jul 06 2022 16:41:07 GMT+0800">
+    <meta property="article:modified_time" content="Mon Aug 22 2022 20:15:44 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2022/07/06/OAuth2自定义异常/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/07/">七月 2022<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/05/">五月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/04/">四月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/03/">三月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/02/">二月 2022<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/OAuth2/">OAuth2<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Redis/">Redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/k8s/">k8s<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/yaml/">yaml<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/上传下载文件/">上传下载文件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/参数校验/">参数校验<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/工具类/">工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/缓存/">缓存<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">22</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-16.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">OAuth2自定义异常</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-07-06 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="OAuth2自定义异常"><a href="#OAuth2自定义异常" class="headerlink" title="OAuth2自定义异常"></a>OAuth2自定义异常</h1><p>项目代码沿用之前写的 jwt的认证、资源服务</p>
+<h2 id="案例结构"><a href="#案例结构" class="headerlink" title="案例结构"></a>案例结构</h2><p><img src="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/OAuth2%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8.png" alt="OAuth2自定义异常"></p>
+<h2 id="认证服务"><a href="#认证服务" class="headerlink" title="认证服务"></a>认证服务</h2><h3 id="默认的认证服务异常"><a href="#默认的认证服务异常" class="headerlink" title="默认的认证服务异常"></a>默认的认证服务异常</h3><p>以<strong>密码模式</strong>为例：</p>
+<p>密码模式需要传递<strong>5</strong>个参数，分别是<strong>用户名</strong>、<strong>密码</strong>、<strong>客户端id</strong>，<strong>客户端秘钥</strong>、<strong>授权类型</strong>。</p>
+<h4 id="用户名-密码错误"><a href="#用户名-密码错误" class="headerlink" title="用户名/密码错误"></a>用户名/密码错误</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"error"</span>: <span class="string">"invalid_grant"</span>,</span><br><span class="line">    <span class="attr">"error_description"</span>: <span class="string">"Bad credentials"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="授权类型错误"><a href="#授权类型错误" class="headerlink" title="授权类型错误"></a>授权类型错误</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"error"</span>: <span class="string">"unsupported_grant_type"</span>,</span><br><span class="line">    <span class="attr">"error_description"</span>: <span class="string">"Unsupported_grant_type: xxx"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="客户端ID、密钥错误"><a href="#客户端ID、密钥错误" class="headerlink" title="客户端ID、密钥错误"></a>客户端ID、密钥错误</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"error"</span>: <span class="string">"invalid_grant"</span>,</span><br><span class="line">    <span class="attr">"error_description"</span>: <span class="string">"Bad client credentials"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很显然，这些返回信息不适合前后端交互的返回格式</p>
+<h3 id="自定义异常"><a href="#自定义异常" class="headerlink" title="自定义异常"></a>自定义异常</h3><p>上面列举了三种常见的异常，解决方案实际可以分为两种：</p>
+<ul>
+<li>用户名，密码错误异常、授权类型异常</li>
+<li>客户端ID、秘钥异常</li>
+</ul>
+<h4 id="用户名，密码错误异常、授权类型异常"><a href="#用户名，密码错误异常、授权类型异常" class="headerlink" title="用户名，密码错误异常、授权类型异常"></a>用户名，密码错误异常、授权类型异常</h4><ol>
+<li><p><strong>定制统一返回类、响应状态码枚举</strong>（这里只是简单给出个例子，规范写法还需要自己定制）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 统一返回类、响应码枚举</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApiResult</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line">    <span class="keyword">private</span> T data;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ApiResult</span><span class="params">(Integer code, String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(code, message, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">ApiResult&lt;T&gt; <span class="title">ok</span><span class="params">(Integer code, String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiResult&lt;&gt;(code, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">ApiResult&lt;T&gt; <span class="title">error</span><span class="params">(Integer code, String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiResult&lt;&gt;(code, message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 全局业务枚举类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> GlobalBusinessCodeEnum &#123;</span><br><span class="line">    CLIENT_AUTHENTICATION_FAILED(<span class="number">1001</span>, <span class="string">"客户端认证失败"</span>),</span><br><span class="line">    USERNAME_OR_PASSWORD_ERROR(<span class="number">1002</span>, <span class="string">"用户名或密码错误"</span>),</span><br><span class="line">    UNSUPPORTED_GRANT_TYPE(<span class="number">1003</span>, <span class="string">"不支持的认证模式"</span>),</span><br><span class="line">    TOKEN_INVALID(<span class="number">1004</span>,<span class="string">"token失效！"</span>),</span><br><span class="line">    NO_PERMISSION(<span class="number">1005</span>, <span class="string">"无权限访问！"</span>),</span><br><span class="line">    UNAUTHORIZED(<span class="number">401</span>, <span class="string">"系统错误"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>自定义WebResponseExceptionTranslator</strong></p>
+<p>需要自定义一个异常翻译器，默认的是 <strong>DefaultWebResponseExceptionTranslator</strong>，此处必须重写里面的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 这个方法就是根据传递过来的Exception判断不同的异常返回特定的信息, 然后做出相应的动作</span></span><br><span class="line"><span class="comment"> * 这里需要判断的异常的如下：</span></span><br><span class="line"><span class="comment"> * - UnsupportedGrantTypeException：不支持的授权类型异常</span></span><br><span class="line"><span class="comment"> * - InvalidGrantException：用户名或者密码错误的异常</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function">ResponseEntity&lt;T&gt; <span class="title">translate</span><span class="params">(Exception e)</span> <span class="keyword">throws</span> Exception</span>;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个<strong>OAuthServerWebResponseExceptionTranslator</strong>实现<strong>WebResponseExceptionTranslator</strong>，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 自定义异常翻译器：针对用户名、密码异常、授权类型不支持 的异常进行处理</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OAuthServerWebResponseExceptionTranslator</span> <span class="keyword">implements</span> <span class="title">WebResponseExceptionTranslator</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据异常自定义返回信息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;ApiResult&gt; <span class="title">translate</span><span class="params">(Exception e)</span> </span>&#123;</span><br><span class="line">        GlobalBusinessCodeEnum resultCode = GlobalBusinessCodeEnum.UNAUTHORIZED;</span><br><span class="line">        <span class="comment">// 授权类型不支持</span></span><br><span class="line">        <span class="keyword">if</span> (e <span class="keyword">instanceof</span> UnsupportedGrantTypeException) &#123;</span><br><span class="line">            resultCode = GlobalBusinessCodeEnum.UNSUPPORTED_GRANT_TYPE;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (e <span class="keyword">instanceof</span> InvalidGrantException) &#123;</span><br><span class="line">            <span class="comment">// 用户名或密码异常</span></span><br><span class="line">            resultCode = GlobalBusinessCodeEnum.USERNAME_OR_PASSWORD_ERROR;</span><br><span class="line">        &#125;</span><br><span class="line">        ApiResult&lt;Object&gt; apiResult = ApiResult.error(resultCode.getCode(), resultCode.getDesc());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(apiResult, HttpStatus.UNAUTHORIZED);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>认证服务配置文件中配置</strong></p>
+<p>需要将自定义的异常翻译器<strong>OAuthServerWebResponseExceptionTranslator</strong>在配置文件中配置，很简单，一行代码的事。</p>
+<p>在<strong>AuthorizationServerConfig</strong>配置文件指定，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 配置令牌访问的端点</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(AuthorizationServerEndpointsConfigurer endpoints)</span> </span>&#123;</span><br><span class="line">    endpoints</span><br><span class="line">        <span class="comment">// 设置异常WebResponseExceptionTranslator，用于处理用户名，密码错误、授权类型不正确的异常</span></span><br><span class="line">        .exceptionTranslator(<span class="keyword">new</span> OAuthServerWebResponseExceptionTranslator())</span><br><span class="line">        <span class="comment">// 授权码模式所需要的authorizationCodeServices</span></span><br><span class="line">        .authorizationCodeServices(authorizationCodeServices())</span><br><span class="line">        <span class="comment">// 密码模式所需要的authorizationCodeServices</span></span><br><span class="line">        .authenticationManager(authenticationManager)</span><br><span class="line">        <span class="comment">// 令牌管理服务，无论哪种模式都需要</span></span><br><span class="line">        .tokenServices(tokenServices())</span><br><span class="line">        <span class="comment">// 只允许POST提交访问令牌，url：/oauth/token</span></span><br><span class="line">        .allowedTokenEndpointRequestMethods(HttpMethod.POST);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：如果对TokenEndpoint中的端点重写了，那么（<strong>OAuthServerWebResponseExceptionTranslator</strong>）将会失效，需要在全局异常中进行捕获</p>
+</blockquote>
+</li>
+<li><p><strong>测试</strong></p>
+<p>按照上述的配置完成后，测试下用户名、密码错误、授权类型错误是否能够正确返回定制的提示信息，如下：</p>
+<p>授权类型错误自行测试</p>
+<img src="https://oauth2images.oss-cn-guangzhou.aliyuncs.com/oauth2/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B81.png" alt="自定义异常1" style="zoom:67%;">
+
+</li>
+</ol>
+<h4 id="客户端ID、密钥异常"><a href="#客户端ID、密钥异常" class="headerlink" title="客户端ID、密钥异常"></a>客户端ID、密钥异常</h4><p>解决这个异常的方案很多，这里只介绍其中一种</p>
+<p>当然还可以使用全局捕获异常来进行处理</p>
+<ol>
+<li><p><strong>自定义AuthenticationEntryPoint</strong></p>
+<p>创建<strong>OAuthServerAuthenticationEntryPoint</strong>，实现AuthenticationEntryPoint，重写其中的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户处理客户端认证出错：包括客户端ID、密钥</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OAuthServerAuthenticationEntryPoint</span> <span class="keyword">implements</span> <span class="title">AuthenticationEntryPoint</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">commence</span><span class="params">(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">        response.setContentType(<span class="string">"application/json;charset=UTF-8"</span>);</span><br><span class="line">        PrintWriter out = response.getWriter();</span><br><span class="line">        ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">    out.write(objectMapper.writeValueAsString(ApiResult.error(GlobalBusinessCodeEnum.CLIENT_AUTHENTICATION_FAILED.getCode(), GlobalBusinessCodeEnum.CLIENT_AUTHENTICATION_FAILED.getDesc())));</span><br><span class="line">        out.flush();</span><br><span class="line">        out.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>改造ClientCredentialsTokenEndpointFilter</strong></p>
+<p><strong>ClientCredentialsTokenEndpointFilter</strong>这个过滤器的主要作用就是校验客户端的ID、秘钥</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 自定义的客户端认证的过滤器，根据客户端的id、秘钥进行认证</span></span><br><span class="line"><span class="comment"> * 重写这个过滤器用于自定义异常处理</span></span><br><span class="line"><span class="comment"> * 具体认证的逻辑依然使用ClientCredentialsTokenEndpointFilter，只是设置一下AuthenticationEntryPoint为定制</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OAuthServerClientCredentialsTokenEndpointFilter</span> <span class="keyword">extends</span> <span class="title">ClientCredentialsTokenEndpointFilter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> AuthorizationServerSecurityConfigurer configurer;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> AuthenticationEntryPoint authenticationEntryPoint;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构造方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> configurer AuthorizationServerSecurityConfigurer对昂</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> authenticationEntryPoint 自定义的AuthenticationEntryPoint</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OAuthServerClientCredentialsTokenEndpointFilter</span><span class="params">(AuthorizationServerSecurityConfigurer configurer, AuthenticationEntryPoint authenticationEntryPoint)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.configurer = configurer;</span><br><span class="line">        <span class="keyword">this</span>.authenticationEntryPoint=authenticationEntryPoint;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAuthenticationEntryPoint</span><span class="params">(AuthenticationEntryPoint authenticationEntryPoint)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.authenticationEntryPoint = authenticationEntryPoint;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 需要重写这个方法，返回AuthenticationManager</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> AuthenticationManager <span class="title">getAuthenticationManager</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> configurer.and().getSharedObject(AuthenticationManager<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 设置AuthenticationEntryPoint主要逻辑</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//TODO 定制认证失败处理器，开发中可以自己修改</span></span><br><span class="line">        setAuthenticationFailureHandler((request, response, exception) -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (exception <span class="keyword">instanceof</span> BadCredentialsException) &#123;</span><br><span class="line">                exception = <span class="keyword">new</span> BadCredentialsException(exception.getMessage(), <span class="keyword">new</span> BadClientCredentialsException());</span><br><span class="line">            &#125;</span><br><span class="line">            authenticationEntryPoint.commence(request, response, exception);</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="comment">//成功处理器，和父类相同，为空即可。</span></span><br><span class="line">        setAuthenticationSuccessHandler((request, response, authentication) -&gt; &#123;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有几个重要的部分需要讲一下，如下：</p>
+<ul>
+<li>构造方法中需要传入第2步自定义的 <strong>OAuthServerAuthenticationEntryPoint</strong></li>
+<li>重写 <strong>getAuthenticationManager()</strong> 方法返回IOC中的AuthenticationManager</li>
+<li>重写<strong>afterPropertiesSet()</strong> 方法，用于自定义认证失败、成功处理器，失败处理器中调用<strong>OAuthServerAuthenticationEntryPoint</strong>进行异常提示信息返回</li>
+</ul>
+</li>
+<li><p><strong>OAuth配置文件中指定过滤器</strong></p>
+<p>只需要将自定义的过滤器添加到<strong>AuthenticationServerConfig</strong>中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 配置令牌访问的安全约束</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(AuthorizationServerSecurityConfigurer security)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1.自定义ClientCredentialsTokenEndpointFilter，用于处理客户端id，密码错误的异常</span></span><br><span class="line">    OAuthServerClientCredentialsTokenEndpointFilter endpointFilter = <span class="keyword">new</span> OAuthServerClientCredentialsTokenEndpointFilter(security, authenticationEntryPoint);</span><br><span class="line">    endpointFilter.afterPropertiesSet();</span><br><span class="line">    security.addTokenEndpointAuthenticationFilter(endpointFilter);</span><br><span class="line"></span><br><span class="line">    security</span><br><span class="line">        <span class="comment">// 开启/oauth/token_key验证端口权限访问</span></span><br><span class="line">        .tokenKeyAccess(<span class="string">"permitAll()"</span>)</span><br><span class="line">        <span class="comment">// 开启/oauth/check_token验证端口认证权限访问</span></span><br><span class="line">        .checkTokenAccess(<span class="string">"permitAll()"</span>);</span><br><span class="line">    	<span class="comment">// 表示支持 client_id 和 client_secret 做登录认证</span></span><br><span class="line">    	<span class="comment">// 2.一定不要添加allowFormAuthenticationForClients，否则自定义的OAuthServerClientCredentialsTokenEndpointFilter不生效</span></span><br><span class="line">    	<span class="comment">//.allowFormAuthenticationForClients();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>其中<strong>authenticationEntryPoint</strong>使用的是第2步自定义的<strong>OAuthServerAuthenticationEntryPoint</strong></li>
+<li>一定要去掉这行代码</li>
+</ol>
+</li>
+<li><p><strong>测试</strong></p>
+</li>
+</ol>
+<h2 id="资源服务"><a href="#资源服务" class="headerlink" title="资源服务"></a>资源服务</h2><h3 id="默认的资源服务异常"><a href="#默认的资源服务异常" class="headerlink" title="默认的资源服务异常"></a>默认的资源服务异常</h3><p>从认证服务获取到令牌之后去请求资源服务的资源，这里涉及到的异常主要有两个</p>
+<h4 id="令牌失效"><a href="#令牌失效" class="headerlink" title="令牌失效"></a>令牌失效</h4><p>比如令牌不正确、过期，此时返回的异常提示如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"error"</span>: <span class="string">"invalid_token"</span>,</span><br><span class="line">    <span class="attr">"error_description"</span>: <span class="string">"Cannot convert access token to JSON"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="权限不足"><a href="#权限不足" class="headerlink" title="权限不足"></a>权限不足</h4><p>令牌的权限不足，比如 <strong>/admin</strong> 接口只允许 <strong>admin</strong> 角色访问，此时返回的异常信息如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"error"</span>: <span class="string">"access_denied"</span>,</span><br><span class="line">    <span class="attr">"error_description"</span>: <span class="string">"不允许访问"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义异常-1"><a href="#自定义异常-1" class="headerlink" title="自定义异常"></a>自定义异常</h3><p>下面针对上述两种异常分别定制异常提示信息，这个比认证服务定制简单</p>
+<h4 id="令牌失效-1"><a href="#令牌失效-1" class="headerlink" title="令牌失效"></a>令牌失效</h4><ol>
+<li><p><strong>自定义AuthenticationEntryPoint</strong></p>
+<p>这个和认证服务的客户端异常类似</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Token失效或者校验失败的处理器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OAuthResourceAuthenticationEntryPoint</span> <span class="keyword">implements</span> <span class="title">AuthenticationEntryPoint</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">commence</span><span class="params">(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">        response.setContentType(<span class="string">"application/json;charset=UTF-8"</span>);</span><br><span class="line">        PrintWriter out = response.getWriter();</span><br><span class="line">        ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">        out.write(objectMapper.writeValueAsString(ApiResult.error(GlobalBusinessCodeEnum.TOKEN_INVALID.getCode(), GlobalBusinessCodeEnum.TOKEN_INVALID.getDesc())));</span><br><span class="line">        out.flush();</span><br><span class="line">        out.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>OAuth配置文件中配置</strong></p>
+<p>直接在配置文件中配置即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 配置资源id和令牌校验服务</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(ResourceServerSecurityConfigurer resources)</span>  </span>&#123;</span><br><span class="line">    <span class="comment">// 配置唯一资源id</span></span><br><span class="line">    resources.resourceId(<span class="string">"res1"</span>)</span><br><span class="line">            <span class="comment">// 定制令牌失效的提示信息</span></span><br><span class="line">            .authenticationEntryPoint(authenticationEntryPoint)</span><br><span class="line">            <span class="comment">//配置令牌校验服务</span></span><br><span class="line">            .tokenServices(tokenServices());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>测试</strong></p>
+</li>
+</ol>
+<h4 id="权限不足-1"><a href="#权限不足-1" class="headerlink" title="权限不足"></a>权限不足</h4><ol>
+<li><p><strong>自定义AccessDeniedHandler</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 当认证后的用户访问受保护的资源时，权限不够，则会进入这个处理器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OAuthResourceAccessDeniedHandler</span> <span class="keyword">implements</span> <span class="title">AccessDeniedHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        response.setContentType(<span class="string">"application/json;charset=UTF-8"</span>);</span><br><span class="line">        PrintWriter out = response.getWriter();</span><br><span class="line">        ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">        out.write(objectMapper.writeValueAsString(ApiResult.error(GlobalBusinessCodeEnum.NO_PERMISSION.getCode(), GlobalBusinessCodeEnum.NO_PERMISSION.getDesc())));</span><br><span class="line">        out.flush();</span><br><span class="line">        out.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>OAuth配置文件中配置</strong></p>
+<p>和令牌失效的异常配置在同一个方法中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 配置资源id和令牌校验服务</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(ResourceServerSecurityConfigurer resources)</span>  </span>&#123;</span><br><span class="line">    <span class="comment">// 配置唯一资源id</span></span><br><span class="line">    resources.resourceId(<span class="string">"res1"</span>)</span><br><span class="line">            <span class="comment">// 定制令牌失效的提示信息</span></span><br><span class="line">            .authenticationEntryPoint(authenticationEntryPoint)</span><br><span class="line">            <span class="comment">// 定制权限不足的提示信息</span></span><br><span class="line">            .accessDeniedHandler(accessDeniedHandler)</span><br><span class="line">            <span class="comment">// 配置令牌校验服务</span></span><br><span class="line">            .tokenServices(tokenServices());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>测试</strong></p>
+<p>用 test 用户去访问 <strong>/admin</strong> 接口</p>
+</li>
+</ol>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2022/07/06/OAuth2自定义异常/">https://yellowbp.github.io/2022/07/06/OAuth2自定义异常/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/OAuth2/">OAuth2</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/其他/">其他</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2022/07/07/网关集成OAuth2/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/07/06/OAuth2四种授权模式演示/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="cl74qc0e20044jctwl14wl36y"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OAuth2自定义异常"><span class="toc-number">1.</span> <span class="toc-text">OAuth2自定义异常</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#案例结构"><span class="toc-number">1.1.</span> <span class="toc-text">案例结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#认证服务"><span class="toc-number">1.2.</span> <span class="toc-text">认证服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的认证服务异常"><span class="toc-number">1.2.1.</span> <span class="toc-text">默认的认证服务异常</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#用户名-密码错误"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">用户名/密码错误</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#授权类型错误"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">授权类型错误</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端ID、密钥错误"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">客户端ID、密钥错误</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义异常"><span class="toc-number">1.2.2.</span> <span class="toc-text">自定义异常</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#用户名，密码错误异常、授权类型异常"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">用户名，密码错误异常、授权类型异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端ID、密钥异常"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">客户端ID、密钥异常</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资源服务"><span class="toc-number">1.3.</span> <span class="toc-text">资源服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#默认的资源服务异常"><span class="toc-number">1.3.1.</span> <span class="toc-text">默认的资源服务异常</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#令牌失效"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">令牌失效</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#权限不足"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">权限不足</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义异常-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">自定义异常</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#令牌失效-1"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">令牌失效</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#权限不足-1"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">权限不足</span></a></li></ol></li></ol></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2022 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

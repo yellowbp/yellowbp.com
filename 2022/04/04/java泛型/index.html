@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>Java泛型 | bp的Blog</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  
+  <meta name="description" content="为什么使用泛型 Object 类型是所有类的基类，Object 类型可以接收任意的对象类型，那么在实际使用种，就会有类型转换的问题。所以java提供了泛型来解决这个安全问题  123456789101112@Testpublic void test() &amp;#123;    List list = new ArrayList&amp;lt;&amp;gt;();    // 因为集合没有做任何限制，任何类型都可以a">
+<meta name="keywords" content="web开发基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java泛型">
+<meta property="og:url" content="https://yellowbp.github.io/2022/04/04/java泛型/index.html">
+<meta property="og:site_name" content="bp的Blog">
+<meta property="og:description" content="为什么使用泛型 Object 类型是所有类的基类，Object 类型可以接收任意的对象类型，那么在实际使用种，就会有类型转换的问题。所以java提供了泛型来解决这个安全问题  123456789101112@Testpublic void test() &amp;#123;    List list = new ArrayList&amp;lt;&amp;gt;();    // 因为集合没有做任何限制，任何类型都可以a">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2022-05-26T11:41:05.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java泛型">
+<meta name="twitter:description" content="为什么使用泛型 Object 类型是所有类的基类，Object 类型可以接收任意的对象类型，那么在实际使用种，就会有类型转换的问题。所以java提供了泛型来解决这个安全问题  123456789101112@Testpublic void test() &amp;#123;    List list = new ArrayList&amp;lt;&amp;gt;();    // 因为集合没有做任何限制，任何类型都可以a">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content>
+  <meta name="keywords" content=",web开发基础">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="bp的Blog">
+  <meta name="msapplication-starturl" content="https://yellowbp.github.io/2022/04/04/java泛型/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="bp的Blog">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Mon Apr 04 2022 10:52:52 GMT+0800">
+    <meta property="article:modified_time" content="Thu May 26 2022 19:41:05 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="https://yellowbp.github.io/2022/04/04/java泛型/">
+  
+
+  <meta name="google-site-verification" content="fXjtlIfaDc_X-0P11rO3bEp1Nk4IKXphoJv0GqGZCco">
+  <meta name="baidu-site-verification" content="I3t1wfwZvd">
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create','UA-139531378-1','auto');ga('send','pageview');
+</script>
+  <script>
+  var _hmt = _hmt || [];
+  (function() {var hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?1054d51c0b66f1d168829173682c8159';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+  
+
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">bp的Blog</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/Gradient1.jpg" style="height: 160px;">
+    <img src="/images/headPic.jpg" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">hbp
+        </div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>要想快，先会慢</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:347070556@qq.com" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '347070556@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/08/">八月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/07/">七月 2022<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/05/">五月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/04/">四月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/03/">三月 2022<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2022/02/">二月 2022<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/10/">十月 2021<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/09/">九月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/08/">八月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/07/">七月 2021<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/06/">六月 2021<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/05/">五月 2021<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="mdui-ripple sidebar_archives-count">12</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2021/01/">一月 2021<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2020/03/">三月 2020<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/11/">十一月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/10/">十月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/09/">九月 2019<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/archives/2019/08/">八月 2019<span class="mdui-ripple sidebar_archives-count">5</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/ElasticSearch/">ElasticSearch<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/OAuth2/">OAuth2<span class="mdui-ripple sidebar_archives-count">8</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Redis/">Redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringBoot/">SpringBoot<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringCloud-Alibaba/">SpringCloud Alibaba<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/SpringMVC/">SpringMVC<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/docker/">docker<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/excel/">excel<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/git/">git<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java8/">java8<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/">jenkins<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jenkins/docker/">docker<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/k8s/">k8s<span class="mdui-ripple sidebar_archives-count">10</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/linux/">linux<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/maven/">maven<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mybatis/">mybatis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/redis/">redis<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/ssm/">ssm<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/yaml/">yaml<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/上传下载文件/">上传下载文件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/乱码/">乱码<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/参数校验/">参数校验<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/发短信/">发短信<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/小程序/">小程序<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/工具类/">工具类<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/开发软件/">开发软件<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/技术/">技术<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/搭建博客/">搭建博客<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/电脑硬件/">电脑硬件<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/算法/">算法<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/缓存/">缓存<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/规范/">规范<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/认证授权/">认证授权<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/部署/">部署<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/重装/">重装<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Spring/">Spring<span class="mdui-ripple sidebar_archives-count">22</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/algorithm/">algorithm<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/excel/">excel<span class="mdui-ripple sidebar_archives-count">5</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/git/">git<span class="mdui-ripple sidebar_archives-count">13</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/javaWeb/">javaWeb<span class="mdui-ripple sidebar_archives-count">7</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/java基础/">java基础<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/jwt/">jwt<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/linux/">linux<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mq/">mq<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/mysql/">mysql<span class="mdui-ripple sidebar_archives-count">6</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/nginx/">nginx<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/redis/">redis<span class="mdui-ripple sidebar_archives-count">9</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/servlet/">servlet<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/spring/">spring<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/web开发基础/">web开发基础<span class="mdui-ripple sidebar_archives-count">3</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/win7/">win7<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/其他/">其他<span class="mdui-ripple sidebar_archives-count">4</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/分布式/">分布式<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/接口文档/">接口文档<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/笔记本选购/">笔记本选购<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/自动化构建工具/">自动化构建工具<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/设计模式/">设计模式<span class="mdui-ripple sidebar_archives-count">6</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-13.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">Java泛型</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-04-04 / 
+          <i class="iconfont">&#xe601;</i> hbp
+          <span id="busuanzi_container_page_pv">
+            本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+          </span>
+          </div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h2 id="为什么使用泛型"><a href="#为什么使用泛型" class="headerlink" title="为什么使用泛型"></a>为什么使用泛型</h2><blockquote>
+<p>Object 类型是所有类的基类，Object 类型可以接收任意的对象类型，那么在实际使用种，就会有类型转换的问题。所以java提供了泛型来解决这个安全问题</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="comment">// 因为集合没有做任何限制，任何类型都可以add进去</span></span><br><span class="line">    list.add(<span class="string">"123"</span>);</span><br><span class="line">    list.add(<span class="number">88</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, size = list.size(); i &lt; size; i++) &#123;</span><br><span class="line">        <span class="comment">// 需求：打印每个元素的长度，就要把对象转成String类型</span></span><br><span class="line">        String str = (String) list.get(i);</span><br><span class="line">        System.out.println(str.length());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行</strong>这段代码，程序在运行时发生了类型转换异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.ClassCastException: <span class="class"><span class="keyword">class</span> <span class="title">java</span>.<span class="title">lang</span>.<span class="title">Integer</span> <span class="title">cannot</span> <span class="title">be</span> <span class="title">cast</span> <span class="title">to</span> <span class="title">class</span> <span class="title">java</span>.<span class="title">lang</span>.<span class="title">String</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这显然不是我们所期望的，如果程序有潜在的错误，我们更期望在编辑时被告知错误，而不是在运行时报异常。为了解决类似的问题（在编译阶段就可以解决），这时就出现了泛型，这样我们使用api 时也变得更为简洁，并在编译时期就能进行语法检查。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">list.add(<span class="string">"123"</span>);</span><br><span class="line">list.add(<span class="number">88</span>);<span class="comment">// 在编译阶段，编译器就会报错</span></span><br></pre></td></tr></table></figure>
+
+<p>这样就避免了我们类型强转时出现异常</p>
+<h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>是一种把明确类型的工作推迟到创建对象或者调用方法时才去明确的特殊的类型。也就是说在泛型使用过程中，操作的数据类型被指定为一个参数，而这种参数类型可以用在类、方法和接口中，分别被称为<code>泛型类</code>、<code>泛型方法</code>、<code>泛型接口</code></p>
+<blockquote>
+<p>注意：一般在创建对象时，当没有执行泛型时，默认类型为 Object 类型</p>
+</blockquote>
+<h2 id="泛型的好处"><a href="#泛型的好处" class="headerlink" title="泛型的好处"></a>泛型的好处</h2><ul>
+<li>避免了类型强转的麻烦</li>
+<li>提供了编译期的类型安全，确保在泛型类型（通常为泛型集合）上只能使用正确类型的对象，避免了在运行时出现ClassCastException</li>
+</ul>
+<h2 id="泛型的使用"><a href="#泛型的使用" class="headerlink" title="泛型的使用"></a>泛型的使用</h2><p>泛型有三种使用方式：泛型方法、泛型类、泛型接口</p>
+<h3 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h3><p>泛型类型用于类的定义中，被称为泛型类。通过泛型可以完成对一组类的操作对外开放相同的接口。最典型的就是各种集合框架容器类，如：List、Set、Map。</p>
+<ul>
+<li>泛型类的定义格式</li>
+</ul>
+<blockquote>
+<p>修饰符 class 类名&lt;代表泛型的变量&gt; {}</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &lt;T&gt; 这里解释下&lt;T&gt;中的T:</span></span><br><span class="line"><span class="comment"> *           此处的T可以随便写为任意标识，常见的有T、E等形式的参数表示泛型</span></span><br><span class="line"><span class="comment"> *           泛型在定义的时候不具体，使用的时候才变得具体。</span></span><br><span class="line"><span class="comment"> *           在使用的时候确定泛型的具体数据类型。即在创建对象的时候确定泛型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsClassDemo</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">//t这个成员变量的类型为T,T的类型由外部指定</span></span><br><span class="line">    <span class="keyword">private</span> T t;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//泛型构造方法形参t的类型也为T，T的类型由外部指定</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GenericsClassDemo</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.t = t;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//泛型方法getT的返回值类型为T，T的类型由外部指定</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> t;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>泛型在定义的时候不具体，使用的时候才变得具体。在使用的时候确定泛型的具体数据类型。即：<strong>在创建对象的时候确定泛型。</strong></p>
+<p>比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Generic&lt;String&gt; genericString = <span class="keyword">new</span> Generic&lt;String&gt;(<span class="string">"helloGenerics"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 此时，泛型标识T的类型就是String类型，那我们之前写的类就可以这么认为：</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsClassDemo</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String t;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GenericsClassDemo</span><span class="params">(String t)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.t = t;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getT</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> t;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当你的泛型类型想变为Integer类型时，也是很方便的。直接在创建时，T写为Integer类型即可：</p>
+<p><code>Generic&lt;Integer&gt; genericInteger = new Generic&lt;Integer&gt;(666);</code></p>
+<ul>
+<li>注意： 定义的泛型类，就一定要传入泛型类型实参么？</li>
+</ul>
+<p>并不是这样，在使用泛型的时候如果传入泛型实参，则会根据传入的泛型实参做相应的限制，此时泛型才会起到本应起到的限制作用。如果不传入泛型类型实参的话，在泛型类中使用泛型的方法或成员变量定义的类型可以为任何的类型。</p>
+<h3 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h3><p><strong>泛型方法，是在调用方法的时候指明泛型的具体类型 。</strong></p>
+<ul>
+<li>定义格式</li>
+</ul>
+<blockquote>
+<p>修饰符 &lt;代表泛型的变量&gt; 返回值类型 方法名(参数){ }</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> t 传入泛型的参数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &lt;T&gt; 泛型的类型</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> T 返回值为T类型</span></span><br><span class="line"><span class="comment"> * 说明：</span></span><br><span class="line"><span class="comment"> *   1）public 与 返回值中间&lt;T&gt;非常重要，可以理解为声明此方法为泛型方法。</span></span><br><span class="line"><span class="comment"> *   2）只有声明了&lt;T&gt;的方法才是泛型方法，泛型类中的使用了泛型的成员方法并不是泛型方法。</span></span><br><span class="line"><span class="comment"> *   3）&lt;T&gt;表明该方法将使用泛型类型T，此时才可以在方法中使用泛型类型T。</span></span><br><span class="line"><span class="comment"> *   4）与泛型类的定义一样，此处T可以随便写为任意标识，常见的如T、E等形式的参数常用于表示泛型。</span></span><br><span class="line"><span class="comment"> *   5）参数需要多少泛型，返回值前面就得定义几个泛型要不然编译期会出错</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">genercMethod</span><span class="params">(T t)</span></span>&#123;</span><br><span class="line">    System.out.println(t.getClass());</span><br><span class="line">    System.out.println(t);</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用方法时，确定泛型的类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这里的泛型跟下面调用的泛型方法可以不一样。</span></span><br><span class="line">    GenericsClassDemo&lt;String&gt; genericString  = <span class="keyword">new</span> GenericsClassDemo(<span class="string">"helloGeneric"</span>); </span><br><span class="line">    <span class="comment">// 传入的是String类型,返回的也是String类型</span></span><br><span class="line">    String str = genericString.genercMethod(<span class="string">"hello"</span>);</span><br><span class="line">    <span class="comment">// 传入的是Integer类型,返回的也是Integer类型</span></span><br><span class="line">    Integer i = genericString.genercMethod(<span class="number">123</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们可以看下结果:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">java</span>.<span class="title">lang</span>.<span class="title">String</span></span></span><br><span class="line"><span class="class"><span class="title">hello</span></span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">java</span>.<span class="title">lang</span>.<span class="title">Integer</span></span></span><br><span class="line"><span class="class">123</span></span><br></pre></td></tr></table></figure>
+
+<p>这里可以看出，泛型方法随着我们的传入参数类型不同，他得到的类型也不同。<strong>泛型方法能使方法独立于类而产生变化</strong>。</p>
+<h3 id="泛型接口"><a href="#泛型接口" class="headerlink" title="泛型接口"></a>泛型接口</h3><p>泛型接口与泛型类的定义及使用基本相同。<strong>泛型接口常被用在各种类的生产器中。</strong></p>
+<ul>
+<li>定义格式</li>
+</ul>
+<blockquote>
+<p>修饰符 interface接口名&lt;代表泛型的变量&gt; { }</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 定义一个泛型接口</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">GenericsInteface</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// public abstract 可不写，因为接口中的方法默认就是public abstract</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(T t)</span></span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用格式：</p>
+<p><strong>定义类时确定泛型的类型</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsImp</span> <span class="keyword">implements</span> <span class="title">GenericsInteface</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"设置了泛型为String类型"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>始终不确定泛型的类型，直到创建对象时，确定泛型的类型</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsImp</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">GenericsInteface</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"没有设置类型"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 确定泛型：</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        GenericsImp&lt;Integer&gt; gi = <span class="keyword">new</span> GenericsImp&lt;&gt;();</span><br><span class="line">        gi.add(<span class="number">66</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="泛型通配符"><a href="#泛型通配符" class="headerlink" title="泛型通配符"></a>泛型通配符</h2><p>当使用泛型类或者接口时，传递的数据中，泛型类型不确定，可以通过通配符&lt;?&gt;表示，也就是说？可以接收所有未知类型。但是一旦使用泛型的通配符后，只能使用Object类中的共性方法，集合中元素自身方法无法使用。</p>
+<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><p>泛型的通配符:<strong>不知道使用什么类型来接收的时候,此时可以使用?</strong></p>
+<p>在Java集合框架中，对于参数值是<code>未知类型</code>的容器类，<code>只能</code>读取其中元素，<code>不能</code>向其中添加元素，<br>因为，其类型是未知，所以编译器无法识别添加元素的类型和容器的类型是否兼容，唯一的例外是NULL</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ？代表可以接收任意类型</span></span><br><span class="line"><span class="comment">// 泛型不存在继承、多态关系,泛型左右两边要一样</span></span><br><span class="line"><span class="comment">// ArrayList&lt;Object&gt; list = new ArrayList&lt;String&gt;();这种是错误的</span></span><br><span class="line"><span class="comment">// 泛型通配符?:左边写&lt;?&gt; 右边的泛型可以是任意类型</span></span><br><span class="line">ArrayList&lt;?&gt; list1 = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</span><br><span class="line">ArrayList&lt;?&gt; list2 = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">ArrayList&lt;?&gt; list3 = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">list1.add(<span class="number">1</span>); <span class="comment">// 报错</span></span><br><span class="line">list1.add(<span class="string">"2"</span>); <span class="comment">// 报错</span></span><br><span class="line">list1.add(<span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p>注意：泛型不存在继承、多态关系,泛型左右两边要一样，jdk1.7后右边的泛型可以省略</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;Integer&gt; list1 = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">    test(list1);</span><br><span class="line">    ArrayList&lt;String&gt; list2 = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    test(list2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用?通配符,就可以传递不同类似进去方法中了，这里的？如果换称T会报错</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(ArrayList&lt;?&gt; coll)</span></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="高级使用"><a href="#高级使用" class="headerlink" title="高级使用"></a>高级使用</h3><p>之前设置泛型的时候，实际上是可以任意设置的，只要是类就可以设置。但是在JAVA的泛型中可以指定一个泛型的<strong>上界</strong>和<strong>下界</strong>。</p>
+<p><strong>泛型的上界：</strong></p>
+<ul>
+<li><strong>格式</strong>：<code>类型名称 &lt;? extends 类 &gt; 对象名称</code></li>
+<li><strong>意义</strong>： <code>只能接收该类型及其子类</code></li>
+</ul>
+<p><strong>泛型的下界：</strong></p>
+<ul>
+<li>格式： <code>类型名称 &lt;? super 类 &gt; 对象名称</code></li>
+<li>意义： <code>只能接收该类型及其父类型</code></li>
+</ul>
+<p>比如：现已知Object类，Animal类，Dog类，Cat类，其中Animal是Dog，Cat的父类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span></span>&#123;&#125;<span class="comment">//父类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span></span>&#123;&#125;<span class="comment">//子类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">extends</span> <span class="title">Animal</span></span>&#123;&#125;<span class="comment">//子类</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>首先我们先看下，泛型的上界<code>&lt;? extends 类 &gt;：</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ArrayList&lt;? extends Animal&gt; list = new ArrayList&lt;Object&gt;();//报错</span></span><br><span class="line">ArrayList&lt;? extends Animal&gt; list2 = <span class="keyword">new</span> ArrayList&lt;Animal&gt;();</span><br><span class="line">ArrayList&lt;? extends Animal&gt; list3 = <span class="keyword">new</span> ArrayList&lt;Dog&gt;();</span><br><span class="line">ArrayList&lt;? extends Animal&gt; list4 = <span class="keyword">new</span> ArrayList&lt;Cat&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，泛型的上限只能是该类型的类型及其子类，或者是实现接口的类。而Object是Animal的父类</p>
+</li>
+<li><p>我们再来看看泛型的下界<code>&lt;? super 类 &gt;：</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;? <span class="keyword">super</span> Animal&gt; list5 = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</span><br><span class="line">ArrayList&lt;? <span class="keyword">super</span> Animal&gt; list6 = <span class="keyword">new</span> ArrayList&lt;Animal&gt;();</span><br><span class="line"><span class="comment">//        ArrayList&lt;? super Animal&gt; list7 = new ArrayList&lt;Dog&gt;();//报错</span></span><br><span class="line"><span class="comment">//        ArrayList&lt;? super Animal&gt; list8 = new ArrayList&lt;Cat&gt;();//报错</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看出，泛型的下界只能是该类型的类型及其父类。</p>
+</li>
+<li><p>一般泛型的上界和下界也是用来参数的传递：</p>
+<p>现已知Object类，String 类，Number类，Integer类，其中Number是Integer的父类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Collection&lt;Integer&gt; list1 = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">    Collection&lt;String&gt; list2 = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    Collection&lt;Number&gt; list3 = <span class="keyword">new</span> ArrayList&lt;Number&gt;();</span><br><span class="line">    Collection&lt;Object&gt; list4 = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</span><br><span class="line">    getElement1(list1);</span><br><span class="line">    getElement1(list2);<span class="comment">//报错</span></span><br><span class="line">    getElement1(list3);</span><br><span class="line">    getElement1(list4);<span class="comment">//报错</span></span><br><span class="line">    getElement2(list1);<span class="comment">//报错</span></span><br><span class="line">    getElement2(list2);<span class="comment">//报错</span></span><br><span class="line">    getElement2(list3);</span><br><span class="line">    getElement2(list4);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 泛型的上界：此时的泛型?，必须是Number类型或者Number类型的子类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getElement1</span><span class="params">(Collection&lt;? extends Number&gt; coll)</span></span>&#123;&#125;</span><br><span class="line"><span class="comment">// 泛型的下界：此时的泛型?，必须是Number类型或者Number类型的父类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getElement2</span><span class="params">(Collection&lt;? <span class="keyword">super</span> Number&gt; coll)</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+
+      <blockquote class="mdui-m-t-5">
+        
+          <strong>本文遵循 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a> 许可协议，转载请附上原文出处链接和本声明。</strong><br>
+        
+        <strong>本文链接：</strong><a href="https://yellowbp.github.io/2022/04/04/java泛型/">https://yellowbp.github.io/2022/04/04/java泛型/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/java8/">java8</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/web开发基础/">web开发基础</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+      <a rel="prev" class="extend prev" href="/2022/04/15/Linux搭建及软件安装/">
+        <button aria-label="prev" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_back</i></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上一篇
+      </a>
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/04/04/mq/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+  <div id="comment" class="mdui-m-t-5">
+    <style>#pop_ad,#feedAv{display:none!important;position:absolute!important;z-index:-9999;left:-1000px;opacity:0!important}</style>
+<div id="SOHUCS" sid="cl74qc0eb004wjctwp0uti2nh"></div>
+<script type="text/javascript">
+(function(){
+var appid = 'cyubhC2Dq';
+var conf = 'prod_e4cce65003c5bed049fefcb8a6f09e12';
+var width = window.innerWidth || document.documentElement.clientWidth;
+if (width < 960) {
+window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("http://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
+  </div>
+
+
+
+  <div style="position: fixed !important; right: 16px; top: 30%;">
+    <button class="mdui-fab mdui-fab-mini mdui-ripple" mdui-menu="{target: '#toc'}"><i class="mdui-icon material-icons">format_list_numbered</i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item" disabled><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么使用泛型"><span class="toc-number">1.</span> <span class="toc-text">为什么使用泛型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是泛型"><span class="toc-number">2.</span> <span class="toc-text">什么是泛型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泛型的好处"><span class="toc-number">3.</span> <span class="toc-text">泛型的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泛型的使用"><span class="toc-number">4.</span> <span class="toc-text">泛型的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型类"><span class="toc-number">4.1.</span> <span class="toc-text">泛型类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型方法"><span class="toc-number">4.2.</span> <span class="toc-text">泛型方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型接口"><span class="toc-number">4.3.</span> <span class="toc-text">泛型接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泛型通配符"><span class="toc-number">5.</span> <span class="toc-text">泛型通配符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本使用"><span class="toc-number">5.1.</span> <span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#高级使用"><span class="toc-number">5.2.</span> <span class="toc-text">高级使用</span></a></li></ol></li></ol></li>
+    </ul>
+  </div>
+</main>
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/yellowbp" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1432440963&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2022 hbp<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>hbp All rights reserved.
+    
+    <br>
+    <span id="busuanzi_container_site_uv">
+    本网站总访问量<span id="busuanzi_value_site_uv"></span>次
+    </span>
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
